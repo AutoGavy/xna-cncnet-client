@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
 using System;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Principal;
@@ -128,6 +129,9 @@ namespace DTAClient.DXGUI
             {
                 byte[] playerNameAsciiBytes = System.Text.Encoding.ASCII.GetBytes(playerName);
                 playerName = System.Text.Encoding.ASCII.GetString(playerNameAsciiBytes);
+
+                // remove invisible ASCII characters, e.g. control characters
+                playerName = new string(playerName.ToList().Where(c => c >= 32 && c <= 127).ToArray());
             }
 
             if (UserINISettings.Instance.AutoRemoveUnderscoresFromName)
@@ -135,7 +139,7 @@ namespace DTAClient.DXGUI
                 playerName = playerName.TrimEnd(new char[] { '_' });
             }
 
-            if (String.IsNullOrEmpty(playerName))
+            if (String.IsNullOrWhiteSpace(playerName))
                 playerName = "NewPlayer";
 
             playerName = Renderer.GetSafeString(NameValidator.GetValidOfflineName(playerName), 0);
