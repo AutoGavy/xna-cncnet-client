@@ -9,10 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
 using Rampastring.XNAUI;
 using System;
-using System.Linq;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Principal;
 using System.Windows.Forms;
 
 namespace DTAClient.DXGUI
