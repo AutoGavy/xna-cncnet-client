@@ -73,7 +73,7 @@ namespace DTAConfig
 
             ddCategory = new XNAClientDropDown(WindowManager);
             ddCategory.Name = "ddCategory";
-            ddCategory.ClientRectangle = new Rectangle(lblCategory.Right + 12, 
+            ddCategory.ClientRectangle = new Rectangle(lblCategory.Right + 12,
                 lblCategory.Y - 1, 250, ddCategory.Height);
 
             HashSet<string> categories = new HashSet<string>();
@@ -89,7 +89,7 @@ namespace DTAConfig
 
             lbHotkeys = new XNAMultiColumnListBox(WindowManager);
             lbHotkeys.Name = "lbHotkeys";
-            lbHotkeys.ClientRectangle = new Rectangle(12, ddCategory.Bottom + 12, 
+            lbHotkeys.ClientRectangle = new Rectangle(12, ddCategory.Bottom + 12,
                 ddCategory.Right - 12, Height - ddCategory.Bottom - 59);
             lbHotkeys.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbHotkeys.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
@@ -326,7 +326,7 @@ namespace DTAConfig
             hotkeyInfoPanel.Enable();
             var command = (GameCommand)lbHotkeys.GetItem(0, lbHotkeys.SelectedIndex).Tag;
             lblCommandCaption.Text = command.UIName;
-            lblDescription.Text = Renderer.FixText(command.Description, lblDescription.FontIndex, 
+            lblDescription.Text = Renderer.FixText(command.Description, lblDescription.FontIndex,
                 hotkeyInfoPanel.Width - lblDescription.X).Text;
             lblCurrentHotkeyValue.Text = command.Hotkey.ToStringWithNone();
 
@@ -362,6 +362,19 @@ namespace DTAConfig
             if (lbHotkeys.SelectedIndex < 0 || lbHotkeys.SelectedIndex >= lbHotkeys.ItemCount)
             {
                 return;
+            }
+
+            switch (pendingHotkey.ToString())
+            {
+                case "256": // shift
+                    pendingHotkey = new Hotkey((Keys)Enum.Parse(typeof(Keys), "16"), KeyModifiers.None);
+                    break;
+                case "512": // ctrl
+                    pendingHotkey = new Hotkey((Keys)Enum.Parse(typeof(Keys), "17"), KeyModifiers.None);
+                    break;
+                case "1024": // alt
+                    pendingHotkey = new Hotkey((Keys)Enum.Parse(typeof(Keys), "18"), KeyModifiers.None);
+                    break;
             }
 
             // If the hotkey is already assigned to other command, unbind it
@@ -530,6 +543,7 @@ namespace DTAConfig
                 UIName = iniSection.GetStringValue("UIName", "Unnamed command");
                 Category = iniSection.GetStringValue("Category", "Unknown category");
                 Description = iniSection.GetStringValue("Description", "Unknown description");
+                Description.Replace("@", Environment.NewLine);
                 DefaultHotkey = new Hotkey(iniSection.GetIntValue("DefaultKey", 0));
             }
 
@@ -681,7 +695,18 @@ namespace DTAConfig
                     case Keys.D9:
                         return "9";
                     default:
-                        return key.ToString();
+                        string value = key.ToString();
+                        switch (value)
+                        {
+                            case "16":
+                                return "Shift";
+                            case "17":
+                                return "Ctrl";
+                            case "18":
+                                return "Alt";
+                            default:
+                                return value;
+                        }
                 }
             }
         }

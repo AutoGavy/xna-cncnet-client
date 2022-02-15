@@ -301,12 +301,20 @@
     <Content Include="Resources\cncricon.png" />
     <Content Include="Resources\dtaicon.png" />
     <None Include="Resources\moicon.png" />
+    <None Include="Resources\esicon.png" />
+    <None Include="Resources\faicon.png" />
+    <None Include="Resources\fcsicon.png" />
+    <None Include="Resources\fricon.png" />
     <Content Include="Resources\raicon.png" />
+    <None Include="Resources\reicon.png" />
+    <None Include="Resources\rnicon.png" />
     <Content Include="Resources\rricon.png" />
+    <None Include="Resources\tcicon.png" />
     <Content Include="Resources\tdicon.png" />
     <Content Include="Resources\tiicon.png" />
     <Content Include="Resources\tsicon.png" />
     <Content Include="Resources\unknownicon.png" />
+    <None Include="Resources\waicon.png" />
     <Content Include="Resources\yricon.png" />
   </ItemGroup>
   <ItemGroup>

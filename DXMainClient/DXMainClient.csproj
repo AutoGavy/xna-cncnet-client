@@ -442,6 +442,7 @@
     <Compile Include="Domain\Multiplayer\LAN\LANServerCommandHandler.cs" />
     <Compile Include="Domain\Multiplayer\LAN\ServerNoParamCommandHandler.cs" />
     <Compile Include="Domain\Multiplayer\LAN\ServerStringCommandHandler.cs" />
+    <Compile Include="Domain\LogbuchParser.cs" />
     <Compile Include="Domain\Multiplayer\PlayerExtraOptions.cs" />
     <Compile Include="Domain\Multiplayer\TeamStartMapping.cs" />
     <Compile Include="Domain\Multiplayer\MapPreviewExtractor.cs" />
@@ -452,6 +453,7 @@
     <Compile Include="Domain\Multiplayer\LAN\HostedLANGame.cs" />
     <Compile Include="Domain\Multiplayer\TeamStartMappingPreset.cs" />
     <Compile Include="Domain\StatisticsSender.cs" />
+    <Compile Include="DXGUI\Generic\CampaignPanel.cs" />
     <Compile Include="DXGUI\Generic\CheaterWindow.cs" />
     <Compile Include="Domain\Multiplayer\Map.cs" />
     <Compile Include="Domain\Multiplayer\MapLoader.cs" />
@@ -463,6 +465,8 @@
     <Compile Include="Domain\MainClientConstants.cs" />
     <Compile Include="Domain\UserAgentHandler.cs" />
     <Compile Include="DXGUI\Generic\CampaignSelector.cs" />
+    <Compile Include="DXGUI\Generic\DatabasePanel.cs" />
+    <Compile Include="DXGUI\Generic\InfoShared.cs" />
     <Compile Include="DXGUI\Generic\PrivacyNotification.cs" />
     <Compile Include="DXGUI\Generic\TopBar.cs" />
     <Compile Include="DXGUI\IMessageView.cs" />

@@ -97,6 +97,83 @@ namespace ClientCore.CnCNet5
                     RegistryInstallPath = "HKCU\\Software\\CnCReloaded",
                     UIName = "C&C: Reloaded",
                     Texture = AssetLoader.TextureFromImage(Resources.cncricon)
+                },
+                
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-rn",
+                    ClientExecutableName = "RNLauncher.exe",
+                    GameBroadcastChannel = "#cncnet-rn-games",
+                    InternalName = "rn",
+                    RegistryInstallPath = "HKCU\\Software\\RevengeNow",
+                    UIName = "Revenge Now",
+                    Texture = AssetLoader.TextureFromImage(Resources.rnicon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-fa",
+                    ClientExecutableName = "Launch Fantasy ADVENTURE.exe",
+                    GameBroadcastChannel = "#cncnet-fa-games",
+                    InternalName = "fa",
+                    RegistryInstallPath = "HKCU\\Software\\FantasyADVENTURE",
+                    UIName = "Fantasy ADVENTURE",
+                    Texture = AssetLoader.TextureFromImage(Resources.faicon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-es",
+                    ClientExecutableName = "Extreme Starry.exe",
+                    GameBroadcastChannel = "#cncnet-es-games",
+                    InternalName = "es",
+                    RegistryInstallPath = "HKCU\\Software\\ExtremeStarry",
+                    UIName = "Extreme Starry",
+                    Texture = AssetLoader.TextureFromImage(Resources.esicon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#riseoftheeast",
+                    ClientExecutableName = "REClient.exe",
+                    GameBroadcastChannel = "#rote-games",
+                    InternalName = "re",
+                    RegistryInstallPath = "HKCU\\Software\\RiseoftheEast",
+                    UIName = "Rise of the East",
+                    Texture = AssetLoader.TextureFromImage(Resources.reicon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-fr",
+                    ClientExecutableName = "FRLauncher.exe",
+                    GameBroadcastChannel = "#cncnet-fr-games",
+                    InternalName = "fr",
+                    RegistryInstallPath = "HKML\\Software\\FinaleReturn",
+                    UIName = "Finale Return",
+                    Texture = AssetLoader.TextureFromImage(Resources.fricon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-fcs",
+                    ClientExecutableName = "FCSLauncher.exe",
+                    GameBroadcastChannel = "#cncnet-fcs-games",
+                    InternalName = "fcs",
+                    RegistryInstallPath = "HKCU\\Software\\FantasyCombatSimulation",
+                    UIName = "Fantasy Combat Simulation",
+                    Texture = AssetLoader.TextureFromImage(Resources.fcsicon)
+                },
+
+                new CnCNetGame()
+                {
+                    ChatChannel = "#cncnet-tc",
+                    ClientExecutableName = "TiberiumCrisis.exe",
+                    GameBroadcastChannel = "#cncnet-tc-games",
+                    InternalName = "tc",
+                    RegistryInstallPath = "HKCU\\Software\\TiberiumCrisis",
+                    UIName = "Tiberium Crisis",
+                    Texture = AssetLoader.TextureFromImage(Resources.tcicon)
                 }
             };
 

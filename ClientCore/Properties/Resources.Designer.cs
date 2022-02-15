@@ -93,6 +93,46 @@ namespace ClientCore.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap esicon {
+            get {
+                object obj = ResourceManager.GetObject("esicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap faicon {
+            get {
+                object obj = ResourceManager.GetObject("faicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap fcsicon {
+            get {
+                object obj = ResourceManager.GetObject("fcsicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap fricon {
+            get {
+                object obj = ResourceManager.GetObject("fricon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap moicon {
             get {
                 object obj = ResourceManager.GetObject("moicon", resourceCulture);
@@ -106,6 +146,26 @@ namespace ClientCore.Properties {
         public static System.Drawing.Bitmap raicon {
             get {
                 object obj = ResourceManager.GetObject("raicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap reicon {
+            get {
+                object obj = ResourceManager.GetObject("reicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap rnicon {
+            get {
+                object obj = ResourceManager.GetObject("rnicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -138,6 +198,16 @@ namespace ClientCore.Properties {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap tcicon {
+            get {
+                object obj = ResourceManager.GetObject("tcicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -177,6 +247,16 @@ namespace ClientCore.Properties {
         public static System.Drawing.Bitmap unknownicon {
             get {
                 object obj = ResourceManager.GetObject("unknownicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap waicon {
+            get {
+                object obj = ResourceManager.GetObject("waicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

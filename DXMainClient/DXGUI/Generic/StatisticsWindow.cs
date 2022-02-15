@@ -149,7 +149,7 @@ namespace DTAClient.DXGUI.Generic
             chkIncludeSpectatedGames.ClientRectangle = new Rectangle(
                 Width - chkIncludeSpectatedGames.Width - 12,
                 cmbGameModeFilter.Bottom + 3,
-                chkIncludeSpectatedGames.Width, 
+                chkIncludeSpectatedGames.Width,
                 chkIncludeSpectatedGames.Height);
             chkIncludeSpectatedGames.CheckedChanged += ChkIncludeSpectatedGames_CheckedChanged;
 
@@ -171,7 +171,8 @@ namespace DTAClient.DXGUI.Generic
             lbGameList = new XNAMultiColumnListBox(WindowManager);
             lbGameList.Name = nameof(lbGameList);
             lbGameList.ClientRectangle = new Rectangle(2, 25, 676, 250);
-            lbGameList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            //lbGameList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            lbGameList.BackgroundTexture = AssetLoader.LoadTexture("generalbglight.png");
             lbGameList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbGameList.AddColumn("DATE / TIME".L10N("UI:Main:GameMatchDateTimeColumnHeader"), 130);
             lbGameList.AddColumn("MAP".L10N("UI:Main:GameMatchMapColumnHeader"), 200);
@@ -200,9 +201,9 @@ namespace DTAClient.DXGUI.Generic
             panelGameStatistics.AddChild(lbGameList);
             panelGameStatistics.AddChild(lbGameStatistics);
 
-#endregion
+            #endregion
 
-#region Total statistics
+            #region Total statistics
 
             panelTotalStatistics = new XNAPanel(WindowManager);
             panelTotalStatistics.Name = "panelTotalStatistics";
@@ -383,7 +384,7 @@ namespace DTAClient.DXGUI.Generic
             panelTotalStatistics.AddChild(lblFavouriteSideValue);
             panelTotalStatistics.AddChild(lblAverageAILevelValue);
 
-#endregion
+            #endregion
 
             AddChild(tabControl);
             AddChild(lblFilter);
@@ -493,7 +494,7 @@ namespace DTAClient.DXGUI.Generic
 
                 if (ps.IsAI)
                 {
-                    items.Add(new XNAListBoxItem(AILevelToString(ps.AILevel), textColor));
+                    items.Add(new XNAListBoxItem(AILevelToString(ps.AILevel, ms.GameMode), textColor));
                 }
                 else
                     items.Add(new XNAListBoxItem(ps.Name, textColor));
@@ -514,7 +515,7 @@ namespace DTAClient.DXGUI.Generic
                     items.Add(new XNAListBoxItem("-", textColor));
                 }
                 else
-                { 
+                {
                     if (!ms.SawCompletion)
                     {
                         // The game wasn't completed - we don't know the stats
@@ -571,7 +572,49 @@ namespace DTAClient.DXGUI.Generic
             return ProgramConstants.TEAMS[teamIndex - 1];
         }
 
-        private string AILevelToString(int aiLevel) => ProgramConstants.AI_PLAYER_NAMES[aiLevel];
+        private string AILevelToString(int aiLevel, string gameMode)
+        {
+            if (!String.IsNullOrEmpty(gameMode))
+            {
+                if (gameMode == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                {
+                    switch (aiLevel)
+                    {
+                        case 2:
+                            return "Abyss AI".L10N("UI:Main:AbyssAI");
+                        case 1:
+                            return "Brutal AI".L10N("UI:Main:BrutalAI");
+                        case 0:
+                        default:
+                            return "Insane AI".L10N("UI:Main:InsaneAI");
+                    }
+                }
+                else if (gameMode == "Difficulty Tier 2".L10N("UI:Main:DT2"))
+                {
+                    switch (aiLevel)
+                    {
+                        case 2:
+                            return "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                        case 1:
+                            return "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
+                        case 0:
+                        default:
+                            return "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
+                    }
+                }
+            }
+
+            switch (aiLevel)
+            {
+                case 2:
+                    return "Hard AI".L10N("UI:Main:HardAI");
+                case 1:
+                    return "Normal AI".L10N("UI:Main:NormalAI");
+                case 0:
+                default:
+                    return "Easy AI".L10N("UI:Main:EasyAI");
+            }
+        }
 
         #region Statistics reading / game listing code
 

@@ -99,6 +99,12 @@ namespace DTAClient.DXGUI.Generic
 
         private readonly bool isMediaPlayerAvailable;
 
+        private bool isWindowIdle = true;
+
+        private bool isGameExited = false;
+
+        private float musicVolume = 1.0f;
+
         private CancellationTokenSource cncnetPlayerCountCancellationSource;
 
         // Main Menu Buttons
@@ -119,6 +125,7 @@ namespace DTAClient.DXGUI.Generic
         public override void Initialize()
         {
             GameProcessLogic.GameProcessExited += SharedUILogic_GameProcessExited;
+            LogbuchParser.ScoreSongStateChanged += StateScoreSongChanged;
 
             Name = nameof(MainMenu);
             BackgroundTexture = AssetLoader.LoadTexture("MainMenu/mainmenubg.png");
@@ -366,6 +373,8 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         private void SettingsSaved(object sender, EventArgs e)
         {
+            musicVolume = (float)UserINISettings.Instance.ClientVolume;
+
             if (isMediaPlayerAvailable)
             {
                 if (MediaPlayer.State == MediaState.Playing)
@@ -373,7 +382,7 @@ namespace DTAClient.DXGUI.Generic
                     if (!UserINISettings.Instance.PlayMainMenuMusic)
                         isMusicFading = true;
                 }
-                else if (topBar.GetTopMostPrimarySwitchable() == this &&
+                else if (LogbuchParser.SongEnded && topBar.GetTopMostPrimarySwitchable() == this &&
                     topBar.LastSwitchType == SwitchType.PRIMARY)
                 {
                     PlayMusic();
@@ -387,6 +396,8 @@ namespace DTAClient.DXGUI.Generic
                 discordHandler?.Connect();
             else
                 discordHandler?.Disconnect();
+
+            isWindowIdle = true;
         }
 
         /// <summary>
@@ -449,6 +460,8 @@ namespace DTAClient.DXGUI.Generic
             if (UserINISettings.Instance.IsFirstRun)
             {
                 UserINISettings.Instance.IsFirstRun.Value = false;
+                UserINISettings.Instance.WindowedMode.Value = true;
+                UserINISettings.Instance.BorderlessWindowedMode.Value = true;
                 UserINISettings.Instance.SaveSettings();
 
                 firstRunMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Initial Installation".L10N("UI:Main:InitialInstallationTitle"),
@@ -470,14 +483,21 @@ namespace DTAClient.DXGUI.Generic
 
         private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox) => optionsWindow.Open();
 
-        private void SharedUILogic_GameProcessStarted() => MusicOff();
+        private void SharedUILogic_GameProcessStarted()
+        {
+            isWindowIdle = false;
+            isGameExited = false;
+            MusicOff();
+        }
 
         private void WindowManager_GameClosing(object sender, EventArgs e) => Clean();
 
         private void SkirmishLobby_Exited(object sender, EventArgs e)
         {
-            if (UserINISettings.Instance.StopMusicOnMenu)
+            if (LogbuchParser.SongEnded && UserINISettings.Instance.StopMusicOnMenu)
                 PlayMusic();
+
+            isWindowIdle = true;
         }
 
         private void LanLobby_Exited(object sender, EventArgs e)
@@ -487,8 +507,10 @@ namespace DTAClient.DXGUI.Generic
             if (UserINISettings.Instance.AutomaticCnCNetLogin)
                 connectionManager.Connect();
 
-            if (UserINISettings.Instance.StopMusicOnMenu)
+            if (LogbuchParser.SongEnded && UserINISettings.Instance.StopMusicOnMenu)
                 PlayMusic();
+
+            isWindowIdle = true;
         }
 
         private void CnCNetInfoController_CnCNetGameCountUpdated(object sender, PlayerCountEventArgs e)
@@ -525,9 +547,13 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         public void PostInit()
         {
-            themeSong = AssetLoader.LoadSong(ClientConfiguration.Instance.MainMenuMusicName);
+            if (LogbuchParser.SongEnded)
+            {
+                themeSong = AssetLoader.LoadSong(ClientConfiguration.Instance.MainMenuMusicName);
+                PlayMusic();
+            }
 
-            PlayMusic();
+            isWindowIdle = true;
 
             if (!ClientConfiguration.Instance.ModMode)
             {
@@ -733,7 +759,7 @@ namespace DTAClient.DXGUI.Generic
         private void BtnOptions_LeftClick(object sender, EventArgs e) => optionsWindow.Open();
 
         private void BtnNewCampaign_LeftClick(object sender, EventArgs e) =>
-            innerPanel.Show(innerPanel.CampaignSelector);
+            innerPanel.Show(innerPanel.CampaignPanel);
 
         private void BtnLoadGame_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.GameLoadingWindow);
@@ -770,10 +796,11 @@ namespace DTAClient.DXGUI.Generic
             Process.Start(MainClientConstants.CREDITS_URL);
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>
-            innerPanel.Show(innerPanel.ExtrasWindow);
+            innerPanel.Show(innerPanel.DatabasePanel); //innerPanel.Show(innerPanel.ExtrasWindow);
 
         private void BtnExit_LeftClick(object sender, EventArgs e)
         {
+            isWindowIdle = false;
             WindowManager.HideWindow();
             FadeMusicExit();
         }
@@ -793,7 +820,18 @@ namespace DTAClient.DXGUI.Generic
             if (!UserINISettings.Instance.StopMusicOnMenu ||
                 (topBar.Enabled && topBar.LastSwitchType == SwitchType.PRIMARY &&
                 topBar.GetTopMostPrimarySwitchable() == this))
+                isGameExited = true;
+        }
+
+        private void StateScoreSongChanged()
+        {
+            if (!LogbuchParser.SongEnded)
                 PlayMusic();
+            else if (isGameExited)
+            {
+                themeSong = AssetLoader.LoadSong(ClientConfiguration.Instance.MainMenuMusicName);
+                PlayMusic();
+            }
         }
 
         /// <summary>
@@ -831,18 +869,38 @@ namespace DTAClient.DXGUI.Generic
 
             if (themeSong != null && UserINISettings.Instance.PlayMainMenuMusic)
             {
+                musicVolume = 1.0f;
                 isMusicFading = false;
                 MediaPlayer.IsRepeating = true;
                 MediaPlayer.Volume = (float)UserINISettings.Instance.ClientVolume;
 
                 try
                 {
+                    if (!LogbuchParser.SongEnded)
+                    {
+                        Logger.Log("Attempting to play score music: " + LogbuchParser.scoreSong);
+                        themeSong = AssetLoader.LoadSong(LogbuchParser.scoreSong);
+                        MediaPlayer.MediaStateChanged += StateSongChanged;
+                        MediaPlayer.IsRepeating = false;
+                    }
                     MediaPlayer.Play(themeSong);
                 }
                 catch (InvalidOperationException ex)
                 {
                     Logger.Log("Playing main menu music failed! " + ex.Message);
                 }
+            }
+        }
+
+        protected virtual void StateSongChanged(object sender, EventArgs e)
+        {
+            if (MediaPlayer.State == MediaState.Stopped)
+            {
+                MediaPlayer.MediaStateChanged -= StateSongChanged;
+                themeSong = AssetLoader.LoadSong(ClientConfiguration.Instance.MainMenuMusicName);
+                LogbuchParser.SongEnded = true;
+                if (isWindowIdle)
+                    PlayMusic();
             }
         }
 
@@ -905,7 +963,7 @@ namespace DTAClient.DXGUI.Generic
 
         public void SwitchOn()
         {
-            if (UserINISettings.Instance.StopMusicOnMenu)
+            if (LogbuchParser.SongEnded && UserINISettings.Instance.StopMusicOnMenu)
                 PlayMusic();
 
             if (!ClientConfiguration.Instance.ModMode && UserINISettings.Instance.CheckForUpdates)
@@ -919,7 +977,8 @@ namespace DTAClient.DXGUI.Generic
 
         public void SwitchOff()
         {
-            if (UserINISettings.Instance.StopMusicOnMenu)
+            isWindowIdle = false;
+            if (LogbuchParser.SongEnded && UserINISettings.Instance.StopMusicOnMenu)
                 MusicOff();
         }
 

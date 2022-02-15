@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientGUICreator.cs" />
+    <Compile Include="CMedal.cs" />
     <Compile Include="ToolTip.cs" />
     <Compile Include="UIDesignConstants.cs" />
     <Compile Include="XNAChatTextBox.cs" />

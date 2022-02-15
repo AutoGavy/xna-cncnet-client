@@ -86,7 +86,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected TopBar TopBar;
 
-        protected int FrameSendRate { get; set; } = 7;
+        private CheaterWindow cheaterWindow;
+
+        protected int FrameSendRate { get; set; } = 1;
 
         /// <summary>
         /// Controls the MaxAhead parameter. The default value of 0 means that 
@@ -173,7 +175,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 GameOptionsPanel.Y,
                lbGameModeMapList.Width, GameOptionsPanel.Height - 24);
             lbChatMessages.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            lbChatMessages.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            //lbChatMessages.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            lbChatMessages.BackgroundTexture = AssetLoader.LoadTexture("generalbglight.png");
             lbChatMessages.LineHeight = 16;
             lbChatMessages.DrawOrder = -1;
             lbChatMessages.UpdateOrder = -1;
@@ -227,6 +230,20 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
             else
                 Logger.Log("MultiplayerGameLobby: Saved games are not available!");
+
+            cheaterWindow = new CheaterWindow(WindowManager);
+            DarkeningPanel dp = new DarkeningPanel(WindowManager);
+            dp.AddChild(cheaterWindow);
+            AddChild(dp);
+            dp.CenterOnParent();
+            cheaterWindow.CenterOnParent();
+            cheaterWindow.YesClicked += CheaterWindow_YesClicked;
+            cheaterWindow.Disable();
+        }
+
+        private void CheaterWindow_YesClicked(object sender, EventArgs e)
+        {
+            AddNotice("Failed to start game: The game host has modified game files.".L10N("UI:Main:CantStartCUZCheat"));
         }
 
         /// <summary>
@@ -265,12 +282,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
         }
 
-        protected override void StartGame()
+        protected override void StartGame(bool bCanControlSpeed = true)
         {
             if (fsw != null)
                 fsw.EnableRaisingEvents = true;
 
-            base.StartGame();
+            if (!Map.IsCoop)
+                bCanControlSpeed = false;
+            base.StartGame(bCanControlSpeed);
         }
 
         protected override void GameProcessExited()

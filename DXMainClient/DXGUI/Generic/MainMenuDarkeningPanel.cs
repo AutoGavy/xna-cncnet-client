@@ -18,16 +18,20 @@ namespace DTAClient.DXGUI.Generic
             this.discordHandler = discordHandler;
             DrawBorders = false;
             DrawMode = ControlDrawMode.UNIQUE_RENDER_TARGET;
+            AlphaRate = 0.0f;
         }
 
         private DiscordHandler discordHandler;
 
+        public CampaignPanel CampaignPanel;
         public CampaignSelector CampaignSelector;
         public GameLoadingWindow GameLoadingWindow;
         public StatisticsWindow StatisticsWindow;
         public UpdateQueryWindow UpdateQueryWindow;
         public UpdateWindow UpdateWindow;
         public ExtrasWindow ExtrasWindow;
+        public DatabasePanel DatabasePanel;
+
 
         public override void Initialize()
         {
@@ -35,9 +39,14 @@ namespace DTAClient.DXGUI.Generic
 
             Name = "DarkeningPanel";
             BorderColor = UISettings.ActiveSettings.PanelBorderColor;
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            //BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            BackgroundTexture = AssetLoader.LoadTexture("generalbglight.png");
+            //ClientRectangle = new Rectangle(0, 0, 1, 1);
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             Alpha = 1.0f;
+
+            CampaignPanel = new CampaignPanel(WindowManager, discordHandler);
+            AddChild(CampaignPanel);
 
             CampaignSelector = new CampaignSelector(WindowManager, discordHandler);
             AddChild(CampaignSelector);
@@ -56,6 +65,9 @@ namespace DTAClient.DXGUI.Generic
 
             ExtrasWindow = new ExtrasWindow(WindowManager);
             AddChild(ExtrasWindow);
+
+            DatabasePanel = new DatabasePanel(WindowManager);
+            AddChild(DatabasePanel);
 
             foreach (XNAControl child in Children)
             {

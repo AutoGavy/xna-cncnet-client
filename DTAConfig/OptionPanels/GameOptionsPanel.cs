@@ -27,6 +27,10 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkTargetLines;
         private XNAClientCheckBox chkScrollCoasting;
         private XNAClientCheckBox chkTooltips;
+        private XNAClientCheckBox chkClassicRallyPoint;
+        private XNAClientCheckBox chkClassicDoubleClick;
+        private XNAClientCheckBox chkWheelZoom;
+        private XNAClientCheckBox chkDisableWin;
 #if YR
         private XNAClientCheckBox chkShowHiddenObjects;
 #elif TS
@@ -89,6 +93,22 @@ namespace DTAConfig.OptionPanels
             chkTooltips = new XNAClientCheckBox(WindowManager);
             chkTooltips.Name = "chkTooltips";
             chkTooltips.Text = "Tooltips".L10N("UI:DTAConfig:Tooltips");
+
+            chkClassicRallyPoint = new XNAClientCheckBox(WindowManager);
+            chkClassicRallyPoint.Name = "chkClassicRallyPoint";
+            chkClassicRallyPoint.Text = "Classic Rally Point".L10N("UI:DTAConfig:ClassicRallyPoint");
+
+            chkClassicDoubleClick = new XNAClientCheckBox(WindowManager);
+            chkClassicDoubleClick.Name = "chkClassicDoubleClick";
+            chkClassicDoubleClick.Text = "Classic Double-Click".L10N("UI:DTAConfig:ClassicDoubleClick");
+
+            chkWheelZoom = new XNAClientCheckBox(WindowManager);
+            chkWheelZoom.Name = "chkWheelZoom";
+            chkWheelZoom.Text = "Wheel Zoom Scale".L10N("UI:DTAConfig:WheelZoomScale");
+
+            chkDisableWin = new XNAClientCheckBox(WindowManager);
+            chkDisableWin.Name = "chkDisableWin";
+            chkDisableWin.Text = "Disable WIN Key".L10N("UI:DTAConfig:DisableWINKey");
 
             var lblPlayerName = new XNALabel(WindowManager);
             lblPlayerName.Name = "lblPlayerName";
@@ -176,6 +196,10 @@ namespace DTAConfig.OptionPanels
             AddChild(chkScrollCoasting);
             AddChild(chkTargetLines);
             AddChild(chkTooltips);
+            AddChild(chkClassicRallyPoint);
+            AddChild(chkClassicDoubleClick);
+            AddChild(chkWheelZoom);
+            AddChild(chkDisableWin);
             AddChild(lblPlayerName);
             AddChild(tbPlayerName);
             AddChild(lblNotice);
@@ -207,7 +231,7 @@ namespace DTAConfig.OptionPanels
         public override void Load()
         {
             base.Load();
-            
+
             int scrollRate = ReverseScrollRate(IniSettings.ScrollRate);
 
             if (scrollRate >= trbScrollRate.MinValue && scrollRate <= trbScrollRate.MaxValue)
@@ -219,8 +243,12 @@ namespace DTAConfig.OptionPanels
             chkScrollCoasting.Checked = !Convert.ToBoolean(IniSettings.ScrollCoasting);
             chkTargetLines.Checked = IniSettings.TargetLines;
             chkTooltips.Checked = IniSettings.Tooltips;
+            chkClassicRallyPoint.Checked = IniSettings.ClassicRallyPoint;
+            chkClassicDoubleClick.Checked = IniSettings.ClassicDoubleClick;
+            chkWheelZoom.Checked = IniSettings.WheelZoom;
+            chkDisableWin.Checked = IniSettings.bDisableWin;
 #if YR
-            chkShowHiddenObjects.Checked = IniSettings.ShowHiddenObjects;
+            chkShowHiddenObjects.Checked = false;
 #endif
 
 #if TS
@@ -239,6 +267,10 @@ namespace DTAConfig.OptionPanels
             IniSettings.ScrollCoasting.Value = Convert.ToInt32(!chkScrollCoasting.Checked);
             IniSettings.TargetLines.Value = chkTargetLines.Checked;
             IniSettings.Tooltips.Value = chkTooltips.Checked;
+            IniSettings.ClassicRallyPoint.Value = chkClassicRallyPoint.Checked;
+            IniSettings.ClassicDoubleClick.Value = chkClassicDoubleClick.Checked;
+            IniSettings.WheelZoom.Value = chkWheelZoom.Checked;
+            IniSettings.bDisableWin.Value = chkDisableWin.Checked;
 #if YR
             IniSettings.ShowHiddenObjects.Value = chkShowHiddenObjects.Checked;
 #endif

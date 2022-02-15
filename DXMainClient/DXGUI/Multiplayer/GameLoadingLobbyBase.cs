@@ -73,6 +73,39 @@ namespace DTAClient.DXGUI.Multiplayer
         private int uniqueGameId = 0;
         private DateTime gameLoadTime;
 
+        private const string SPMUSIC_SETTINGS = "Client/MusicSettings.ini";
+        private const string SPSOUND_INI = "spsound.ini";
+
+        protected int StartMusicIndex { get; set; }
+        protected int ConflictMusicIndex { get; set; }
+        private string GetPlayerMusicSide(string SideIndex)
+        {
+            switch (Convert.ToInt32(SideIndex))
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 10:
+                    return "GDI";
+                case 3:
+                case 4:
+                case 5:
+                case 11:
+                    return "Nod";
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return "Scrin";
+                default:
+                    Random random = new Random();
+                    if (Convert.ToBoolean(random.Next(0, 2)))
+                        return "GDI";
+                    else
+                        return "Nod";
+            }
+        }
+
         public override void Initialize()
         {
             Name = "GameLoadingLobby";
@@ -150,7 +183,8 @@ namespace DTAClient.DXGUI.Multiplayer
 
             lbChatMessages = new ChatListBox(WindowManager);
             lbChatMessages.Name = nameof(lbChatMessages);
-            lbChatMessages.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            //lbChatMessages.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            lbChatMessages.BackgroundTexture = AssetLoader.LoadTexture("generalbglight.png");
             lbChatMessages.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbChatMessages.ClientRectangle = new Rectangle(12, panelPlayers.Bottom + 12,
                 Width - 24,

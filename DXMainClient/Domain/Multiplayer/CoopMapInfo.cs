@@ -14,6 +14,8 @@ namespace DTAClient.Domain.Multiplayer
         [JsonProperty]
         public List<int> DisallowedPlayerSides = new List<int>();
         [JsonProperty]
+        public List<int> DisallowedPlayerSides0 = new List<int>();
+        [JsonProperty]
         public List<int> DisallowedPlayerColors = new List<int>();
 
         public void SetHouseInfos(IniSection iniSection)

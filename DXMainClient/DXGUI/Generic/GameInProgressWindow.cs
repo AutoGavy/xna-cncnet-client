@@ -29,6 +29,8 @@ namespace DTAClient.DXGUI
         private bool initialized = false;
         private bool nativeCursorUsed = false;
 
+        private XNAMessageBox ReShadeMSGBox;
+
 #if ARES
         private List<string> debugSnapshotDirectories;
         private DateTime debugLogLastWriteTime;
@@ -43,7 +45,8 @@ namespace DTAClient.DXGUI
 
             initialized = true;
 
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            //BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            BackgroundTexture = AssetLoader.LoadTexture("generalbglight.png");
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             DrawBorders = false;
             ClientRectangle = new Rectangle(0, 0, WindowManager.RenderResolutionX, WindowManager.RenderResolutionY);
@@ -122,6 +125,135 @@ namespace DTAClient.DXGUI
         private void SharedUILogic_GameProcessExited()
         {
             AddCallback(new Action(HandleGameProcessExited), null);
+
+            if (UserINISettings.Instance.bDisableWin)
+            {
+                try
+                {
+                    Logger.Log("Killing disable win process...");
+                    foreach (System.Diagnostics.Process process in
+                        System.Diagnostics.Process.GetProcessesByName(ProgramConstants.DISABLE_WIN_PROCESS))
+                        process.Kill();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Error killing disable win exe: " + ex.Message);
+                }
+            }
+
+            if (UserINISettings.Instance.HighDetail >= 0 && !UserINISettings.Instance.CanReShade)
+            {
+                string reshadeIni = ProgramConstants.GamePath + "ReShade.ini";
+                if (File.Exists(reshadeIni))
+                {
+                    IniFile reshadeIniInstance = new IniFile(reshadeIni);
+                    if (reshadeIniInstance.SectionExists("DX8_BUFFER_DETECTION") ||
+                        reshadeIniInstance.SectionExists("DX9_BUFFER_DETECTION") ||
+                        reshadeIniInstance.SectionExists("DX10_BUFFER_DETECTION") ||
+                        reshadeIniInstance.SectionExists("DX11_BUFFER_DETECTION") ||
+                        reshadeIniInstance.SectionExists("DX12_BUFFER_DETECTION") ||
+                        reshadeIniInstance.SectionExists("DX13_BUFFER_DETECTION") ||
+                        reshadeIniInstance.SectionExists("OPENGL") ||
+                        reshadeIniInstance.SectionExists("DEPTH"))
+                    {
+                        ReShadeMSGBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                            "Enhanced Quality Successful".L10N("UI:Main:ReShadeSucceed"),
+                            string.Format("If got lags, make sure you changed" + Environment.NewLine +
+                            "preferred graphics processor to GPU." + Environment.NewLine +
+                            "Do you want to change it now?").L10N("UI:Main:ReShadeSucceed_Desc"));
+                        UserINISettings.Instance.CanReShade.Value = true;
+                        UserINISettings.Instance.SaveSettings();
+                        ReShadeMSGBox.YesClickedAction = ReShadeMSGBox_YesClicked_Success;
+                    }
+                    else
+                    {
+                        ReShadeMSGBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                            "Failed to enable Enhanced Quality".L10N("UI:Main:ReShadeFailed"),
+                            string.Format("Please try to switch your renderer to" + Environment.NewLine +
+                            "OpenGL or DirectX" + Environment.NewLine +
+                            "Make sure you got the latest Windows version" + Environment.NewLine +
+                            "and installed DirectX End-User Runtimes" + Environment.NewLine +
+                            "Do you want to download it now?").L10N("UI:Main:ReShadeFailed_Desc"));
+                        ReShadeMSGBox.YesClickedAction = ReShadeMSGBox_YesClicked_Fail;
+                    }
+                }
+                else
+                {
+                    XNAMessageBox.Show(WindowManager, "Failed to enable Enhanced Quality".L10N("UI:Main:ReShadeFailed"),
+                        string.Format("Please try to close your anti-virus softwares," + Environment.NewLine +
+                        "and make sure reshade.dll is your Resources folder.").L10N("UI:Main:ReShadeFailed_Desc2"));
+                }
+            }
+        }
+
+        private void ReShadeMSGBox_YesClicked_Success(XNAMessageBox messageBox)
+        {
+            try
+            {
+               // if (ClientConfiguration.Instance.ClientLanguage == 0)
+                    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
+                /*else
+                    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");*/
+            }
+            catch (Exception)
+            {
+                XNAMessageBox.Show(WindowManager, "Cannot open readme doc", "Please manually open this document:"
+                    + Environment.NewLine + ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
+                try
+                {
+                   // if (ClientConfiguration.Instance.ClientLanguage == 0)
+                        System.Diagnostics.Process.Start("http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
+                    /*else
+                         System.Diagnostics.Process.Start("http://shimo.im/docs/cHPR9d6RYpcpV9r3");*/
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        //if (ClientConfiguration.Instance.ClientLanguage == 0)
+                            System.Diagnostics.Process.Start("iexplore.exe", "http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
+                        /*else
+                            System.Diagnostics.Process.Start("iexplore.exe", "http://shimo.im/docs/cHPR9d6RYpcpV9r3");*/
+
+                    }
+                    catch (Exception)
+                    {
+                        Logger.Log("Error opening a website.");
+                    }
+                }
+            }
+        }
+
+        private void ReShadeMSGBox_YesClicked_Fail(XNAMessageBox messageBox)
+        {
+            try
+            {
+                //if (ClientConfiguration.Instance.ClientLanguage == 0)
+                    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                /*else
+                    System.Diagnostics.Process.Start("http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");*/
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    //if (ClientConfiguration.Instance.ClientLanguage == 0)
+                        System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                    /*else
+                        System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");*/
+                }
+                catch (Exception ex)
+                {
+                    //if (ClientConfiguration.Instance.ClientLanguage == 0)
+                        XNAMessageBox.Show(WindowManager, "Cannot open website", "Need to manually put this link into your browser:"
+                            + Environment.NewLine + "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                    /*else
+                        XNAMessageBox.Show(WindowManager, "无法打开网址", "需要手动复制到浏览器地址。"
+                            + Environment.NewLine + "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");*/
+
+                    Logger.Log("Error opening microsoft website, message: " + ex.Message);
+                }
+            }
         }
 
         private void HandleGameProcessExited()

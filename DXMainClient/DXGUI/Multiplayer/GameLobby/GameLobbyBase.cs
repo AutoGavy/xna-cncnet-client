@@ -36,6 +36,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private readonly string FavoriteMapsLabel = "Favorite Maps".L10N("UI:Main:FavoriteMaps");
 
+        private const string SPMUSIC_SETTINGS = "Client/MusicSettings.ini";
+        private const string SPSOUND_INI = "spsound.ini";
+
         private const int RANK_NONE = 0;
         private const int RANK_EASY = 1;
         private const int RANK_MEDIUM = 2;
@@ -52,8 +55,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         public GameLobbyBase(
             WindowManager windowManager,
             string iniName,
-            MapLoader mapLoader, 
-            bool isMultiplayer, 
+            MapLoader mapLoader,
+            bool isMultiplayer,
             DiscordHandler discordHandler
         ) : base(windowManager)
         {
@@ -86,6 +89,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected GameModeMapFilter gameModeMapFilter;
 
         private GameModeMap _gameModeMap;
+
+        protected int StartMusicIndex { get; set; }
+        protected int ConflictMusicIndex { get; set; }
+
+        protected int LoadingScreenIndex { get; set; }
 
         /// <summary>
         /// The currently selected game mode.
@@ -182,6 +190,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private LoadOrSaveGameOptionPresetWindow loadOrSaveGameOptionPresetWindow;
 
+        private readonly string[] LightNameArray =
+        {
+            "Red",
+            "Blue",
+            "Green",
+            "Level",
+            "Ground",
+            "Ambient"
+        };
+
         public override void Initialize()
         {
             Name = _iniSectionName;
@@ -251,7 +269,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblMapAuthor.ClientRectangle = new Rectangle(MapPreviewBox.Right,
                 lblMapName.Y, 0, 0);
             lblMapAuthor.FontIndex = 1;
-            lblMapAuthor.Text = "By".L10N("UI:Main:AuthorBy")+ " ";
+            lblMapAuthor.Text = "By".L10N("UI:Main:AuthorBy") + " ";
 
             lblGameMode = new XNALabel(WindowManager);
             lblGameMode.Name = "lblGameMode";
@@ -265,7 +283,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblMapSize.ClientRectangle = new Rectangle(lblGameMode.ClientRectangle.X,
                 lblGameMode.ClientRectangle.Bottom + 3, 0, 0);
             lblMapSize.FontIndex = 1;
-            lblMapSize.Text = "Size:".L10N("UI:Main:MapSize")+ " ";
+            lblMapSize.Text = "Size:".L10N("UI:Main:MapSize") + " ";
             lblMapSize.Visible = false;
 
             lbGameModeMapList = new XNAMultiColumnListBox(WindowManager);
@@ -725,7 +743,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 Logger.Log($"Deleting map {Map.BaseFilePath} failed! Message: {ex.Message}");
                 XNAMessageBox.Show(WindowManager, "Deleting Map Failed".L10N("UI:Main:DeleteMapFailedTitle"),
-                    "Deleting map failed! Reason:".L10N("UI:Main:DeleteMapFailedText")+ " " + ex.Message);
+                    "Deleting map failed! Reason:".L10N("UI:Main:DeleteMapFailedText") + " " + ex.Message);
             }
         }
 
@@ -834,7 +852,24 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     locationY + (DROP_DOWN_HEIGHT + playerOptionVecticalMargin) * i,
                     playerNameWidth, DROP_DOWN_HEIGHT);
                 ddPlayerName.AddItem(String.Empty);
-                ProgramConstants.AI_PLAYER_NAMES.ForEach(ddPlayerName.AddItem);
+                if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                {
+                    ddPlayerName.AddItem("Insane AI".L10N("UI:Main:InsaneAI"));
+                    ddPlayerName.AddItem("Brutal AI".L10N("UI:Main:BrutalAI"));
+                    ddPlayerName.AddItem("Abyss AI".L10N("UI:Main:AbyssAI"));
+                }
+                else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
+                {
+                    ddPlayerName.AddItem("Abyss+1 AI".L10N("UI:Main:Abyss1AI"));
+                    ddPlayerName.AddItem("Abyss+2 AI".L10N("UI:Main:Abyss2AI"));
+                    ddPlayerName.AddItem("Abyss+3 AI".L10N("UI:Main:Abyss3AI"));
+                }
+                else
+                {
+                    ddPlayerName.AddItem("Easy AI".L10N("UI:Main:EasyAI"));
+                    ddPlayerName.AddItem("Normal AI".L10N("UI:Main:NormalAI"));
+                    ddPlayerName.AddItem("Hard AI".L10N("UI:Main:HardAI"));
+                }
                 ddPlayerName.AllowDropDown = true;
                 ddPlayerName.SelectedIndexChanged += CopyPlayerDataFromUI;
                 ddPlayerName.RightClick += MultiplayerName_RightClick;
@@ -845,7 +880,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerSide.ClientRectangle = new Rectangle(
                     ddPlayerName.Right + playerOptionHorizontalMargin,
                     ddPlayerName.Y, sideWidth, DROP_DOWN_HEIGHT);
-                ddPlayerSide.AddItem("Random", LoadTextureOrNull("randomicon.png"));
+                ddPlayerSide.AddItem("Random".L10N("UI:Main:Random"), LoadTextureOrNull("randomicon.png"));
                 foreach (string randomSelector in selectorNames)
                     ddPlayerSide.AddItem(randomSelector, LoadTextureOrNull(randomSelector + "icon.png"));
                 foreach (string sideName in sides)
@@ -859,7 +894,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerColor.ClientRectangle = new Rectangle(
                     ddPlayerSide.Right + playerOptionHorizontalMargin,
                     ddPlayerName.Y, colorWidth, DROP_DOWN_HEIGHT);
-                ddPlayerColor.AddItem("Random", AssetLoader.GetColorFromString(randomColor));
+                ddPlayerColor.AddItem("Random".L10N("UI:Main:Random"), AssetLoader.GetColorFromString(randomColor));
                 foreach (MultiplayerColor mpColor in MPColors)
                     ddPlayerColor.AddItem(mpColor.Name, mpColor.XnaColor);
                 ddPlayerColor.AllowDropDown = false;
@@ -1195,6 +1230,19 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         dd.Items[SideCount + RandomSelectorCount].Selectable = true;
                 }
             }
+
+            CheckEggSides();
+        }
+
+        public void CheckEggSides()
+        {
+            foreach (XNADropDown dd in ddPlayerSides)
+            {
+                dd.Items[RandomSelectorCount + 11].Selectable = UserINISettings.Instance.EggSide4 ? true : false;
+                dd.Items[RandomSelectorCount + 12].Selectable = UserINISettings.Instance.EggSide1 ? true : false;
+                dd.Items[RandomSelectorCount + 13].Selectable = UserINISettings.Instance.EggSide2 ? true : false;
+                dd.Items[RandomSelectorCount + 14].Selectable = UserINISettings.Instance.EggSide3 ? true : false;
+            }
         }
 
         /// <summary>
@@ -1313,7 +1361,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <summary>
         /// Writes spawn.ini. Returns the player house info returned from the randomizer.
         /// </summary>
-        private PlayerHouseInfo[] WriteSpawnIni()
+        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false)
         {
             Logger.Log("Writing spawn.ini");
 
@@ -1465,6 +1513,24 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
+            // force game speed
+            int iSpeed = 0;
+            foreach (GameLobbyDropDown dropDown in DropDowns)
+            {
+                if (dropDown.OptionName == "Game Speed")
+                    iSpeed = dropDown.SelectedIndex;
+            }
+
+            if (bForceSpeed)
+            {
+                if (iSpeed == 6)
+                    spawnIni.SetIntValue("Settings", "GameSpeed", 1);
+                else
+                {
+                    spawnIni.SetIntValue("Settings", "GameSpeed", 2);
+                }
+            }
+
             spawnIni.WriteIniFile();
 
             return houseInfos;
@@ -1552,19 +1618,49 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 var pHouseInfo = houseInfos[Players.Count + aiId];
                 PlayerInfo aiInfo = AIPlayers[aiId];
-                matchStatistics.AddPlayer("Computer", false, true, false,
+                matchStatistics.AddPlayer("AI", false, true, false,
                     pHouseInfo.SideIndex + 1, aiInfo.TeamId,
                     MPColors.FindIndex(c => c.GameColorIndex == pHouseInfo.ColorIndex),
                     aiInfo.ReversedAILevel);
             }
         }
 
+        private string GetPlayerMusicSide(PlayerHouseInfo[] houseInfos)
+        {
+            int myIndex = Players.FindIndex(c => c.Name == ProgramConstants.PLAYERNAME);
+            switch (houseInfos[myIndex].SideIndex)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 10:
+                    return "GDI";
+                case 3:
+                case 4:
+                case 5:
+                case 11:
+                    return "Nod";
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return "Scrin";
+                default:
+                    Random random = new Random();
+                    if (Convert.ToBoolean(random.Next(0, 2)))
+                        return "GDI";
+                    else
+                        return "Nod";
+            }
+        }
+
         /// <summary>
         /// Writes spawnmap.ini.
         /// </summary>
-        private void WriteMap(PlayerHouseInfo[] houseInfos)
+        private void WriteMap(PlayerHouseInfo[] houseInfos, bool bForceSpeed = false)
         {
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNMAP_INI);
+            File.Delete(ProgramConstants.GamePath + SPSOUND_INI);
 
             Logger.Log("Writing map.");
 
@@ -1577,10 +1673,22 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             MapCodeHelper.ApplyMapCode(mapIni, GameMode.GetMapRulesIniFile());
             MapCodeHelper.ApplyMapCode(mapIni, globalCodeIni);
 
-            if (isMultiplayer)
+            // apply multiplayer options
+            if (bForceSpeed)
             {
-                IniFile mpGlobalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/MultiplayerGlobalCode.ini");
-                MapCodeHelper.ApplyMapCode(mapIni, mpGlobalCodeIni);
+                IniFile multiplayerOptionsIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/MultiplayerOptions.ini");
+                IniFile.ConsolidateIniFiles(mapIni, multiplayerOptionsIni);
+            }
+
+            // apply fast options
+            if (bForceSpeed && Players.Count() - AIPlayers.Count() > 3)
+            {
+                IniFile spawnIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
+                if (spawnIni.GetIntValue("Settings", "GameSpeed", 2) == 1)
+                {
+                    IniFile fastOptionsIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/FastOptions.ini");
+                    IniFile.ConsolidateIniFiles(mapIni, fastOptionsIni);
+                }
             }
 
             foreach (GameLobbyCheckBox checkBox in CheckBoxes)
@@ -1593,7 +1701,484 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             ManipulateStartingLocations(mapIni, houseInfos);
 
+            // Map Settings
+            if (mapIni.GetDoubleValue("Lighting", "Ambient", 0.30f) <= 0.44f)
+                mapIni.SetDoubleValue("Lighting", "Ambient", 0.44f);
+            foreach (string strName in LightNameArray)
+            {
+                mapIni.SetDoubleValue("Lighting", "Ion" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
+                mapIni.SetDoubleValue("Lighting", "Dominator" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
+            }
+            mapIni.SetStringValue("Basic", "TiberiumDeathToVisceroid", "yes");
+
+            if (mapIni.GetBooleanValue("BaseInfo", "Ambient.Wind.Cold", false))
+                mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_Cold");
+            else if (mapIni.GetBooleanValue("BaseInfo", "Ambient.Wind.MountLow", false))
+                mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_MountLow");
+            else if (mapIni.GetBooleanValue("BaseInfo", "Ambient.Wind.MountHigh", false))
+                mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_MountHigh");
+            else if (mapIni.GetBooleanValue("BaseInfo", "Ambient.Wind.Disable", false))
+                mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "NULLQAQ");
+
+            // ReShade Settings
+            ProgramConstants.SetupPreset(bForceSpeed);
+            StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
+            if (!UserINISettings.Instance.NoReShade)
+            {
+                string strTechniques = "UI_Before,Colourfulness";
+                string strExtraLines = String.Empty;
+
+                if (UserINISettings.Instance.EnhancedLaser > 0)
+                {
+                    strTechniques += ",BlitLaser";
+                }
+                if (UserINISettings.Instance.EnhancedLight > 0)
+                {
+                    strTechniques += ",AnimMask";
+                }
+                if (UserINISettings.Instance.HighDetail == 3)
+                {
+                    strTechniques += ",MagicBloom";
+                }
+
+                double flAmbient = mapIni.GetDoubleValue("Lighting", "Ambient", 1.00f);
+
+                // Clouds
+                bool bLightClouds = false;
+                if (flAmbient > 0.85f)
+                    bLightClouds = true;
+
+                string strLightClouds = mapIni.GetStringValue("BaseInfo", "RedAmbEffect", "none").ToLower();
+                if (strLightClouds == "true")
+                    bLightClouds = true;
+                else if (strLightClouds == "false")
+                    bLightClouds = false;
+
+                if (UserINISettings.Instance.CloudsEffect == 1) //2
+                {
+                    //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_CLOUD_O);
+                    mapIni.SetStringValue("Basic", "AltNextScenario", "O_");
+                }
+                else if (strLightClouds == "none")
+                {
+                    //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_CLOUD_N);
+                    mapIni.SetStringValue("Basic", "AltNextScenario", "N_");
+                }
+                else if (bLightClouds)
+                {
+                    //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_CLOUD_D);
+                    mapIni.SetStringValue("Basic", "AltNextScenario", "D_");
+                }
+                else
+                {
+                    //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_CLOUD_N);
+                    mapIni.SetStringValue("Basic", "AltNextScenario", "N_");
+                }
+
+                if (mapIni.GetBooleanValue("BaseInfo", "IsSnow", false)) // Snow
+                {
+                    if (mapIni.GetBooleanValue("BaseInfo", "IsSnowNight", false))
+                    {
+                        //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWNIGHT);
+                        strExtraLines += ClientConfiguration.SHADER_SNOWNIGHT_SETUP;
+                        if (UserINISettings.Instance.HighDetail == 3)
+                        {
+                            strTechniques += ",PPFXBloom";
+                        }
+                        if (UserINISettings.Instance.HighDetail > 0)
+                        {
+                            strTechniques += ",FilmicPass";
+                        }
+
+                        if (UserINISettings.Instance.CloudsEffect > 0)
+                        {
+                            strTechniques += bLightClouds ?
+                                ",RedAmbMapMag" : ",CloudMapMag";
+                        }
+                        if (UserINISettings.Instance.Displacement > 0)
+                        {
+                            strTechniques += ",DisplacementMap";
+                        }
+                        if (UserINISettings.Instance.CloudsEffect > 0)
+                        {
+                            strTechniques += ",LightMapMag";
+                        }
+
+                        if (UserINISettings.Instance.HighDetail >= 2)
+                        {
+                            strTechniques += ",AmbientLight";
+                        }
+                        if (UserINISettings.Instance.HighDetail >= 1)
+                        {
+                            strTechniques += ",Levels";
+                        }
+
+                        mapIni.SetStringValue("Basic", "NextScenario", "S_Shader");
+
+                        // Tint
+                        if (strLightClouds == "none")
+                            strExtraLines += ClientConfiguration.TC_TINT_SNOWNIGHT;
+                        else if (bLightClouds)
+                            strExtraLines += ClientConfiguration.SHADER_TINT_SNOWNIGHT_VANILLA;
+                        else
+                            strExtraLines += ClientConfiguration.SHADER_TINT_SNOW_LIGHT;
+                    }
+                    else
+                    {
+                        //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWDAY);
+                        strExtraLines += ClientConfiguration.SHADER_SNOWDAY_SETUP;
+                        if (UserINISettings.Instance.HighDetail == 3)
+                        {
+                            strTechniques += ",PPFXBloom";
+                        }
+                        if (UserINISettings.Instance.HighDetail > 0)
+                        {
+                            strTechniques += ",FilmicPass";
+                        }
+
+                        if (UserINISettings.Instance.CloudsEffect > 0)
+                        {
+                            strTechniques += bLightClouds ?
+                                ",RedAmbMapMag" : ",CloudMapMag";
+                        }
+                        if (UserINISettings.Instance.Displacement > 0)
+                        {
+                            strTechniques += ",DisplacementMap";
+                        }
+                        if (UserINISettings.Instance.CloudsEffect > 0)
+                        {
+                            strTechniques += ",LightMapMag";
+                        }
+                        if (UserINISettings.Instance.EnhancedLight > 0)
+                        {
+                            strTechniques += ",AnimMask";
+                        }
+
+                        if (UserINISettings.Instance.HighDetail >= 2)
+                        {
+                            strTechniques += ",AmbientLight";
+                        }
+                        if (UserINISettings.Instance.HighDetail >= 1)
+                        {
+                            strTechniques += ",Levels";
+                        }
+
+                        mapIni.SetStringValue("Basic", "NextScenario", "A_Shader");
+
+                        // Tint
+                        if (strLightClouds == "none")
+                            strExtraLines += ClientConfiguration.TC_TINT_SNOWDAY;
+                        else if (bLightClouds)
+                            strExtraLines += ClientConfiguration.SHADER_TINT_SNOWDAY_VANILLA;
+                        else
+                            strExtraLines += ClientConfiguration.SHADER_TINT_SNOW_LIGHT;
+                    }
+                }
+                else
+                {
+                    bool bIsNight = false;
+                    bool bIsNight2 = false;
+                    if (flAmbient <= 0.86f)
+                    {
+                        switch (mapIni.GetStringValue("Map", "Theater", "URBAN"))
+                        {
+                            case "SNOW":
+                            case "DESERT":
+                            case "TEMPERATE":
+                                if (flAmbient < 0.70f)
+                                    bIsNight2 = true;
+                                else
+                                    bIsNight = true;
+                                break;
+                            default:
+                                if (flAmbient <= 0.70f)
+                                    bIsNight = true;
+                                else if (flAmbient < 0.50f)
+                                    bIsNight2 = true;
+                                break;
+                        }
+                    }
+
+                    if (mapIni.GetStringValue("BaseInfo", "IsNight2", "none").ToLower() == "true") // Night2
+                        bIsNight2 = true;
+                    else if (mapIni.GetStringValue("BaseInfo", "IsNight2", "none").ToLower() == "false")
+                        bIsNight2 = false;
+
+                    if (bIsNight2)
+                    {
+                        //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_NIGHT2);
+                        strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
+                        if (UserINISettings.Instance.CloudsEffect > 0)
+                        {
+                            strTechniques += bLightClouds ?
+                                ",RedAmbMapMag" : ",CloudMapMag";
+                        }
+                        if (UserINISettings.Instance.Displacement > 0)
+                        {
+                            strTechniques += ",DisplacementMap";
+                        }
+                        if (UserINISettings.Instance.CloudsEffect > 0)
+                        {
+                            strTechniques += ",LightMapMag";
+                        }
+                        if (UserINISettings.Instance.EnhancedLight > 0)
+                        {
+                            strTechniques += ",AnimMask";
+                        }
+
+                        if (UserINISettings.Instance.HighDetail > 0)
+                        {
+                            strTechniques += ",FilmicPass";
+                        }
+
+                        if (UserINISettings.Instance.HighDetail >= 2)
+                        {
+                            strTechniques += ",AmbientLight";
+                        }
+                        if (UserINISettings.Instance.HighDetail >= 1)
+                        {
+                            strTechniques += ",Levels";
+                        }
+
+                        mapIni.SetStringValue("Basic", "NextScenario", "M_Shader");
+
+                        // Tint
+                        if (strLightClouds == "none")
+                            strExtraLines += ClientConfiguration.TC_TINT_NIGHT2;
+                        else if (bLightClouds)
+                            strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
+                        else
+                            strExtraLines += ClientConfiguration.SHADER_TINT_NONE;
+                    }
+                    else
+                    {
+                        if (mapIni.GetStringValue("BaseInfo", "IsNight", "none").ToLower() == "true") // Vanilla Day / Night
+                            bIsNight = true;
+                        else if (mapIni.GetStringValue("BaseInfo", "IsNight", "none").ToLower() == "false")
+                            bIsNight = false;
+
+                        if (bIsNight)
+                        {
+                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_NIGHT);
+                            strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += bLightClouds ?
+                                    ",RedAmbMapMag" : ",CloudMapMag";
+                            }
+                            if (UserINISettings.Instance.Displacement > 0)
+                            {
+                                strTechniques += ",DisplacementMap";
+                            }
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += ",LightMapMag";
+                            }
+
+                            if (UserINISettings.Instance.HighDetail > 0)
+                            {
+                                strTechniques += ",FilmicPass";
+                            }
+
+                            if (UserINISettings.Instance.HighDetail >= 2)
+                            {
+                                strTechniques += ",AmbientLight";
+                            }
+                            if (UserINISettings.Instance.HighDetail >= 1)
+                            {
+                                strTechniques += ",Levels";
+                            }
+
+                            mapIni.SetStringValue("Basic", "NextScenario", "N_Shader");
+
+                            // Tint
+                            if (strLightClouds == "none")
+                                strExtraLines += ClientConfiguration.TC_TINT_NIGHT;
+                            else if (bLightClouds)
+                                strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
+                            else
+                                strExtraLines += ClientConfiguration.SHADER_TINT_NONE;
+                        }
+                        else
+                        {
+                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DAY);
+                            strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += bLightClouds ?
+                                    ",RedAmbMapMag" : ",CloudMapMag";
+                            }
+                            if (UserINISettings.Instance.Displacement > 0)
+                            {
+                                strTechniques += ",DisplacementMap";
+                            }
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += ",LightMapMag";
+                            }
+
+                            if (UserINISettings.Instance.HighDetail > 0)
+                            {
+                                strTechniques += ",FilmicPass";
+                            }
+
+                            mapIni.SetStringValue("Basic", "NextScenario", "D_Shader");
+
+                            // Tint
+                            if (strLightClouds == "none")
+                                strExtraLines += ClientConfiguration.TC_TINT_DAY;
+                            else if (bLightClouds)
+                                strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
+                            else
+                                strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
+                        }
+                    }
+                }
+
+                strTechniques += ",Tint,UI_After";
+                if (UserINISettings.Instance.WheelZoom)
+                {
+                    strTechniques += ",Magnifier";
+                }
+                switch (UserINISettings.Instance.AntiAliasing)
+                {
+                    case 1:
+                        strTechniques += ",SMAA";
+                        break;
+                    case 2:
+                        strTechniques += ",FXAA";
+                        break;
+                }
+
+                shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
+                shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_2 + strTechniques);
+
+                if (!String.IsNullOrEmpty(strExtraLines))
+                {
+                    shaderIniWriter.WriteLine(strExtraLines);
+                }
+            }
+            else
+            {
+                shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DEFAULT); // Default
+                mapIni.SetStringValue("Basic", "Name", "");
+            }
+            shaderIniWriter.WriteLine(shaderIniWriter.NewLine);
+            shaderIniWriter.Close();
+
+            Random random = new Random();
+            IniFile musicSettingsIni = new IniFile(ProgramConstants.GamePath + SPMUSIC_SETTINGS);
+
+            // Game Music Settings
+            IniFile musicListIni = new IniFile(ProgramConstants.GamePath + "INI/MusicListTC.ini");
+            IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
+            if (UserINISettings.Instance.SmartMusic && UserINISettings.Instance.MusicType < 2)
+            {
+                StartMusicIndex = musicSettingsIni.GetIntValue("Settings", "NextStartMusicIndex", 1);
+                ConflictMusicIndex = musicSettingsIni.GetIntValue("Settings", "NextConflictMusicIndex", 1);
+
+                string sideName = GetPlayerMusicSide(houseInfos);
+
+                string[] indexArray = { "1", "2", "3", "4", "5" };
+                List<string> tempArray = indexArray.ToList();
+                tempArray.Remove(Convert.ToString(ConflictMusicIndex));
+                indexArray = tempArray.ToArray();
+
+                for (int i = 0; i < indexArray.Length; i++)
+                {
+                    int randomInt = random.Next(i, indexArray.Length);
+                    string tempIndex = indexArray[i];
+                    indexArray[i] = indexArray[randomInt];
+                    indexArray[randomInt] = tempIndex;
+                }
+
+                musicConfigIni.SetStringValue("SP_Start", "Repeat", "yes");
+                musicConfigIni.SetStringValue("SP_Conflict1", "Repeat", "yes");
+                musicConfigIni.SetStringValue("SP_Conflict2", "Repeat", "yes");
+                musicConfigIni.SetStringValue("SP_Conflict3", "Repeat", "yes");
+                musicConfigIni.SetStringValue("SP_Conflict4", "Repeat", "yes");
+                musicConfigIni.SetStringValue("SP_Conflict5", "Repeat", "yes");
+
+                if (UserINISettings.Instance.MusicType == 0)
+                {
+                    musicConfigIni.SetStringValue("SP_Start", "Sound",
+                        musicListIni.GetStringValue("GameStart", sideName + Convert.ToString(StartMusicIndex), "gdi_start_1"));
+
+                    musicConfigIni.SetStringValue("SP_Conflict1", "Sound",
+                        musicListIni.GetStringValue("GameConflict", sideName + Convert.ToString(ConflictMusicIndex), "gdi_conflict_1"));
+
+                    musicConfigIni.SetStringValue("SP_Conflict2", "Sound",
+                        musicListIni.GetStringValue("GameConflict", sideName + indexArray[0], "gdi_conflict_2"));
+
+                    musicConfigIni.SetStringValue("SP_Conflict3", "Sound",
+                        musicListIni.GetStringValue("GameConflict", sideName + indexArray[1], "gdi_conflict_3"));
+
+                    musicConfigIni.SetStringValue("SP_Conflict4", "Sound",
+                        musicListIni.GetStringValue("GameConflict", sideName + indexArray[2], "gdi_conflict_4"));
+
+                    musicConfigIni.SetStringValue("SP_Conflict5", "Sound",
+                        musicListIni.GetStringValue("GameConflict", sideName + indexArray[2], "gdi_conflict_5"));
+                }
+                else if (UserINISettings.Instance.MusicType == 1)
+                {
+                    musicConfigIni.SetStringValue("SP_Start", "Sound", "cc_start_" + Convert.ToString(StartMusicIndex));
+                    musicConfigIni.SetStringValue("SP_Conflict1", "Sound", "cc_conflict_" + Convert.ToString(ConflictMusicIndex));
+                    musicConfigIni.SetStringValue("SP_Conflict2", "Sound", "cc_conflict_" + indexArray[0]);
+                    musicConfigIni.SetStringValue("SP_Conflict3", "Sound", "cc_conflict_" + indexArray[1]);
+                    musicConfigIni.SetStringValue("SP_Conflict4", "Sound", "cc_conflict_" + indexArray[2]);
+                    musicConfigIni.SetStringValue("SP_Conflict5", "Sound", "cc_conflict_" + indexArray[3]);
+                }
+
+                File.Delete(ProgramConstants.GamePath + SPMUSIC_SETTINGS);
+
+                int[] startIndexArray = { 1, 2, 3 };
+                List<int> tempStartArray = startIndexArray.ToList();
+                tempStartArray.Remove(StartMusicIndex);
+                startIndexArray = tempStartArray.ToArray();
+                musicSettingsIni.SetIntValue("Settings", "NextStartMusicIndex", startIndexArray[random.Next(0, startIndexArray.Length)]);
+
+                if (ConflictMusicIndex >= 4 || ConflictMusicIndex < 1)
+                    musicSettingsIni.SetIntValue("Settings", "NextConflictMusicIndex", 1);
+                else
+                    musicSettingsIni.SetIntValue("Settings", "NextConflictMusicIndex", ConflictMusicIndex + 1);
+            }
+            musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
+
             mapIni.WriteIniFile(ProgramConstants.GamePath + ProgramConstants.SPAWNMAP_INI);
+
+            // Random skirmish loading screen
+            LoadingScreenIndex = musicSettingsIni.GetIntValue("Settings", "NextLoadingIndex", 1);
+            int[] loadingIndexArray = { 1, 2, 3, 4, 5, 6, 7 };
+            List<int> tempLoadingArray = loadingIndexArray.ToList();
+            tempLoadingArray.Remove(LoadingScreenIndex);
+            loadingIndexArray = tempLoadingArray.ToArray();
+            musicSettingsIni.SetIntValue("Settings", "NextLoadingIndex", loadingIndexArray[random.Next(0, loadingIndexArray.Length)]);
+
+            if (LoadingScreenIndex >= 7 || LoadingScreenIndex < 1)
+                musicSettingsIni.SetIntValue("Settings", "NextLoadingIndex", 1);
+            else
+                musicSettingsIni.SetIntValue("Settings", "NextLoadingIndex", LoadingScreenIndex + 1);
+
+            musicSettingsIni.WriteIniFile();
+
+            string loadingFilename = String.Empty;
+            foreach (int resolution in MainClientConstants.ResolutionList)
+            {
+                if (UserINISettings.Instance.IngameScreenWidth >= resolution)
+                {
+                    loadingFilename += resolution + "skirmishloads" + LoadingScreenIndex + ".big";
+                    break;
+                }
+            }
+
+            if (String.IsNullOrEmpty(loadingFilename))
+                loadingFilename += "1024skirmishloads" + LoadingScreenIndex + ".big";
+
+            string bigPath = ProgramConstants.GetBaseSharedPath() + loadingFilename;
+            if (File.Exists(bigPath))
+                File.Copy(bigPath, ProgramConstants.GamePath + "tcextrab00.big", true);
+            else
+                Logger.Log("Cloud not find skirmish loading screen file: " + bigPath);
         }
 
         private void ManipulateStartingLocations(IniFile mapIni, PlayerHouseInfo[] houseInfos)
@@ -1704,15 +2289,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// Writes spawn.ini, writes the map file, initializes statistics and
         /// starts the game process.
         /// </summary>
-        protected virtual void StartGame()
+        protected virtual void StartGame(bool bCanControlSpeed = true)
         {
-            PlayerHouseInfo[] houseInfos = WriteSpawnIni();
+            PlayerHouseInfo[] houseInfos = WriteSpawnIni(!bCanControlSpeed);
             InitializeMatchStatistics(houseInfos);
-            WriteMap(houseInfos);
+            WriteMap(houseInfos, !bCanControlSpeed);
 
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
-            GameProcessLogic.StartGameProcess();
+            GameProcessLogic.StartGameProcess(bCanControlSpeed);
             UpdateDiscordPresence(true);
         }
 
@@ -1725,6 +2310,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Logger.Log("GameProcessExited: Parsing statistics.");
 
             matchStatistics.ParseStatistics(ProgramConstants.GamePath, ClientConfiguration.Instance.LocalGame, false);
+
+            LogbuchParser.ParseForSkirmish(matchStatistics);
+
+            LogbuchParser.ClearTrash();
 
             Logger.Log("GameProcessExited: Adding match to statistics.");
 
@@ -1857,6 +2446,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             bool allowOptionsChange = AllowPlayerOptionsChange();
             var playerExtraOptions = GetPlayerExtraOptions();
 
+            List<int> sideIndexList = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
+
             // Human players
             for (int pId = 0; pId < Players.Count; pId++)
             {
@@ -1883,10 +2474,94 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerStarts[pId].SelectedIndex = pInfo.StartingLocation;
 
                 ddPlayerTeams[pId].SelectedIndex = pInfo.TeamId;
-                if (GameModeMap != null)
+                if (Map != null && GameModeMap != null)
                 {
                     ddPlayerTeams[pId].AllowDropDown = !playerExtraOptions.IsForceRandomTeams && allowPlayerOptionsChange && !Map.IsCoop && !Map.ForceNoTeams && !GameMode.ForceNoTeams;
                     ddPlayerStarts[pId].AllowDropDown = !playerExtraOptions.IsForceRandomStarts && allowPlayerOptionsChange && (Map.IsCoop || !Map.ForceRandomStartLocations && !GameMode.ForceRandomStartLocations);
+                }
+
+                // disallowed sides in slot0
+                if (Map != null && GameMode != null)
+                {
+                    if (Map.CoopInfo != null)
+                    {
+                        ddPlayerStarts[pId].Items[0].Selectable = true;
+                        for (int index = RandomSelectorCount; index < SideCount + RandomSelectorCount; index++) // enable all non-random
+                            ddPlayerSides[pId].Items[index].Selectable = true;
+                        if (Map.CoopInfo.DisallowedPlayerSides0.Count <= 0) // using default blocking
+                        {
+                            // default blocking
+                            foreach (int disallowedSideIndex in Map.CoopInfo.DisallowedPlayerSides)
+                            {
+                                if (disallowedSideIndex > SideCount + RandomSelectorCount)
+                                    continue;
+
+                                ddPlayerSides[pId].Items[disallowedSideIndex + RandomSelectorCount].Selectable = false;
+                            }
+                        }
+                        else // using custom blocking
+                        {
+                            // set default to slot1
+                            if (pInfo.StartingLocation == 0)
+                            {
+                                pInfo.StartingLocation = 1;
+                                ddPlayerStarts[pId].SelectedIndex = 1;
+                            }
+
+                            // disable random start and random selector
+                            ddPlayerStarts[pId].Items[0].Selectable = false;
+                            for (int index = 0; index < RandomSelectorCount; index++)
+                                ddPlayerSides[pId].Items[index].Selectable = false;
+
+                            // custom blocking
+                            if (pInfo.StartingLocation == 1)
+                            {
+                                // set default to spectator
+                                bool bShouldContinue = true;
+                                foreach (int disallowedSideIndex0 in Map.CoopInfo.DisallowedPlayerSides0)
+                                {
+                                    if (disallowedSideIndex0 > SideCount + RandomSelectorCount)
+                                        continue;
+
+                                    if (bShouldContinue && pInfo.SideId < RandomSelectorCount ||
+                                        pInfo.SideId == disallowedSideIndex0 + RandomSelectorCount)
+                                    {
+                                        pInfo.SideId = sideIndexList.Except(Map.CoopInfo.DisallowedPlayerSides0).First()
+                                            + RandomSelectorCount;
+                                        ddPlayerSides[pId].SelectedIndex = pInfo.SideId;
+                                        bShouldContinue = false;
+                                    }
+
+                                    ddPlayerSides[pId].Items[disallowedSideIndex0 + RandomSelectorCount].Selectable = false;
+                                }
+                            }
+                            else // use default
+                            {
+                                // set default to spectator
+                                bool bShouldContinue = true;
+                                foreach (int disallowedSideIndex in Map.CoopInfo.DisallowedPlayerSides)
+                                {
+                                    if (disallowedSideIndex > SideCount + RandomSelectorCount)
+                                        continue;
+
+                                    // set default to spectator
+                                    if (bShouldContinue && pInfo.SideId < RandomSelectorCount ||
+                                        pInfo.SideId == disallowedSideIndex + RandomSelectorCount)
+                                    {
+                                        pInfo.SideId = sideIndexList.Except(Map.CoopInfo.DisallowedPlayerSides).First()
+                                            + RandomSelectorCount;
+                                        ddPlayerSides[pId].SelectedIndex = pInfo.SideId;
+                                        bShouldContinue = false;
+                                    }
+
+                                    ddPlayerSides[pId].Items[disallowedSideIndex + RandomSelectorCount].Selectable = false;
+                                }
+                            }
+                        }
+                    }
+
+                    ddPlayerTeams[pId].AllowDropDown = allowPlayerOptionsChange && !Map.IsCoop && !Map.ForceNoTeams && !GameMode.ForceNoTeams;
+                    ddPlayerStarts[pId].AllowDropDown = allowPlayerOptionsChange && (Map.IsCoop || !Map.ForceRandomStartLocations && !GameMode.ForceRandomStartLocations);
                 }
             }
 
@@ -1901,9 +2576,24 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 XNADropDown ddPlayerName = ddPlayerNames[index];
                 ddPlayerName.Items[0].Text = "-";
-                ddPlayerName.Items[1].Text = ProgramConstants.AI_PLAYER_NAMES[0];
-                ddPlayerName.Items[2].Text = ProgramConstants.AI_PLAYER_NAMES[1];
-                ddPlayerName.Items[3].Text = ProgramConstants.AI_PLAYER_NAMES[2];
+                if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                {
+                    ddPlayerName.Items[1].Text = "Insane AI".L10N("UI:Main:InsaneAI");
+                    ddPlayerName.Items[2].Text = "Brutal AI".L10N("UI:Main:BrutalAI");
+                    ddPlayerName.Items[3].Text = "Abyss AI".L10N("UI:Main:AbyssAI");
+                }
+                else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
+                {
+                    ddPlayerName.Items[1].Text = "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
+                    ddPlayerName.Items[2].Text = "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
+                    ddPlayerName.Items[3].Text = "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                }
+                else
+                {
+                    ddPlayerName.Items[1].Text = "Easy AI".L10N("UI:Main:EasyAI");
+                    ddPlayerName.Items[2].Text = "Normal AI".L10N("UI:Main:NormalAI");
+                    ddPlayerName.Items[3].Text = "Hard AI".L10N("UI:Main:HardAI");
+                }
                 ddPlayerName.SelectedIndex = 3 - aiInfo.AILevel;
                 ddPlayerName.AllowDropDown = allowOptionsChange;
 
@@ -1917,7 +2607,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 ddPlayerTeams[index].SelectedIndex = aiInfo.TeamId;
 
-                if (GameModeMap != null)
+                if (Map != null && GameMode != null)
                 {
                     ddPlayerTeams[index].AllowDropDown = !playerExtraOptions.IsForceRandomTeams && allowOptionsChange && !Map.IsCoop && !Map.ForceNoTeams && !GameMode.ForceNoTeams;
                     ddPlayerStarts[index].AllowDropDown = !playerExtraOptions.IsForceRandomStarts && allowOptionsChange && (Map.IsCoop || !Map.ForceRandomStartLocations && !GameMode.ForceRandomStartLocations);
@@ -1930,9 +2620,24 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 XNADropDown ddPlayerName = ddPlayerNames[ddIndex];
                 ddPlayerName.AllowDropDown = false;
                 ddPlayerName.Items[0].Text = string.Empty;
-                ddPlayerName.Items[1].Text = ProgramConstants.AI_PLAYER_NAMES[0];
-                ddPlayerName.Items[2].Text = ProgramConstants.AI_PLAYER_NAMES[1];
-                ddPlayerName.Items[3].Text = ProgramConstants.AI_PLAYER_NAMES[2];
+                if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                {
+                    ddPlayerName.Items[1].Text = "Insane AI".L10N("UI:Main:InsaneAI");
+                    ddPlayerName.Items[2].Text = "Brutal AI".L10N("UI:Main:BrutalAI");
+                    ddPlayerName.Items[3].Text = "Abyss AI".L10N("UI:Main:AbyssAI");
+                }
+                else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
+                {
+                    ddPlayerName.Items[1].Text = "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
+                    ddPlayerName.Items[2].Text = "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
+                    ddPlayerName.Items[3].Text = "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                }
+                else
+                {
+                    ddPlayerName.Items[1].Text = "Easy AI".L10N("UI:Main:EasyAI");
+                    ddPlayerName.Items[2].Text = "Normal AI".L10N("UI:Main:NormalAI");
+                    ddPlayerName.Items[3].Text = "Hard AI".L10N("UI:Main:HardAI");
+                }
                 ddPlayerName.SelectedIndex = 0;
 
                 ddPlayerSides[ddIndex].SelectedIndex = -1;
@@ -2059,7 +2764,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 ddStart.Items.Clear();
 
-                ddStart.AddItem("???");
+                ddStart.AddItem("-");
 
                 for (int i = 1; i <= Map.MaxPlayers; i++)
                     ddStart.AddItem(i.ToString());
@@ -2159,14 +2864,41 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected string AILevelToName(int aiLevel)
         {
-            switch (aiLevel)
+            if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
             {
-                case 0:
-                    return ProgramConstants.AI_PLAYER_NAMES[2];
-                case 1:
-                    return ProgramConstants.AI_PLAYER_NAMES[1];
-                case 2:
-                    return ProgramConstants.AI_PLAYER_NAMES[0];
+                switch (aiLevel)
+                {
+                    case 0:
+                        return "Abyss AI".L10N("UI:Main:AbyssAI");
+                    case 1:
+                        return "Brutal AI".L10N("UI:Main:BrutalAI");
+                    case 2:
+                        return "Insane AI".L10N("UI:Main:InsaneAI");
+                }
+            }
+            else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
+            {
+                switch (aiLevel)
+                {
+                    case 0:
+                        return "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                    case 1:
+                        return "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
+                    case 2:
+                        return "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
+                }
+            }
+            else
+            {
+                switch (aiLevel)
+                {
+                    case 0:
+                        return "Hard AI".L10N("UI:Main:HardAI");
+                    case 1:
+                        return "Normal AI".L10N("UI:Main:NormalAI");
+                    case 2:
+                        return "Easy AI".L10N("UI:Main:EasyAI");
+                }
             }
 
             return string.Empty;

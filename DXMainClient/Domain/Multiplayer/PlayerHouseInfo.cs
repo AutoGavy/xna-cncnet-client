@@ -6,7 +6,30 @@ namespace DTAClient.Domain.Multiplayer
 {
     public class PlayerHouseInfo
     {
-        public int SideIndex { get; set; }
+        int tempSideInedex;
+        static public readonly int[] sideIndexReal = {
+            0,  // 0
+            1,  // 1
+            2,  // 2
+            10, // 3
+            3,  // 4
+            4,  // 5
+            5,  // 6
+            11, // 7
+            6,  // 8
+            7,  // 9
+            8,  // 10
+            9,  // 11
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+        };
+
+        public int SideIndex { get { return sideIndexReal[tempSideInedex]; } set { tempSideInedex = value; } }
 
         /// <summary>
         /// A side (or, more correctly, house or country depending on the game)
@@ -18,7 +41,7 @@ namespace DTAClient.Domain.Multiplayer
             {
                 if (IsSpectator && !string.IsNullOrEmpty(ClientConfiguration.Instance.SpectatorInternalSideIndex))
                     return int.Parse(ClientConfiguration.Instance.SpectatorInternalSideIndex);
-                
+
                 if (!string.IsNullOrEmpty(ClientConfiguration.Instance.InternalSideIndices))
                     return Array.ConvertAll(ClientConfiguration.Instance.InternalSideIndices.Split(','), int.Parse)[SideIndex];
 
@@ -49,7 +72,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 int sideId;
 
-                do sideId = random.Next(0, sideCount);
+                do sideId = random.Next(0, sideCount - 4);
                 while (disallowedSideArray[sideId]);
 
                 SideIndex = sideId;
@@ -62,7 +85,7 @@ namespace DTAClient.Domain.Multiplayer
                     int[] randomsides = randomSelectors[pInfo.SideId - 1];
                     int count = randomsides.Length;
                     int sideId;
-                    
+
                     do sideId = randomsides[random.Next(0, count)];
                     while (disallowedSideArray[sideId]);
 
@@ -81,7 +104,7 @@ namespace DTAClient.Domain.Multiplayer
         /// <param name="freeColors">The list of available (un-used) colors.</param>
         /// <param name="mpColors">The list of all multiplayer colors.</param>
         /// <param name="random">Random number generator.</param>
-        public void RandomizeColor(PlayerInfo pInfo, List<int> freeColors, 
+        public void RandomizeColor(PlayerInfo pInfo, List<int> freeColors,
             List<MultiplayerColor> mpColors, Random random)
         {
             if (pInfo.ColorId == 0)
@@ -114,9 +137,9 @@ namespace DTAClient.Domain.Multiplayer
         /// <returns>True if the player's starting location index exceeds the map's number of starting waypoints,
         /// otherwise false.</returns>
         public void RandomizeStart(
-            PlayerInfo pInfo, 
+            PlayerInfo pInfo,
             Random random,
-            List<int> freeStartingLocations, 
+            List<int> freeStartingLocations,
             List<int> takenStartingLocations,
             bool overrideGameRandomLocations
         )

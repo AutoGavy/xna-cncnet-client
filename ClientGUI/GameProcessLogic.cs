@@ -26,8 +26,60 @@ namespace ClientGUI
         /// <summary>
         /// Starts the main game process.
         /// </summary>
-        public static void StartGameProcess()
+        public static void StartGameProcess(bool bCanControlSpeed = true, bool bIsCampaign = false)
         {
+            // reshade stuff
+            if (!UserINISettings.Instance.DebugReShade)
+            {
+                IniFile ReShadeIni = new IniFile(ProgramConstants.GamePath + "ReShade.ini");
+                ReShadeIni.SetStringValue("GENERAL", "PresetPath", "./GameShaders/TCMainShader.ini");
+                ReShadeIni.SetStringValue("GENERAL", "CurrentPresetPath", "./GameShaders/TCMainShader.ini");
+                ReShadeIni.SetStringValue("GENERAL", "EffectSearchPaths", "./GameShaders/ShadersTC");
+                ReShadeIni.SetStringValue("GENERAL", "TextureSearchPaths", "./GameShaders/ShadersTC");
+                ReShadeIni.SetStringValue("GENERAL", "SkipLoadingDisabledEffects", "1");
+                ReShadeIni.SetStringValue("GENERAL", "PerformanceMode", "1");
+                ReShadeIni.SetStringValue("GENERAL", "NoReloadOnInit", "0");
+                ReShadeIni.SetStringValue("GENERAL", "TutorialProgress", "4");
+                ReShadeIni.SetStringValue("OVERLAY", "TutorialProgress", "4");
+                ReShadeIni.SetStringValue("INPUT", "KeyEffects", "0,0,0,0");
+                ReShadeIni.SetStringValue("INPUT", "KeyMenu", "0,0,0,0");
+                ReShadeIni.WriteIniFile(ProgramConstants.GamePath + "ReShade.ini");
+            }
+
+            // choose main game executable file (1 forcespeed, 3 forcespeed + disable music selection)
+            string strMainExecutableName;
+            if (bCanControlSpeed)
+            {
+                strMainExecutableName = ProgramConstants.MAIN_EXE_2;
+            }
+            else if (bIsCampaign)
+            {
+                strMainExecutableName = ProgramConstants.MAIN_EXE_3;
+            }
+            else
+            {
+                strMainExecutableName = ProgramConstants.MAIN_EXE;
+            }
+            if (File.Exists(ProgramConstants.GetBaseResourcePath() + strMainExecutableName))
+            {
+                File.Copy(ProgramConstants.GetBaseResourcePath() + strMainExecutableName,
+                    ProgramConstants.GamePath + "gamemd.exe", true);
+            }
+
+            // disable win
+            if (UserINISettings.Instance.bDisableWin)
+            {
+                try
+                {
+                    Logger.Log("About to launch disable win executable.");
+                    Process.Start(ProgramConstants.GetBaseResourcePath() + ProgramConstants.DISABLE_WIN);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Error launching tc disable win: " + ex.Message);
+                }
+            }
+
             Logger.Log("About to launch main game executable.");
 
             // In the relatively unlikely event that INI preprocessing is still going on, just wait until it's done.
@@ -39,7 +91,7 @@ namespace ClientGUI
                 waitTimes++;
                 if (waitTimes > 10)
                 {
-                    MessageBox.Show("INI preprocessing not complete. Please try " + 
+                    MessageBox.Show("INI preprocessing not complete. Please try " +
                         "launching the game again. If the problem persists, " +
                         "contact the game or mod authors for support.");
                     return;
@@ -72,17 +124,17 @@ namespace ClientGUI
             File.Delete(ProgramConstants.GamePath + "TS.LOG");
 
             GameProcessStarting?.Invoke();
-            
+
             if (UserINISettings.Instance.WindowedMode && UseQres)
-			{
+            {
                 Logger.Log("Windowed mode is enabled - using QRes.");
                 Process QResProcess = new Process();
                 QResProcess.StartInfo.FileName = ProgramConstants.QRES_EXECUTABLE;
                 QResProcess.StartInfo.UseShellExecute = false;
                 if (!string.IsNullOrEmpty(extraCommandLine))
-                    QResProcess.StartInfo.Arguments = "c=16 /R " + "\"" + ProgramConstants.GamePath + gameExecutableName + "\" "  + additionalExecutableName + "-SPAWN " + extraCommandLine;
+                    QResProcess.StartInfo.Arguments = "c=16 /R " + "\"" + ProgramConstants.GamePath + gameExecutableName + "\" " + additionalExecutableName + "-SPAWN " + extraCommandLine;
                 else
-                    QResProcess.StartInfo.Arguments = "c=16 /R " + "\"" + ProgramConstants.GamePath + gameExecutableName + "\" " + additionalExecutableName  + "-SPAWN";
+                    QResProcess.StartInfo.Arguments = "c=16 /R " + "\"" + ProgramConstants.GamePath + gameExecutableName + "\" " + additionalExecutableName + "-SPAWN";
                 QResProcess.EnableRaisingEvents = true;
                 QResProcess.Exited += new EventHandler(Process_Exited);
                 Logger.Log("Launch executable: " + QResProcess.StartInfo.FileName);
@@ -127,7 +179,7 @@ namespace ClientGUI
                 {
                     Logger.Log("Error launching " + gameExecutableName + ": " + ex.Message);
                     MessageBox.Show("Error launching " + gameExecutableName + ". Please check that your anti-virus isn't blocking the CnCNet Client. " +
-                        "You can also try running the client as an administrator." + Environment.NewLine + Environment.NewLine + "You are unable to participate in this match." + 
+                        "You can also try running the client as an administrator." + Environment.NewLine + Environment.NewLine + "You are unable to participate in this match." +
                         Environment.NewLine + Environment.NewLine + "Returned error: " + ex.Message,
                         "Error launching game", MessageBoxButtons.OK);
                     Process_Exited(DtaProcess, EventArgs.Empty);

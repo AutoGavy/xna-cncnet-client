@@ -41,12 +41,19 @@ namespace DTAClient.DXGUI
 
             string windowTitle = ClientConfiguration.Instance.WindowTitle;
             Window.Title = string.IsNullOrEmpty(windowTitle) ?
-                string.Format("{0} Client", MainClientConstants.GAME_NAME_SHORT) : windowTitle;
+                string.Format("{0} Client", MainClientConstants.GAME_NAME_LONG) : windowTitle;
 
             base.Initialize();
 
-            string primaryNativeCursorPath = ProgramConstants.GetResourcePath() + "cursor.cur";
-            string alternativeNativeCursorPath = ProgramConstants.GetBaseResourcePath() + "cursor.cur";
+            string suffixA = ".cur";
+            string suffixB = ".png";
+#if WINDOWSGL
+            string tempSuffix = suffixA;
+            suffixA = suffixB;
+            suffixB = tempSuffix;
+#endif
+            string primaryNativeCursorPath = ProgramConstants.GetResourcePath() + "cursor" + suffixA;
+            string alternativeNativeCursorPath = ProgramConstants.GetBaseResourcePath() + "cursor" + suffixB;
 
             AssetLoader.Initialize(GraphicsDevice, content);
             AssetLoader.AssetSearchPaths.Add(ProgramConstants.GetResourcePath());
@@ -78,7 +85,7 @@ namespace DTAClient.DXGUI
                     File.WriteAllBytes(ProgramConstants.GamePath + "Client" + Path.DirectorySeparatorChar + ".dxfail",
                         new byte[] { 1 });
 
-                    string launcherExe = ClientConfiguration.Instance.LauncherExe;
+                    string launcherExe = ProgramConstants.GetResourcePath() + "clientxna.exe"; //ClientConfiguration.Instance.LauncherExe;
                     if (string.IsNullOrEmpty(launcherExe))
                     {
                         // LauncherExe is unspecified, just throw the exception forward
@@ -125,7 +132,7 @@ namespace DTAClient.DXGUI
             Components.Add(wm);
 
             string playerName = UserINISettings.Instance.PlayerName.Value.Trim();
-            
+
             if (UserINISettings.Instance.AutoRemoveUnderscoresFromName)
             {
                 while (playerName.EndsWith("_"))
@@ -164,14 +171,17 @@ namespace DTAClient.DXGUI
             settings.BackgroundColor = AssetLoader.GetColorFromString(ClientConfiguration.Instance.AltUIBackgroundColor);
             settings.FocusColor = AssetLoader.GetColorFromString(ClientConfiguration.Instance.ListBoxFocusColor);
             settings.DisabledItemColor = AssetLoader.GetColorFromString(ClientConfiguration.Instance.DisabledButtonColor);
-            
+
             settings.DefaultAlphaRate = ClientConfiguration.Instance.DefaultAlphaRate;
             settings.CheckBoxAlphaRate = ClientConfiguration.Instance.CheckBoxAlphaRate;
-            
+
             settings.CheckBoxClearTexture = AssetLoader.LoadTexture("checkBoxClear.png");
             settings.CheckBoxCheckedTexture = AssetLoader.LoadTexture("checkBoxChecked.png");
             settings.CheckBoxDisabledClearTexture = AssetLoader.LoadTexture("checkBoxClearD.png");
             settings.CheckBoxDisabledCheckedTexture = AssetLoader.LoadTexture("checkBoxCheckedD.png");
+
+            ProgramConstants.CheckBoxClearHoverTexture = AssetLoader.LoadTexture("checkBoxClear_c.png");
+            ProgramConstants.CheckBoxCheckedHoverTexture = AssetLoader.LoadTexture("checkBoxChecked_c.png");
 
             UISettings.ActiveSettings = settings;
         }

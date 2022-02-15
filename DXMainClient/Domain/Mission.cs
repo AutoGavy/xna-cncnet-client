@@ -19,6 +19,7 @@ namespace DTAClient.Domain
             FinalMovie = iniFile.GetStringValue(sectionName, nameof(FinalMovie), "none");
             RequiredAddon = iniFile.GetBooleanValue(sectionName, nameof(RequiredAddon), false);
             Enabled = iniFile.GetBooleanValue(sectionName, nameof(Enabled), true);
+            Hide = iniFile.GetBooleanValue(sectionName, "Hide", false);
             BuildOffAlly = iniFile.GetBooleanValue(sectionName, nameof(BuildOffAlly), false);
             PlayerAlwaysOnNormalDifficulty = iniFile.GetBooleanValue(sectionName, nameof(PlayerAlwaysOnNormalDifficulty), false);
 
@@ -34,6 +35,7 @@ namespace DTAClient.Domain
         public string FinalMovie { get; }
         public bool RequiredAddon { get; }
         public bool Enabled { get; }
+        public bool Hide { get; private set; }
         public bool BuildOffAlly { get; }
         public bool PlayerAlwaysOnNormalDifficulty { get; }
     }

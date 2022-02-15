@@ -154,4 +154,28 @@
   <data name="cncricon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cncricon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="esicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\esicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="faicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\faicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fcsicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fcsicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fricon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fricon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="reicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rnicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rnicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tcicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tcicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="waicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\waicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

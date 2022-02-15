@@ -15,6 +15,32 @@ namespace ClientCore
         private const string GAME_OPTIONS = "GameOptions.ini";
         private const string CLIENT_DEFS = "ClientDefinitions.ini";
 
+        public const string TC_SHADER_DEFAULT = "PreprocessorDefinitions=\nTechniques=\nTechniqueSorting=";
+
+        public const string SHADER_TINT_NONE = "\n[Sepia.fx]\nStrength=0.0\nTint=0.784306,0.784314,0.784314";
+
+        public const string SHADER_TINT_DAY = "\n[Sepia.fx]\nStrength=0.020000\nTint=0.784306,0.784314,0.784314";
+        public const string SHADER_TINT_NIGHT_VANILLA = "\n[Sepia.fx]\nStrength=0.110000\nTint=0.784306,0.784314,0.784314";
+        public const string SHADER_TINT_SNOWDAY_VANILLA = "\n[Sepia.fx]\nStrength=0.230000\nTint=0.705882,0.705882,1.000000";
+        public const string SHADER_TINT_SNOWNIGHT_VANILLA = "\n[Sepia.fx]\nStrength=0.128000\nTint=0.627451,0.627451,1.000000";
+        public const string SHADER_TINT_SNOW_LIGHT = "\n[Sepia.fx]\nStrength=0.128000\nTint=0.501961,0.196078,1.000000";
+
+        public const string SHADER_GEN_SETUP = "\n[Cloud_Map.fx]\ncloud_adjust_range=1.000000\n[Light_Map.fx]\nlight_adjust_range=1.200000\n[Colourfulness.fx]\ncolourfulness=-0.050000";
+
+        public const string SHADER_SNOWDAY_SETUP = "\n[Cloud_Map.fx]\ncloud_adjust_range=0.800000\n[Light_Map.fx]\nlight_adjust_range=0.500000\n[Colourfulness.fx]\ncolourfulness=-0.250000";
+
+        public const string SHADER_SNOWNIGHT_SETUP = "\n[Cloud_Map.fx]\ncloud_adjust_range=1.000000\n[Light_Map.fx]\nlight_adjust_range=0.700000\n[Colourfulness.fx]\ncolourfulness=-0.250000";
+
+        public const string SHADER_TECHNIQUE_1 = "Techniques=";
+
+        public const string SHADER_TECHNIQUE_2 = "TechniqueSorting=";
+
+        public static string TC_TINT_DAY = SHADER_TINT_DAY;
+        public static string TC_TINT_NIGHT = SHADER_TINT_NONE;
+        public static string TC_TINT_NIGHT2 = SHADER_TINT_NONE;
+        public static string TC_TINT_SNOWDAY = SHADER_TINT_SNOW_LIGHT;
+        public static string TC_TINT_SNOWNIGHT = SHADER_TINT_SNOW_LIGHT;
+
         private static ClientConfiguration _instance;
 
         private IniFile gameOptions_ini;
@@ -170,6 +196,9 @@ namespace ClientCore
 
         public int MaximumRenderHeight => clientDefinitionsIni.GetIntValue(SETTINGS, "MaximumRenderHeight", 800);
 
+        public string[] PreferedRenderResolutions => clientDefinitionsIni.GetStringValue(SETTINGS, "PreferedRenderResolutions", "1280x800,1280x768").Split(',');
+        public string[] OptimalRenderResolutions => clientDefinitionsIni.GetStringValue(SETTINGS, "OptimalRenderResolutions", "1024x600,1024x720,1280x600,1280x720,1280x768,1280x800").Split(',');
+
         public string WindowTitle => clientDefinitionsIni.GetStringValue(SETTINGS, "WindowTitle", string.Empty);
 
         public string InstallationPathRegKey => clientDefinitionsIni.GetStringValue(SETTINGS, "RegistryInstallPath", "TiberianSun");
@@ -182,7 +211,7 @@ namespace ClientCore
 
         public string UnixMapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "UnixMapEditorExePath", Instance.MapEditorExePath);
 
-        public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "ModMode", false);
+        public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "TC_DeveloperMode", false);
 
         public string LongGameName => clientDefinitionsIni.GetStringValue(SETTINGS, "LongGameName", "Tiberian Sun");
 

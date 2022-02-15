@@ -57,19 +57,71 @@ namespace ClientCore
             const string WINDOWED_MODE_KEY = "Video.Windowed";
             BackBufferInVRAM = new BoolSetting(iniFile, VIDEO, "UseGraphicsPatch", true);
 #endif
+            int IngameScreenX = 1024;
+            int IngameScreenY = 768;
+            if (Screen.PrimaryScreen.Bounds.Width >= 1920 || Screen.PrimaryScreen.Bounds.Height >= 1080)
+            {
+                IngameScreenX = 1920;
+                IngameScreenY = 1080;
+            }
+            else if (Screen.PrimaryScreen.Bounds.Width >= 1600 || Screen.PrimaryScreen.Bounds.Height >= 900)
+            {
+                IngameScreenX = 1600;
+                IngameScreenY = 900;
+            }
+            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", IngameScreenX);
+            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", IngameScreenY);
 
-            IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
-            IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
             Renderer = new StringSetting(iniFile, COMPATIBILITY, "Renderer", string.Empty);
-            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
-            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
+            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, true);
+            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", true);
 
-            ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", Screen.PrimaryScreen.Bounds.Width);
-            ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", Screen.PrimaryScreen.Bounds.Height);
-            BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", true);
+            int ScreenX = 1280;
+            int ScreenY = 800;
+            if (Screen.PrimaryScreen.Bounds.Width < 1280 || Screen.PrimaryScreen.Bounds.Height < 800)
+            {
+                ScreenX = Screen.PrimaryScreen.Bounds.Width;
+                ScreenY = Screen.PrimaryScreen.Bounds.Height;
+            }
+            ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", ScreenX);
+            ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", ScreenY);
+
+            BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", false);
+            DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
             ClientFPS = new IntSetting(iniFile, VIDEO, "ClientFPS", 60);
+
+            System.Management.ManagementObjectSearcher objvide = new System.Management.ManagementObjectSearcher("select * from Win32_VideoController");
+            foreach (System.Management.ManagementObject obj in objvide.Get())
+            {
+                if (obj["VideoProcessor"] == null)
+                    continue;
+
+                string strName = obj["VideoProcessor"].ToString().ToUpper();
+                if (strName.Contains("RTX") || strName.Contains("TITAN") || strName.Contains("GTX"))
+                    GoodGPU = 3;
+                else if (strName.Contains("AMD"))
+                {
+                    if (strName.Contains("RX") || strName.Contains("R9") || strName.Contains("PRO")
+                        || strName.Contains("HD7990") || strName.Contains("HD7970") || strName.Contains("HD6990")
+                        || strName.Contains("HD7950") || strName.Contains("HD7870"))
+                        GoodGPU = 3;
+                }
+            }
+
+            NoReShade = new BoolSetting(iniFile, VIDEO, "NoReShade", false);
+            HighDetail = new IntSetting(iniFile, VIDEO, "HighDetail", GoodGPU);
+            AntiAliasing = new IntSetting(iniFile, VIDEO, "AntiAliasing", GoodGPU == 3 ? 1 : 0);
+            EnhancedLaser = new IntSetting(iniFile, VIDEO, "EnhancedLaser", 1);
+            EnhancedLight = new IntSetting(iniFile, VIDEO, "EnhancedLight", 1);
+            Displacement = new IntSetting(iniFile, VIDEO, "DisplaceEffect", GoodGPU == 3 ? 1 : 0);
+            CloudsEffect = new IntSetting(iniFile, VIDEO, "CloudsEffect", GoodGPU == 3 ? 1 : 0);
+
+            AlphaLight = new BoolSetting(iniFile, VIDEO, "AlphaLight", GoodGPU == 3 ? true : false);
+            AirflowEffect = new BoolSetting(iniFile, VIDEO, "AirflowEffect", GoodGPU == 3 ? true : false);
+            VideoMode = new BoolSetting(iniFile, VIDEO, "VideoMode", false);
+            MultiCPU = new BoolSetting(iniFile, VIDEO, "MultiCPU", true);
 
             ScoreVolume = new DoubleSetting(iniFile, AUDIO, "ScoreVolume", 0.7);
             SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.7);
@@ -79,11 +131,17 @@ namespace ClientCore
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
             StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);
+            SmartMusic = new BoolSetting(iniFile, AUDIO, "SmartMusic", true);
+            MusicType = new IntSetting(iniFile, AUDIO, "MusicType", 0);
 
             ScrollRate = new IntSetting(iniFile, OPTIONS, "ScrollRate", 3);
-            TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", true);
+            TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", false);
             ScrollCoasting = new IntSetting(iniFile, OPTIONS, "ScrollMethod", 0);
             Tooltips = new BoolSetting(iniFile, OPTIONS, "ToolTips", true);
+            ClassicRallyPoint = new BoolSetting(iniFile, OPTIONS, "ClassicRallyPoint", false);
+            ClassicDoubleClick = new BoolSetting(iniFile, OPTIONS, "ClassicDoubleClick", false);
+            WheelZoom = new BoolSetting(iniFile, OPTIONS, "WheelZoom", true);
+            bDisableWin = new BoolSetting(iniFile, OPTIONS, "bDisableWin", false);
             ShowHiddenObjects = new BoolSetting(iniFile, OPTIONS, "ShowHidden", true);
             MoveToUndeploy = new BoolSetting(iniFile, OPTIONS, "MoveToUndeploy", true);
             TextBackgroundColor = new IntSetting(iniFile, OPTIONS, "TextBackgroundColor", 0);
@@ -116,11 +174,21 @@ namespace ClientCore
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
+            FakeDifficulty = new IntSetting(iniFile, OPTIONS, "FakeDifficulty", 0);
+            SelectedMissionIndex = new IntSetting(iniFile, OPTIONS, "SelectedMissionIndex", 0);
             GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 1);
             PreloadMapPreviews = new BoolSetting(iniFile, VIDEO, "PreloadMapPreviews", false);
             ForceLowestDetailLevel = new BoolSetting(iniFile, VIDEO, "ForceLowestDetailLevel", false);
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);
             AutoRemoveUnderscoresFromName = new BoolSetting(iniFile, OPTIONS, "AutoRemoveUnderscoresFromName", true);
+
+            CanReShade = new BoolSetting(iniFile, OPTIONS, "CanReShade", false);
+
+            TC2Completed = new BoolSetting(iniFile, "Network", "OTStuID5", false);
+            EggSide1 = new BoolSetting(iniFile, "Network", "OTStuID1", false);
+            EggSide2 = new BoolSetting(iniFile, "Network", "OTStuID2", false);
+            EggSide3 = new BoolSetting(iniFile, "Network", "OTStuID3", false);
+            EggSide4 = new BoolSetting(iniFile, "Network", "OTStuID4", false);
 
             SortState = new IntSetting(iniFile, GAME_FILTERS, "SortState", (int)SortDirection.None);
             ShowFriendGamesOnly = new BoolSetting(iniFile, GAME_FILTERS, "ShowFriendGamesOnly", DEFAULT_SHOW_FRIENDS_ONLY_GAMES);
@@ -151,6 +219,21 @@ namespace ClientCore
         public IntSetting ClientResolutionX { get; private set; }
         public IntSetting ClientResolutionY { get; private set; }
         public BoolSetting BorderlessWindowedClient { get; private set; }
+
+        public BoolSetting AlphaLight { get; private set; }
+        public BoolSetting AirflowEffect { get; private set; }
+        public BoolSetting VideoMode { get; private set; }
+        public BoolSetting DebugReShade { get; private set; }
+        public BoolSetting MultiCPU { get; private set; }
+
+        public BoolSetting NoReShade { get; private set; }
+        public IntSetting HighDetail { get; private set; }
+        public IntSetting CloudsEffect { get; private set; }
+        public IntSetting AntiAliasing { get; private set; }
+        public IntSetting EnhancedLaser { get; private set; }
+        public IntSetting EnhancedLight { get; private set; }
+        public IntSetting Displacement { get; private set; }
+
         public IntSetting ClientFPS { get; private set; }
 
         /*********/
@@ -165,6 +248,8 @@ namespace ClientCore
         public BoolSetting PlayMainMenuMusic { get; private set; }
         public BoolSetting StopMusicOnMenu { get; private set; }
         public BoolSetting MessageSound { get; private set; }
+        public BoolSetting SmartMusic { get; private set; }
+        public IntSetting MusicType { get; private set; }
 
         /********/
         /* GAME */
@@ -180,6 +265,10 @@ namespace ClientCore
         public IntSetting DragDistance { get; private set; }
         public IntSetting DoubleTapInterval { get; private set; }
         public StringSetting Win8CompatMode { get; private set; }
+        public BoolSetting ClassicRallyPoint { get; private set; }
+        public BoolSetting ClassicDoubleClick { get; private set; }
+        public BoolSetting WheelZoom { get; private set; }
+        public BoolSetting bDisableWin { get; private set; }
 
         /************************/
         /* MULTIPLAYER (CnCNet) */
@@ -202,27 +291,27 @@ namespace ClientCore
         public BoolSetting NotifyOnUserListChange { get; private set; }
 
         public BoolSetting DisablePrivateMessagePopups { get; private set; }
-        
+
         public IntSetting AllowPrivateMessagesFromState { get; private set; }
 
         public BoolSetting EnableMapSharing { get; private set; }
 
         public BoolSetting AlwaysDisplayTunnelList { get; private set; }
-        
+
         /*********************/
         /* GAME LIST FILTERS */
         /*********************/
 
         public IntSetting SortState { get; private set; }
-        
+
         public BoolSetting ShowFriendGamesOnly { get; private set; }
-        
+
         public BoolSetting HideLockedGames { get; private set; }
-        
+
         public BoolSetting HidePasswordedGames { get; private set; }
-        
+
         public BoolSetting HideIncompatibleGames { get; private set; }
-        
+
         public IntRangeSetting MaxPlayerCount { get; private set; }
 
         /********/
@@ -234,6 +323,10 @@ namespace ClientCore
         public BoolSetting PrivacyPolicyAccepted { get; private set; }
         public BoolSetting IsFirstRun { get; private set; }
         public BoolSetting CustomComponentsDenied { get; private set; }
+
+        public IntSetting FakeDifficulty { get; private set; }
+
+        public IntSetting SelectedMissionIndex { get; private set; }
 
         public IntSetting Difficulty { get; private set; }
 
@@ -248,9 +341,21 @@ namespace ClientCore
         public BoolSetting MinimizeWindowsOnGameStart { get; private set; }
 
         public BoolSetting AutoRemoveUnderscoresFromName { get; private set; }
-        
+
         public StringListSetting FavoriteMaps { get; private set; }
-        
+
+        public BoolSetting CanReShade { get; private set; }
+
+        public BoolSetting NewUpdate { get; private set; }
+
+        public BoolSetting TC2Completed { get; private set; }
+        public BoolSetting EggSide1 { get; private set; }
+        public BoolSetting EggSide2 { get; private set; }
+        public BoolSetting EggSide3 { get; private set; }
+        public BoolSetting EggSide4 { get; private set; }
+
+        public int GoodGPU { get; set; } = 0;
+
         public bool IsGameFollowed(string gameName)
         {
             return SettingsIni.GetBooleanValue("Channels", gameName, false);
@@ -267,7 +372,7 @@ namespace ClientCore
                 FavoriteMaps.Remove(favoriteMapKey);
             else
                 FavoriteMaps.Add(favoriteMapKey);
-            
+
             Instance.SaveSettings();
 
             return !isFavorite;
@@ -281,7 +386,7 @@ namespace ClientCore
         public bool IsFavoriteMap(string nameName, string gameModeName) => FavoriteMaps.Value.Contains(FavoriteMapKey(nameName, gameModeName));
 
         private string FavoriteMapKey(string nameName, string gameModeName) => $"{nameName}:{gameModeName}";
-        
+
         public void ReloadSettings()
         {
             SettingsIni.Reload();

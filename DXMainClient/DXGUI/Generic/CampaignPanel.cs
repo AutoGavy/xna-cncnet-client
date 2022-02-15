@@ -5,22 +5,26 @@ using System.Collections.Generic;
 using DTAClient.Domain;
 using System.IO;
 using ClientGUI;
-using Rampastring.XNAUI.XNAControls;
 using Rampastring.XNAUI;
 using Rampastring.Tools;
-using Updater;
-using Localization;
 using System.Linq;
+using Localization;
 
 namespace DTAClient.DXGUI.Generic
 {
-    public class CampaignSelector : XNAWindow
+    public class CampaignPanel : XNAWindow
     {
         private const int DEFAULT_WIDTH = 650;
         private const int DEFAULT_HEIGHT = 600;
+        private const int MEDAL_COUNT = 8;
+        private const string DEFAULT_POS = "0,0";
+        private const string DEFAULT_SIZE = "1,1";
         private const string SPMUSIC_SETTINGS = "Client/MusicSettings.ini";
         private const string SPSOUND_INI = "spsound.ini";
         private const string CREDITS_TXT = "creditstc.txt";
+        private const string PROFILE_NAME = "Client/profile_data";
+        private const string RESOURCE_PATH = "CampaignRes/";
+        private const string MSMEDAL_PREFIX = "MSMEDAL_";
 
         private static readonly string[] DifficultyNames = new string[]
         {
@@ -30,20 +34,10 @@ namespace DTAClient.DXGUI.Generic
             "Abyss".L10N("UI:Main:Abyss")
         };
 
-        private static string[] DifficultyIniPaths = new string[]
-        {
-            "INI/Map Code/Difficulty Easy.ini",
-            "INI/Map Code/Difficulty Medium.ini",
-            "INI/Map Code/Difficulty Hard.ini",
-            "INI/Map Code/Difficulty Hell.ini"
-        };
-
         protected int StartMusicIndex { get; set; }
         protected int ConflictMusicIndex { get; set; }
 
-        private int FakeDifficultyLevel;
-
-        public CampaignSelector(WindowManager windowManager, DiscordHandler discordHandler) : base(windowManager)
+        public CampaignPanel(WindowManager windowManager, DiscordHandler discordHandler) : base(windowManager)
         {
             this.discordHandler = discordHandler;
         }
@@ -225,146 +219,249 @@ namespace DTAClient.DXGUI.Generic
             "Ambient"
         };
 
+        private readonly string[] DifficultyList =
+        {
+            "btnEasy",
+            "btnNormal",
+            "btnHard",
+            "btnAbyss"
+        };
+
+        private readonly string[] GDOMissionList =
+        {
+            "gdo1",
+            "gdo2",
+            "gdo3",
+            "gdo4",
+            "gdo5",
+            "gdo6",
+            "gdo7",
+            "gdo8",
+            "gdo9",
+            "gdo10",
+            "gdo11",
+            "gdo12"
+        };
+
+        private readonly Dictionary<string, string> MedalNameList = new Dictionary<string, string>
+        {
+            {"none",   "362,355,123,107"},
+            {"easy",   "380,356,97,106"},
+            {"normal", "377,358,103,104"},
+            {"hard",   "380,351,97,111"},
+            {"abyss",  "378,350,102,112"},
+        };
+
+        private string[] MissionList;
+
+        //private EnhancedSoundEffect ClickSoundLight = new EnhancedSoundEffect("button.wav");
+        private EnhancedSoundEffect ClickSoundHeavy = new EnhancedSoundEffect("checkbox.wav");
+
+        private delegate void gsDelegate(XNAClientButton button);
+        private readonly gsDelegate[] SetAsButton = new gsDelegate[4];
+
         private List<Mission> Missions = new List<Mission>();
-        private XNAListBox lbCampaignList;
-        private XNAClientButton btnLaunch;
-        private XNATextBlock tbMissionDescription;
-        private XNATrackbar trbDifficultySelector;
+        private List<XNAClientButton> DifficultyButtons = new List<XNAClientButton>();
+        private List<XNAClientButton> MissionButtons = new List<XNAClientButton>();
+        private List<XNAClientButton> UnusedButtons = new List<XNAClientButton>();
+        private List<int> UnusedButtonsIndex = new List<int>();
+
+        private List<CMedal> Medals = new List<CMedal>(8);
+        private CMedal DifficultyMedal;
 
         private CheaterWindow cheaterWindow;
         private XNAMessageBox TooHardMessageBox;
 
-        private Mission missionToLaunch;
+        private XNAClientButton btnLaunch;
+        private XNAClientButton btnCancel;
+        private XNAClientButton btnSlideUp;
+        private XNAClientButton btnSlideDown;
+        private XNAClientButton btnOldCampaign;
+
+        private IniFile campaignOptionsIni;
+        private IniFile profileIni;
+
+        private string SIDE_ABBR;
+        private int curDifficultyIndex;
+        private int curMissionIndex;
 
         public override void Initialize()
         {
-            BackgroundTexture = AssetLoader.LoadTexture("missionselectorbg.png");
             ClientRectangle = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
             BorderColor = UISettings.ActiveSettings.PanelBorderColor;
 
-            Name = "CampaignSelector";
+            Name = "CampaignPanel";
 
-            var lblSelectCampaign = new XNALabel(WindowManager);
-            lblSelectCampaign.Name = "lblSelectCampaign";
-            lblSelectCampaign.FontIndex = 1;
-            lblSelectCampaign.ClientRectangle = new Rectangle(12, 12, 0, 0);
-            lblSelectCampaign.Text = "MISSIONS:".L10N("UI:Main:Missions");
+            SIDE_ABBR = "GDO";
+            MissionList = GDOMissionList;
 
-            lbCampaignList = new XNAListBox(WindowManager);
-            lbCampaignList.Name = "lbCampaignList";
-            // lbCampaignList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
-            lbCampaignList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            lbCampaignList.ClientRectangle = new Rectangle(12,
-                lblSelectCampaign.Bottom + 6, 300, 516);
-            lbCampaignList.SelectedIndexChanged += LbCampaignList_SelectedIndexChanged;
+            campaignOptionsIni = new IniFile(ProgramConstants.GetBaseResourcePath() + Name + ".ini");
+            profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
-            var lblMissionDescriptionHeader = new XNALabel(WindowManager);
-            lblMissionDescriptionHeader.Name = "lblMissionDescriptionHeader";
-            lblMissionDescriptionHeader.FontIndex = 1;
-            lblMissionDescriptionHeader.ClientRectangle = new Rectangle(
-                lbCampaignList.Right + 12,
-                lblSelectCampaign.Y, 0, 0);
-            lblMissionDescriptionHeader.Text = "MISSION DESCRIPTION:".L10N("UI:Main:MissionDescription");
+            SetAsButton[0] = new gsDelegate(SetAsButton1);
+            SetAsButton[1] = new gsDelegate(SetAsButton2);
+            SetAsButton[2] = new gsDelegate(SetAsButton3);
+            SetAsButton[3] = new gsDelegate(SetAsButton4);
 
-            tbMissionDescription = new XNATextBlock(WindowManager);
-            tbMissionDescription.Name = "tbMissionDescription";
-            tbMissionDescription.ClientRectangle = new Rectangle(
-                lblMissionDescriptionHeader.X,
-                lblMissionDescriptionHeader.Bottom + 6,
-                Width - 24 - lbCampaignList.Right, 430);
-            tbMissionDescription.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            tbMissionDescription.Alpha = 1.0f;
+            // Difficulty buttons
+            foreach (string difficultyName in DifficultyList)
+            {
+                string[] posArray = campaignOptionsIni.GetStringValue(difficultyName, "Location", DEFAULT_POS).Split(',');
+                string[] sizeArray = campaignOptionsIni.GetStringValue(difficultyName, "Size", DEFAULT_SIZE).Split(',');
 
-            tbMissionDescription.BackgroundTexture = AssetLoader.CreateTexture(AssetLoader.GetColorFromString(ClientConfiguration.Instance.AltUIBackgroundColor),
-                tbMissionDescription.Width, tbMissionDescription.Height);
+                XNAClientButton xNAClientButton = new XNAClientButton(WindowManager);
+                xNAClientButton.Name = difficultyName;
+                xNAClientButton.ClientRectangle = new Rectangle(Convert.ToInt32(posArray[0]), Convert.ToInt32(posArray[1]),
+                    Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]));
+                xNAClientButton.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + difficultyName.ToLower() + ".png");
+                xNAClientButton.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + difficultyName.ToLower() + "_c.png");
+                xNAClientButton.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+                xNAClientButton.Disable();
+                xNAClientButton.Visible = false;
+                xNAClientButton.LeftClick += DifficultyButton_LeftClick;
 
-            var lblDifficultyLevel = new XNALabel(WindowManager);
-            lblDifficultyLevel.Name = "lblDifficultyLevel";
-            lblDifficultyLevel.Text = "DIFFICULTY LEVEL".L10N("UI:Main:DifficultyLevel");
-            lblDifficultyLevel.FontIndex = 1;
-            Vector2 textSize = Renderer.GetTextDimensions(lblDifficultyLevel.Text, lblDifficultyLevel.FontIndex);
-            lblDifficultyLevel.ClientRectangle = new Rectangle(
-                tbMissionDescription.X + (tbMissionDescription.Width - (int)textSize.X) / 2,
-                tbMissionDescription.Bottom + 12, (int)textSize.X, (int)textSize.Y);
+                DifficultyButtons.Add(xNAClientButton);
+                AddChild(xNAClientButton);
+            }
 
-            trbDifficultySelector = new XNATrackbar(WindowManager);
-            trbDifficultySelector.Name = "trbDifficultySelector";
-            trbDifficultySelector.ClientRectangle = new Rectangle(
-                tbMissionDescription.X, lblDifficultyLevel.Bottom + 6,
-                tbMissionDescription.Width, 30);
-            trbDifficultySelector.MinValue = 0;
-            trbDifficultySelector.MaxValue = 3;
-            trbDifficultySelector.BackgroundTexture = AssetLoader.CreateTexture(
-                new Color(0, 0, 0, 128), 2, 2);
-            trbDifficultySelector.ButtonTexture = AssetLoader.LoadTextureUncached(
-                "trackbarButton_difficulty.png");
+            // Mission buttons
+            for (int i = 1; i <= MissionList.Length; i++)
+            {
+                XNAClientButton xNAClientButton = new XNAClientButton(WindowManager);
+                xNAClientButton.Name = "btn" + SIDE_ABBR + i;
+                xNAClientButton.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+                xNAClientButton.Disable();
+                xNAClientButton.Visible = false;
+                xNAClientButton.LeftClick += MissionButton_LeftClick;
 
-            var lblEasy = new XNALabel(WindowManager);
-            lblEasy.Name = "lblEasy";
-            lblEasy.FontIndex = 1;
-            lblEasy.Text = "EASY".L10N("UI:Main:DifficultyEasy");
-            lblEasy.ClientRectangle = new Rectangle(trbDifficultySelector.X,
-                trbDifficultySelector.Bottom + 6, 1, 1);
+                MissionButtons.Add(xNAClientButton);
+                AddChild(xNAClientButton);
+            }
 
-            var lblNormal = new XNALabel(WindowManager);
-            lblNormal.Name = "lblNormal";
-            lblNormal.FontIndex = 1;
-            lblNormal.Text = "NORMAL".L10N("UI:Main:DifficultyNormal");
-            textSize = Renderer.GetTextDimensions(lblNormal.Text, lblNormal.FontIndex);
-            lblNormal.ClientRectangle = new Rectangle(
-                tbMissionDescription.X + (tbMissionDescription.Width - (int)textSize.X) / 2,
-                lblEasy.Y, (int)textSize.X, (int)textSize.Y);
+            // Medals
+            for (int i = 0; i < MEDAL_COUNT; i++)
+            {
+                CMedal cMedal = new CMedal(WindowManager);
+                cMedal.Checked = false;
+                cMedal.Disable();
+                cMedal.Visible = false;
 
-            var lblHard = new XNALabel(WindowManager);
-            lblHard.Name = "lblHard";
-            lblHard.FontIndex = 1;
-            lblHard.Text = "HARD".L10N("UI:Main:DifficultyHard");
-            lblHard.ClientRectangle = new Rectangle(
-                tbMissionDescription.Right - lblHard.Width,
-                lblEasy.Y, 1, 1);
-
-            var lblHELL = new XNALabel(WindowManager);
-            lblHELL.Name = "lblHELL";
-            lblHELL.FontIndex = 1;
-            lblHELL.Text = "Abyss".L10N("UI:Main:DifficultyAbyss");
-            lblHELL.ClientRectangle = new Rectangle(
-                tbMissionDescription.ClientRectangle.Right - lblHard.ClientRectangle.Width,
-                lblEasy.ClientRectangle.Y, 1, 1);
+                Medals.Add(cMedal);
+                AddChild(cMedal);
+            }
+            DifficultyMedal = new CMedal(WindowManager);
+            DifficultyMedal.Name = "DifficultyMedal";
+            DifficultyMedal.Visible = true;
+            AddChild(DifficultyMedal);
 
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = "btnLaunch";
-            btnLaunch.ClientRectangle = new Rectangle(12, Height - 35, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
-            btnLaunch.Text = "Launch".L10N("UI:Main:ButtonLaunch");
-            btnLaunch.AllowClick = false;
+            btnLaunch.ClientRectangle = new Rectangle(85, 655, 429, 45);
+            btnLaunch.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "launchbtn.png");
+            btnLaunch.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "launchbtn_c.png");
+            btnLaunch.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnLaunch.SetBorderWidth(101);
+            btnLaunch.SetAlphaCheckVal(0);
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
 
-            var btnCancel = new XNAClientButton(WindowManager);
+            btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
-            btnCancel.ClientRectangle = new Rectangle(Width - 145,
-                btnLaunch.Y, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
-            btnCancel.Text = "Cancel".L10N("UI:Main:ButtonCancel");
+            btnCancel.ClientRectangle = new Rectangle(1184, 725, 66, 32);
+            // english:
+            // btnCancel.ClientRectangle = new Rectangle(1161, 725, 92, 31);
+            btnCancel.IdleTexture = AssetLoader.LoadTexture("Database/backbtn.png");
+            btnCancel.HoverTexture = AssetLoader.LoadTexture("Database/backbtn_c.png");
+            btnCancel.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
             btnCancel.LeftClick += BtnCancel_LeftClick;
 
-            AddChild(lblSelectCampaign);
-            AddChild(lblMissionDescriptionHeader);
-            AddChild(lbCampaignList);
-            AddChild(tbMissionDescription);
-            AddChild(lblDifficultyLevel);
+            btnSlideUp = new XNAClientButton(WindowManager);
+            btnSlideUp.Name = "btnSlideUp";
+            btnSlideUp.ClientRectangle = new Rectangle(892, 51, 313, 39);
+            btnSlideUp.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn.png");
+            btnSlideUp.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn_c.png");
+            btnSlideUp.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnSlideUp.ClickSoundEffect = new EnhancedSoundEffect("checkbox.wav");
+            btnSlideUp.AllowClick = false;
+            btnSlideUp.MouseLeftDown += BtnSlideUp_MouseLeftDown;
+            btnSlideUp.MouseLeave += BtnSlideUp_MouseLeave;
+            btnSlideUp.LeftClick += BtnSlideUp_LeftClick;
+
+            btnSlideDown = new XNAClientButton(WindowManager);
+            btnSlideDown.Name = "btnSlideDown";
+            btnSlideDown.ClientRectangle = new Rectangle(892, 666, 314, 39);
+            btnSlideDown.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn.png");
+            btnSlideDown.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn_c.png");
+            btnSlideDown.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnSlideDown.ClickSoundEffect = new EnhancedSoundEffect("checkbox.wav");
+            btnSlideDown.AllowClick = false;
+            btnSlideDown.MouseLeftDown += BtnSlideDown_MouseLeftDown;
+            btnSlideDown.MouseLeave += BtnSlideDown_MouseLeave;
+            btnSlideDown.LeftClick += BtnSlideDown_LeftClick;
+
+            btnOldCampaign = new XNAClientButton(WindowManager);
+            btnOldCampaign.Name = "btnOldCampaign";
+            btnOldCampaign.ClientRectangle = new Rectangle(5, 0, 86, 33);
+            // english:
+            // btnOldCampaign.ClientRectangle = new Rectangle(5, 0, 112, 33);
+            btnOldCampaign.SetBorderHeight(10);
+            btnOldCampaign.SetBorderWidth(11);
+            btnOldCampaign.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn.png");
+            btnOldCampaign.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn_c.png");
+            btnOldCampaign.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            if (true) //(UserINISettings.Instance.TC2Completed)
+            {
+                btnOldCampaign.Visible = true;
+                btnOldCampaign.AllowClick = true;
+            }
+            else
+            {
+                btnOldCampaign.Visible = false;
+                btnOldCampaign.AllowClick = false;
+            }
+            btnOldCampaign.LeftClick += BtnOldCampaign_LeftClick;
+
             AddChild(btnLaunch);
             AddChild(btnCancel);
-            AddChild(trbDifficultySelector);
-            AddChild(lblEasy);
-            AddChild(lblNormal);
-            AddChild(lblHard);
-            AddChild(lblHELL);
+            AddChild(btnSlideUp);
+            AddChild(btnSlideDown);
+            AddChild(btnOldCampaign);
 
-            // Set control attributes from INI file
+            curMissionIndex = UserINISettings.Instance.SelectedMissionIndex;
+            curDifficultyIndex = UserINISettings.Instance.FakeDifficulty;
+
+            // Sort button list
+            if (curMissionIndex > 3)
+            {
+                btnSlideUp.AllowClick = true;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    SetAsButton[i](MissionButtons[curMissionIndex + i - 3]);
+                    CheckMission(MissionButtons[curMissionIndex + i - 3]);
+                    MissionButtons[curMissionIndex - i].Enable();
+                    MissionButtons[curMissionIndex - i].Visible = true;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    SetAsButton[i](MissionButtons[i]);
+                    CheckMission(MissionButtons[i]);
+                }
+            }
+
+            SwitchMission(curMissionIndex, -1, true);
+            SwitchDifficulty(curDifficultyIndex, -1, true);
+
+            if (curMissionIndex < 8 && campaignOptionsIni.GetBooleanValue("General", SIDE_ABBR + '5', false))
+            {
+                btnSlideDown.AllowClick = true;
+            }
+
             base.Initialize();
 
-            // Center on screen
             CenterOnParent();
-
-            trbDifficultySelector.Value = UserINISettings.Instance.FakeDifficulty;
 
             ParseBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
 
@@ -377,33 +474,264 @@ namespace DTAClient.DXGUI.Generic
             cheaterWindow.Disable();
         }
 
-        private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
+        public void UpdateMissionMedals()
         {
-            if (lbCampaignList.SelectedIndex == -1)
+            profileIni.Reload();
+
+            foreach (CMedal medal in Medals)
             {
-                tbMissionDescription.Text = string.Empty;
-                btnLaunch.AllowClick = false;
+                string optionName = SIDE_ABBR + (curMissionIndex + 1).ToString() + "_" + medal.Name;
+
+                medal.SetDisplayText(profileIni.GetBooleanValue(optionName, "Enable", false)
+                    ? medal.unlockedText
+                    : medal.lockedText);
+
+                medal.DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false)
+                    ? AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + (curMissionIndex + 1).ToString() + "/" + medal.Name + "_c.png")
+                    : AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + (curMissionIndex + 1).ToString() + "/" + medal.Name + ".png");
+            }
+
+            // Difficulty Medal
+            string medalName = profileIni.GetStringValue(SIDE_ABBR + (curMissionIndex + 1).ToString(), "DifficultyMedal", "none");
+            if (!MedalNameList.ContainsKey(medalName))
+                medalName = "none";
+
+            DifficultyMedal.SetDisplayText(campaignOptionsIni.GetStringValue(MSMEDAL_PREFIX + medalName.ToUpper(), "Text", String.Empty));
+            DifficultyMedal.DisabledClearTexture = AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR.ToLower() + medalName + ".png");
+            DifficultyMedal.Enable();
+        }
+
+        private void GetMissionMedals(int index)
+        {
+            string missionIndex = (index + 1).ToString();
+            string[] medalArray = campaignOptionsIni.GetStringValue(SIDE_ABBR + missionIndex, "Medals", String.Empty).Split(',');
+            if (medalArray.Length > MEDAL_COUNT)
+            {
+                Logger.Log("Error: Mission " + SIDE_ABBR + missionIndex + " exceeds 8 medals!");
                 return;
             }
 
-            Mission mission = Missions[lbCampaignList.SelectedIndex];
-
-            if (string.IsNullOrEmpty(mission.Scenario))
+            // Disable all medals
+            foreach (CMedal medal in Medals)
             {
-                tbMissionDescription.Text = string.Empty;
-                btnLaunch.AllowClick = false;
-                return;
+                medal.Checked = false;
+                medal.Disable();
+                medal.Visible = false;
             }
 
-            tbMissionDescription.Text = mission.GUIDescription;
-
-            if (!mission.Enabled)
+            for (int i = 0; i < medalArray.Length; i++)
             {
-                btnLaunch.AllowClick = false;
-                return;
+                string optionName = SIDE_ABBR + missionIndex + "_" + medalArray[i];
+                string[] posArray = campaignOptionsIni.GetStringValue(optionName, "Location", DEFAULT_POS).Split(',');
+                string[] sizeArray = campaignOptionsIni.GetStringValue(optionName, "Size", DEFAULT_SIZE).Split(',');
+
+                Medals[i].Name = medalArray[i];
+                Medals[i].ClientRectangle = new Rectangle(Convert.ToInt32(posArray[0]), Convert.ToInt32(posArray[1]),
+                    Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]));
+
+                Medals[i].lockedText = campaignOptionsIni.GetStringValue(optionName, "TipLocked", String.Empty);
+                Medals[i].unlockedText = campaignOptionsIni.GetStringValue(optionName, "TipUnlocked", String.Empty);
+                Medals[i].SetDisplayText(profileIni.GetBooleanValue(optionName, "Enable", false)
+                    ? Medals[i].unlockedText
+                    : Medals[i].lockedText);
+
+                Medals[i].DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false)
+                    ? AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + missionIndex + "/" + medalArray[i] + "_c.png")
+                    : AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + missionIndex + "/" + medalArray[i] + ".png");
+
+                Medals[i].RefreshSize();
+                Medals[i].Enable();
+                Medals[i].Visible = true;
             }
 
-            btnLaunch.AllowClick = true;
+            // Difficulty Medal
+            string medalName = profileIni.GetStringValue(SIDE_ABBR + missionIndex, "DifficultyMedal", "none");
+            if (!MedalNameList.ContainsKey(medalName))
+                medalName = "none";
+
+            string[] rectArray = MedalNameList[medalName].Split(',');
+            DifficultyMedal.ClientRectangle = new Rectangle(Convert.ToInt32(rectArray[0]), Convert.ToInt32(rectArray[1]),
+                Convert.ToInt32(rectArray[2]), Convert.ToInt32(rectArray[3]));
+
+            DifficultyMedal.SetDisplayText(campaignOptionsIni.GetStringValue(MSMEDAL_PREFIX + medalName.ToUpper(), "Text", String.Empty));
+            DifficultyMedal.DisabledClearTexture = AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR.ToLower() + medalName + ".png");
+            DifficultyMedal.RefreshSize();
+            DifficultyMedal.Enable();
+        }
+
+        private void SwitchDifficulty(int index, int currentIndex = -1, bool firstRun = false)
+        {
+            if (currentIndex >= 0)
+            {
+                DifficultyButtons[currentIndex].Disable();
+                DifficultyButtons[currentIndex].Visible = false;
+                DifficultyButtons[currentIndex].OnMouseLeave();
+            }
+
+            if (index >= DifficultyList.Length)
+            {
+                index = 0;
+            }
+
+            if (firstRun)
+            {
+                curDifficultyIndex = UserINISettings.Instance.FakeDifficulty.Value;
+                index = curDifficultyIndex;
+            }
+            else
+            {
+                UserINISettings.Instance.FakeDifficulty.Value = index;
+                curDifficultyIndex = index;
+            }
+
+            if (!firstRun)
+                DifficultyButtons[index].OnMouseEnter();
+
+            DifficultyButtons[index].Enable();
+            DifficultyButtons[index].Visible = true;
+        }
+
+        private void SwitchMission(int index, int currentIndex = -1, bool firstRun = false)
+        {
+            if (currentIndex >= 0)
+            {
+                MissionButtons[currentIndex].AllowClick = true;
+                //MissionButtons[currentIndex].OnMouseLeave();
+                MissionButtons[currentIndex].IdleTexture = AssetLoader.LoadTexture(MissionButtons[currentIndex].Tag.ToString() + ".png");
+                MissionButtons[index].AllowClick = true;
+            }
+
+            if (index >= MissionList.Length)
+            {
+                index = 0;
+            }
+
+            if (firstRun)
+            {
+                curMissionIndex = UserINISettings.Instance.SelectedMissionIndex.Value;
+                index = curMissionIndex;
+            }
+            else
+            {
+                UserINISettings.Instance.SelectedMissionIndex.Value = index;
+                curMissionIndex = index;
+            }
+
+            //MissionButtons[index].OnMouseEnter();
+            MissionButtons[index].bButtonHover = false;
+            MissionButtons[index].AllowClick = false;
+            MissionButtons[index].IdleTexture = AssetLoader.LoadTexture(MissionButtons[index].Tag.ToString() + "_c.png");
+            BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + MissionList[index] + "bg.png");
+
+            btnLaunch.AllowClick = campaignOptionsIni.GetBooleanValue(SIDE_ABBR + (currentIndex).ToString(), "Enable", true);
+
+            GetMissionMedals(curMissionIndex);
+        }
+
+        private void BtnSlideUp_MouseLeftDown(object sender, EventArgs e)
+        {
+            btnSlideUp.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn.png");
+        }
+
+        private void BtnSlideDown_MouseLeftDown(object sender, EventArgs e)
+        {
+            btnSlideDown.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn.png");
+        }
+
+        private void BtnSlideUp_MouseLeave(object sender, EventArgs e)
+        {
+            btnSlideUp.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn_c.png");
+        }
+
+        private void BtnSlideDown_MouseLeave(object sender, EventArgs e)
+        {
+            btnSlideDown.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn_c.png");
+        }
+
+        private void BtnSlideUp_LeftClick(object sender, EventArgs e)
+        {
+            ClickSoundHeavy.Play();
+            btnSlideUp.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn_c.png");
+
+            UnusedButtons = MissionButtons;
+
+            foreach (XNAClientButton button in MissionButtons)
+            {
+                if (button.Tag != null && (int)button.Tag == 1)
+                {
+                    int topIndex = Convert.ToInt32(button.Name.Substring(6)) - 1;
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        SetAsButton[i](MissionButtons[topIndex + i - 1]);
+                        CheckMission(MissionButtons[topIndex + i - 1]);
+
+                        UnusedButtons.RemoveAt(topIndex + i - 1);
+                    }
+
+                    foreach (XNAClientButton unusedButton in UnusedButtons)
+                    {
+                        UnusedButtonsIndex.Add(Convert.ToInt32(unusedButton.Name.Substring(6)) - 1);
+                    }
+
+                    ClearUnusedButtonsTag();
+
+                    return;
+                }
+            }
+        }
+
+        private void BtnSlideDown_LeftClick(object sender, EventArgs e)
+        {
+            ClickSoundHeavy.Play();
+            btnSlideDown.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn_c.png");
+
+            UnusedButtons = MissionButtons;
+
+            foreach (XNAClientButton button in MissionButtons)
+            {
+                if (button.Tag != null && (int)button.Tag == 4)
+                {
+                    int bottomIndex = Convert.ToInt32(button.Name.Substring(6)) - 1;
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        SetAsButton[i](MissionButtons[bottomIndex + i - 2]);
+                        CheckMission(MissionButtons[bottomIndex + i - 2]);
+
+                        UnusedButtons.RemoveAt(bottomIndex + i - 2);
+                    }
+
+                    foreach (XNAClientButton unusedButton in UnusedButtons)
+                    {
+                        UnusedButtonsIndex.Add(Convert.ToInt32(unusedButton.Name.Substring(6)) - 1);
+                    }
+
+                    ClearUnusedButtonsTag();
+
+                    return;
+                }
+            }
+        }
+
+        private void DifficultyButton_LeftClick(object sender, EventArgs e)
+        {
+            //ClickSoundLight.Play();
+            SwitchDifficulty(curDifficultyIndex + 1, curDifficultyIndex);
+        }
+
+        private void MissionButton_LeftClick(object sender, EventArgs e)
+        {
+            foreach (XNAClientButton button in MissionButtons)
+            {
+                if (button.bButtonHover)
+                {
+                    ClickSoundHeavy.Play();
+                    SwitchMission(Convert.ToInt32(button.Name.Substring(6)) - 1, curMissionIndex);
+                    return;
+                }
+            }
+            Logger.Log("Error: Could not find hovered mission button.");
         }
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)
@@ -413,18 +741,32 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            if (trbDifficultySelector.Value > 2)
+            if (curDifficultyIndex != 0)
             {
-                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
-                    "HELL Difficulty to Start".L10N("UI:Main:HellDifficultyStart"),
-                    string.Format("Are you sure to play this mission at HELL difficulty?" + Environment.NewLine +
-                    "High difficulty is named Hard.").L10N("UI:Main:HellDifficultyStart_Desc"));
+                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "以非简单难度进行",
+                string.Format("您确定不从简单难度开始任务吗?" + Environment.NewLine +
+                "moreblabla"));
+                TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
+            }
+            else if (curDifficultyIndex > 2)
+            {
+                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "以地狱难度进行",
+                string.Format("您确定要以地狱难度进行此任务吗?" + Environment.NewLine +
+                "高难度为困难难度。"));
                 TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
             }
             else
             {
+                //ClickSoundLight.Play();
                 PrepareToLaunch();
             }
+        }
+
+        private void BtnOldCampaign_LeftClick(object sender, EventArgs e)
+        {
+            //ClickSoundLight.Play();
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            parent.Show(parent.CampaignSelector);
         }
 
         private void TooHardMessageBox_YesClicked(XNAMessageBox messageBox)
@@ -434,15 +776,11 @@ namespace DTAClient.DXGUI.Generic
 
         private void PrepareToLaunch()
         {
-            int selectedMissionId = lbCampaignList.SelectedIndex;
+            Mission mission = Missions[curMissionIndex + 3];
 
-            Mission mission = Missions[selectedMissionId];
-
-            if (!ClientConfiguration.Instance.ModMode &&
-                (!CUpdater.IsFileNonexistantOrOriginal(mission.Scenario) || AreFilesModified()))
+            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
-                missionToLaunch = mission;
                 cheaterWindow.Enable();
                 return;
             }
@@ -452,12 +790,6 @@ namespace DTAClient.DXGUI.Generic
 
         private bool AreFilesModified()
         {
-            foreach (string filePath in filesToCheck)
-            {
-                if (!CUpdater.IsFileNonexistantOrOriginal(filePath))
-                    return true;
-            }
-
             int iCount = 0;
             foreach (string filePath in filesToCheck)
             {
@@ -493,20 +825,6 @@ namespace DTAClient.DXGUI.Generic
             }
         }
 
-        /// <summary>
-        /// Called when the user wants to proceed to the mission despite having
-        /// being called a cheater.
-        /// </summary>
-        private void CheaterWindow_YesClicked(object sender, EventArgs e)
-        {
-            LaunchMission(missionToLaunch);
-        }
-
-        /// <summary>
-        /// Starts a singleplayer mission.
-        /// </summary>
-        /// <param name="scenario">The internal name of the scenario.</param>
-        /// <param name="requiresAddon">True if the mission is for Firestorm / Enhanced Mode.</param>
         private void LaunchMission(Mission mission)
         {
             bool copyMapsToSpawnmapINI = ClientConfiguration.Instance.CopyMissionsToSpawnmapINI;
@@ -531,12 +849,33 @@ namespace DTAClient.DXGUI.Generic
             swriter.WriteLine("Side=" + mission.Side);
             swriter.WriteLine("BuildOffAlly=" + mission.BuildOffAlly);
 
-            swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : trbDifficultySelector.Value.ToString()));
-            swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty());
+            IniFile difficultyIni;
+            IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
 
-            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + DifficultyIniPaths[trbDifficultySelector.Value]);
-            string difficultyName = DifficultyNames[trbDifficultySelector.Value];
-
+            if (curDifficultyIndex == 0) // Easy
+            {
+                swriter.WriteLine("DifficultyModeHuman=0");
+                swriter.WriteLine("DifficultyModeComputer=2");
+                difficultyIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/Difficulty Easy.ini");
+            }
+            else if (curDifficultyIndex == 1) // Normal
+            {
+                swriter.WriteLine("DifficultyModeHuman=0");
+                swriter.WriteLine("DifficultyModeComputer=2");
+                difficultyIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/Difficulty Normal.ini");
+            }
+            else if (curDifficultyIndex == 2) // Hard
+            {
+                swriter.WriteLine("DifficultyModeHuman=1");
+                swriter.WriteLine("DifficultyModeComputer=1");
+                difficultyIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/Difficulty Hard.ini");
+            }
+            else // Abyss
+            {
+                swriter.WriteLine("DifficultyModeHuman=2");
+                swriter.WriteLine("DifficultyModeComputer=0");
+                difficultyIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/Difficulty Hell.ini");
+            }
             swriter.WriteLine();
             swriter.WriteLine();
             swriter.WriteLine();
@@ -910,8 +1249,6 @@ namespace DTAClient.DXGUI.Generic
                 if (!File.Exists(ProgramConstants.GamePath + "tcextrab04.big"))
                     mapIni.SetStringValue("Basic", "Win", "dummymovie_win");
 
-                IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
-
                 // other settings in BaseInfo
                 if (CampaignIni.GetBooleanValue("BaseInfo", "DifficultyAdjust", true))
                 {
@@ -949,25 +1286,20 @@ namespace DTAClient.DXGUI.Generic
             else
                 File.Delete(ProgramConstants.GamePath + CREDITS_TXT);
 
-            FakeDifficultyLevel = trbDifficultySelector.Value;
-            if (trbDifficultySelector.Value < 0)
+            if (curDifficultyIndex <= 0)
                 UserINISettings.Instance.Difficulty.Value = 0;
             else
-                UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value - 1;
-            UserINISettings.Instance.FakeDifficulty.Value = FakeDifficultyLevel;
+                UserINISettings.Instance.Difficulty.Value = curDifficultyIndex - 1;
             UserINISettings.Instance.SaveSettings();
 
             ((MainMenuDarkeningPanel)Parent).Hide();
 
-            string strDifficultyName = DifficultyNames[trbDifficultySelector.Value];
+            string strDifficultyName = DifficultyNames[curDifficultyIndex];
             discordHandler?.UpdatePresence(mission.GUIName, strDifficultyName, mission.IconPath, true);
 
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
             GameProcessLogic.StartGameProcess(CampaignIni.GetBooleanValue("BaseInfo", "ControlSpeed", true), true);
         }
-
-        private int GetComputerDifficulty() =>
-            Math.Abs(trbDifficultySelector.Value - 2);
 
         private void GameProcessExited_Callback()
         {
@@ -980,16 +1312,18 @@ namespace DTAClient.DXGUI.Generic
         protected virtual void GameProcessExited()
         {
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
-            LogbuchParser.ParseForCampaign();
+            LogbuchParser.ParseForCampaign(null, null, curDifficultyIndex);
             LogbuchParser.ClearTrash();
+            UpdateMissionMedals();
+            if (true) //(UserINISettings.Instance.TC2Completed)
+            {
+                btnOldCampaign.Enable();
+                btnOldCampaign.Visible = true;
+                btnOldCampaign.AllowClick = true;
+            }
             discordHandler?.UpdatePresence();
         }
 
-        /// <summary>
-        /// Parses a Battle(E).ini file. Returns true if succesful (file found), otherwise false.
-        /// </summary>
-        /// <param name="path">The path of the file, relative to the game directory.</param>
-        /// <returns>True if succesful, otherwise false.</returns>
         private bool ParseBattleIni(string path)
         {
             Logger.Log("Attempting to parse " + path + " to populate mission list.");
@@ -1001,54 +1335,117 @@ namespace DTAClient.DXGUI.Generic
                 return false;
             }
 
-            IniFile battleIni = new IniFile(battleIniPath);
+            IniFile battle_ini = new IniFile(battleIniPath);
 
-            List<string> battleKeys = battleIni.GetSectionKeys("Battles");
+            List<string> battleKeys = battle_ini.GetSectionKeys("Battles");
 
             if (battleKeys == null)
                 return false; // File exists but [Battles] doesn't
 
             foreach (string battleEntry in battleKeys)
             {
-                string battleSection = battleIni.GetStringValue("Battles", battleEntry, "NOT FOUND");
+                string battleSection = battle_ini.GetStringValue("Battles", battleEntry, "NOT FOUND");
 
-                if (!battleIni.SectionExists(battleSection))
+                if (!battle_ini.SectionExists(battleSection))
                     continue;
 
-                var mission = new Mission(battleIni, battleSection);
-
-                // Skip TC2 missions
-                if (mission.Hide)
-                    continue;
+                var mission = new Mission(battle_ini, battleSection);
 
                 Missions.Add(mission);
-
-                XNAListBoxItem item = new XNAListBoxItem();
-                item.Text = mission.GUIName;
-                if (!mission.Enabled)
-                {
-                    item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
-                }
-                else if (string.IsNullOrEmpty(mission.Scenario))
-                {
-                    item.TextColor = AssetLoader.GetColorFromString(
-                        ClientConfiguration.Instance.ListBoxHeaderColor);
-                    item.IsHeader = true;
-                    item.Selectable = false;
-                }
-                else
-                {
-                    item.TextColor = lbCampaignList.DefaultItemColor;
-                }
-
-                if (!string.IsNullOrEmpty(mission.IconPath))
-                    item.Texture = AssetLoader.LoadTexture(mission.IconPath + "icon.png");
-
-                lbCampaignList.AddItem(item);
             }
 
             Logger.Log("Finished parsing " + path + ".");
             return true;
+        }
+
+        private void CheckMission(XNAClientButton button)
+        {
+            if ((button.Name.Length == 6 && button.Name[button.Name.Length - 1] == '1') ||
+                profileIni.GetBooleanValue("General", button.Name.Substring(3), false))
+            {
+                button.Enable();
+                button.Visible = true;
+            }
+            else
+            {
+                button.Disable();
+                button.Visible = false;
+            }
+        }
+
+        private void ClearUnusedButtonsTag()
+        {
+            foreach (int unusedInex in UnusedButtonsIndex)
+            {
+                MissionButtons[unusedInex].Tag = null;
+                MissionButtons[unusedInex].Disable();
+                MissionButtons[unusedInex].AllowClick = false;
+            }
+        }
+
+        private void SetAsButton1(XNAClientButton button)
+        {
+            button.Tag = 1;
+            button.X = 894;
+            button.Y = 89;
+            button.Width = 308;
+            button.Height = 133;
+            button.SetAlphaCheckVal(30);
+
+            string strPath = RESOURCE_PATH + button.Name.ToLower() + "a";
+            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
+            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+            button.Tag = strPath;
+            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            button.RefreshSize();
+        }
+
+        private void SetAsButton2(XNAClientButton button)
+        {
+            button.Tag = 2;
+            button.X = 893;
+            button.Y = 240;
+            button.Width = 306;
+            button.Height = 127;
+
+            string strPath = RESOURCE_PATH + button.Name.ToLower() + "b";
+            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
+            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+            button.Tag = strPath;
+            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            button.RefreshSize();
+        }
+
+        private void SetAsButton3(XNAClientButton button)
+        {
+            button.Tag = 3;
+            button.X = 893;
+            button.Y = 388;
+            button.Width = 306;
+            button.Height = 128;
+
+            string strPath = RESOURCE_PATH + button.Name.ToLower() + "c";
+            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
+            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+            button.Tag = strPath;
+            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            button.RefreshSize();
+        }
+
+        private void SetAsButton4(XNAClientButton button)
+        {
+            button.Tag = 4;
+            button.X = 0;
+            button.Y = 0;
+            button.Width = 0;
+            button.Height = 0;
+
+            string strPath = RESOURCE_PATH + button.Name.ToLower() + "d";
+            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
+            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+            button.Tag = strPath + "d";
+            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            button.RefreshSize();
         }
 
         public override void Draw(GameTime gameTime)

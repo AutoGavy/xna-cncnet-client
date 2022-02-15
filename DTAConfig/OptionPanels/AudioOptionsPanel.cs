@@ -23,14 +23,18 @@ namespace DTAConfig.OptionPanels
         private XNALabel lblScoreVolumeValue;
         private XNALabel lblSoundVolumeValue;
         private XNALabel lblVoiceVolumeValue;
+        private XNAClientDropDown ddMusicType;
 
         private XNAClientCheckBox chkScoreShuffle;
+        private XNAClientCheckBox chkSmartMusic;
 
         private XNALabel lblClientVolumeValue;
         private XNATrackbar trbClientVolume;
 
         private XNAClientCheckBox chkMainMenuMusic;
         private XNAClientCheckBox chkStopMusicOnMenu;
+
+        private XNAMessageBox NoMusicPackMessageBox;
 
         public override void Initialize()
         {
@@ -162,6 +166,28 @@ namespace DTAConfig.OptionPanels
                 lblScoreVolume.X, chkMainMenuMusic.Bottom + 24, 0, 0);
             chkStopMusicOnMenu.Text = "Don't play main menu music in lobbies".L10N("UI:DTAConfig:NoLobbiesMusic");
 
+            chkSmartMusic = new XNAClientCheckBox(WindowManager);
+            chkSmartMusic.Name = "chkSmartMusic";
+            chkSmartMusic.ClientRectangle = new Rectangle(
+                lblScoreVolume.ClientRectangle.X, chkMainMenuMusic.ClientRectangle.Bottom + 24, 0, 0);
+            chkSmartMusic.Text = "Situational Music".L10N("UI:DTAConfig:SmartMusic");
+            chkSmartMusic.CheckedChanged += ChkSmartMusic_CheckedChanged;
+
+            var lblMusicType = new XNALabel(WindowManager);
+            lblMusicType.Name = "lblMusicType";
+            lblMusicType.ClientRectangle = new Rectangle(12, 14, 0, 0);
+            lblMusicType.Text = "Music Type".L10N("UI:DTAConfig:MusicType");
+
+            ddMusicType = new XNAClientDropDown(WindowManager);
+            ddMusicType.Name = "ddMusicType";
+            ddMusicType.ClientRectangle = new Rectangle(12, 14, 0, 0);
+            ddMusicType.AddItem("CNC4 (Default)".L10N("UI:DTAConfig:MusicType_1"));
+            ddMusicType.AddItem("CNC Classic (Need to download)".L10N("UI:DTAConfig:MusicType_2"));
+            ddMusicType.AddItem("None (Using vanilla)".L10N("UI:DTAConfig:MusicType_3"));
+            ddMusicType.Items[0].Selectable = chkSmartMusic.Checked;
+            ddMusicType.Items[1].Selectable = chkSmartMusic.Checked;
+            ddMusicType.SelectedIndexChanged += ddMusicType_SelectedIndexChanged;
+
             AddChild(lblScoreVolume);
             AddChild(lblScoreVolumeValue);
             AddChild(trbScoreVolume);
@@ -173,6 +199,8 @@ namespace DTAConfig.OptionPanels
             AddChild(trbVoiceVolume);
 
             AddChild(chkScoreShuffle);
+            AddChild(lblMusicType);
+            AddChild(ddMusicType);
 
             AddChild(lblClientVolume);
             AddChild(lblClientVolumeValue);
@@ -182,6 +210,58 @@ namespace DTAConfig.OptionPanels
             AddChild(chkStopMusicOnMenu);
 
             WindowManager.SoundPlayer.SetVolume(trbClientVolume.Value / 10.0f);
+        }
+
+        private void ChkSmartMusic_CheckedChanged(object sender, EventArgs e)
+        {
+            ddMusicType.Items[0].Selectable = chkSmartMusic.Checked;
+            ddMusicType.Items[1].Selectable = chkSmartMusic.Checked;
+            if (!chkSmartMusic.Checked)
+                ddMusicType.SelectedIndex = 2;
+        }
+
+        private void ddMusicType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddMusicType.SelectedIndex == 1)
+            {
+                string strFilePath = ProgramConstants.GamePath + "tcextrab10.big";
+                if (!System.IO.File.Exists(strFilePath) || Rampastring.Tools.Utilities.CalculateSHA1ForFile(strFilePath).ToUpper() != "0B0766448139D48C4A2FB531966165BFA226DB48")
+                {
+                    NoMusicPackMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                        "CNC Music Pack Not Found".L10N("UI:DTAConfig:CNCMusicPackNotFound"),
+                    string.Format("Cannot find CNC Music Pack." + Environment.NewLine +
+                    "You need to download it before using this type of music." + Environment.NewLine +
+                    "Do you want to download now?").
+                    L10N("UI:DTAConfig:CNCMusicPackNotFound_Desc"));
+                    NoMusicPackMessageBox.YesClickedAction = NoMusicPackMessageBox_YesClicked;
+                    NoMusicPackMessageBox.NoClickedAction = NoMusicPackMessageBox_NoClicked;
+                }
+            }
+        }
+
+        private void NoMusicPackMessageBox_YesClicked(XNAMessageBox messageBox)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("http://jq.qq.com/?_wv=1027&k=5cRWqHk");
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start("iexplore.exe", "http://jq.qq.com/?_wv=1027&k=5cRWqHk");
+                }
+                catch (Exception ex)
+                {
+                    Rampastring.Tools.Logger.Log("Error opening qq website, message: " + ex.Message);
+                }
+            }
+            ddMusicType.SelectedIndex = 0;
+        }
+
+        private void NoMusicPackMessageBox_NoClicked(XNAMessageBox messageBox)
+        {
+            ddMusicType.SelectedIndex = 0;
         }
 
         private void ChkMainMenuMusic_CheckedChanged(object sender, EventArgs e)
@@ -225,6 +305,8 @@ namespace DTAConfig.OptionPanels
 
             chkMainMenuMusic.Checked = IniSettings.PlayMainMenuMusic;
             chkStopMusicOnMenu.Checked = IniSettings.StopMusicOnMenu;
+            chkSmartMusic.Checked = IniSettings.SmartMusic;
+            ddMusicType.SelectedIndex = IniSettings.MusicType;
         }
 
         public override bool Save()
@@ -234,8 +316,10 @@ namespace DTAConfig.OptionPanels
             IniSettings.ScoreVolume.Value = trbScoreVolume.Value / 10.0;
             IniSettings.SoundVolume.Value = trbSoundVolume.Value / 10.0;
             IniSettings.VoiceVolume.Value = trbVoiceVolume.Value / 10.0;
-            
+
             IniSettings.IsScoreShuffle.Value = chkScoreShuffle.Checked;
+            IniSettings.SmartMusic.Value = chkSmartMusic.Checked;
+            IniSettings.MusicType.Value = ddMusicType.SelectedIndex;
 
             IniSettings.ClientVolume.Value = trbClientVolume.Value / 10.0;
 

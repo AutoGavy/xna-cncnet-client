@@ -25,6 +25,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private string spawnIniOption = string.Empty;
 
+        private string[] DataToWrite = null;
+
         private int defaultIndex;
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
@@ -45,6 +47,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         else item.Text = items[i];
                         AddItem(item);
                     }
+                    return;
+                case "DataToWrite":
+                    DataToWrite = value.Split(',');
                     return;
                 case "DataWriteMode":
                     if (value.ToUpper() == "INDEX")
@@ -101,6 +106,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     if (Items[SelectedIndex].Tag != null)
                     {
                         spawnIni.SetStringValue("Settings", spawnIniOption, Items[SelectedIndex].Tag.ToString());
+                    }
+                    else if (DataToWrite != null)
+                    {
+                        spawnIni.SetStringValue("Settings", spawnIniOption, DataToWrite[SelectedIndex]);
                     }
                     else
                     {
