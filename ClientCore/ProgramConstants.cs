@@ -182,7 +182,7 @@ namespace ClientCore
                 ddrawIni.SetBooleanValue("gamemd", "resizeable", false);
                 ddrawIni.SetBooleanValue("gamemd", "fullscreen", false);
                 ddrawIni.SetBooleanValue("gamemd", "nonexclusive", true);
-                ddrawIni.SetBooleanValue("gamemd", "singlecpu", !UserINISettings.Instance.MultiCPU);
+                ddrawIni.SetBooleanValue("gamemd", "singlecpu", false);
                 ddrawIni.WriteIniFile();
             }
 

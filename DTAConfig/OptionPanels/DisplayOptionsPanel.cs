@@ -1034,8 +1034,6 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.VideoMode.Value = chkVideoMode.Checked;
 
-            IniSettings.MultiCPU.Value = true; //chkMultiCPU.Checked;
-
 #if YR
             IniSettings.BackBufferInVRAM.Value = false;
 #else
@@ -1103,36 +1101,31 @@ namespace DTAConfig.OptionPanels
             if (File.Exists(strBigPath))
             {
                 if (Utilities.CalculateSHA1ForFile(strBigPath).ToUpper() != "0B0766448139D48C4A2FB531966165BFA226DB48")
+                {
                     File.Delete(strBigPath);
+                }
             }
 
             // Airflow Effect
             strBigPath = ProgramConstants.GamePath + "tcextrab11.big";
             if (!chkAirflowEffect.Checked)
+            {
                 File.Copy(ProgramConstants.GetBaseSharedPath() + "airflow.big", strBigPath, true);
+            }
             else if (File.Exists(strBigPath))
+            {
                 File.Delete(strBigPath);
+            } 
 
             // Alpha Light
             strBigPath = ProgramConstants.GamePath + "tcextrab12.big";
             if (!chkAlphaLight.Checked)
-                File.Copy(ProgramConstants.GetBaseSharedPath() + "alphalight.big", strBigPath, true);
-            else if (File.Exists(strBigPath))
-                File.Delete(strBigPath);
-
-            // Check GPU for Enhanced Quality Option
-            if (!IniSettings.NewUpdate)
             {
-                if (ddHighDetail.AllowDropDown)
-                {
-                    ddHighDetail.SelectedIndex = 4;
-                    ddCloudsEffect.SelectedIndex = 0;
-                    /*if (ClientConfiguration.Instance.ClientLanguage == 0)
-                        Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
-                    else
-                        Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");*/
-                }
-                IniSettings.NewUpdate.Value = true;
+                File.Copy(ProgramConstants.GetBaseSharedPath() + "alphalight.big", strBigPath, true);
+            }
+            else if (File.Exists(strBigPath))
+            {
+                File.Delete(strBigPath);
             }
         }
 
@@ -1211,8 +1204,6 @@ namespace DTAConfig.OptionPanels
             IniSettings.AirflowEffect.Value = chkAirflowEffect.Checked;
 
             IniSettings.VideoMode.Value = chkVideoMode.Checked;
-
-            IniSettings.MultiCPU.Value = true; //chkMultiCPU.Checked;
 
 #if YR
             IniSettings.BackBufferInVRAM.Value = false;

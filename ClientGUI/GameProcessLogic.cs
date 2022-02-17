@@ -117,7 +117,7 @@ namespace ClientGUI
                 }
             }
 
-            string extraCommandLine = ClientConfiguration.Instance.ExtraExeCommandLineParameters;
+            string extraCommandLine = ClientConfiguration.Instance.ExtraExeCommandLineParameters + " -LegalUse ";
 
             File.Delete(ProgramConstants.GamePath + "DTA.LOG");
             File.Delete(ProgramConstants.GamePath + "TI.LOG");
@@ -169,7 +169,7 @@ namespace ClientGUI
                 DtaProcess.EnableRaisingEvents = true;
                 DtaProcess.Exited += new EventHandler(Process_Exited);
                 Logger.Log("Launch executable: " + DtaProcess.StartInfo.FileName);
-                Logger.Log("Launch arguments: " + DtaProcess.StartInfo.Arguments);
+                //Logger.Log("Launch arguments: " + DtaProcess.StartInfo.Arguments);
                 try
                 {
                     DtaProcess.Start();

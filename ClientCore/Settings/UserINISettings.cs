@@ -121,7 +121,6 @@ namespace ClientCore
             AlphaLight = new BoolSetting(iniFile, VIDEO, "AlphaLight", GoodGPU == 3 ? true : false);
             AirflowEffect = new BoolSetting(iniFile, VIDEO, "AirflowEffect", GoodGPU == 3 ? true : false);
             VideoMode = new BoolSetting(iniFile, VIDEO, "VideoMode", false);
-            MultiCPU = new BoolSetting(iniFile, VIDEO, "MultiCPU", true);
 
             ScoreVolume = new DoubleSetting(iniFile, AUDIO, "ScoreVolume", 0.7);
             SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.7);
@@ -224,7 +223,6 @@ namespace ClientCore
         public BoolSetting AirflowEffect { get; private set; }
         public BoolSetting VideoMode { get; private set; }
         public BoolSetting DebugReShade { get; private set; }
-        public BoolSetting MultiCPU { get; private set; }
 
         public BoolSetting NoReShade { get; private set; }
         public IntSetting HighDetail { get; private set; }
@@ -345,8 +343,6 @@ namespace ClientCore
         public StringListSetting FavoriteMaps { get; private set; }
 
         public BoolSetting CanReShade { get; private set; }
-
-        public BoolSetting NewUpdate { get; private set; }
 
         public BoolSetting TC2Completed { get; private set; }
         public BoolSetting EggSide1 { get; private set; }
