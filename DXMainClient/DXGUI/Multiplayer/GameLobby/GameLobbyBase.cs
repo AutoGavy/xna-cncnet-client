@@ -16,6 +16,7 @@ using DTAClient.DXGUI.Multiplayer.CnCNet;
 using DTAClient.Online;
 using DTAClient.Online.EventArguments;
 using Localization;
+using System.Diagnostics;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -1361,7 +1362,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <summary>
         /// Writes spawn.ini. Returns the player house info returned from the randomizer.
         /// </summary>
-        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false)
+        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = true)
         {
             Logger.Log("Writing spawn.ini");
 
@@ -1379,6 +1380,106 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             var teamStartMappings = PlayerExtraOptionsPanel.GetTeamStartMappings();
 
             PlayerHouseInfo[] houseInfos = Randomize(teamStartMappings);
+
+            /*
+             * gsCustomizeRestriction
+             * 游戏一共有3个阵营，每个阵营有4个子阵营
+             * 子阵营类型分别是：进攻 防守 支援 综合
+             * 新的阵营选择器的规则是：同一个队伍内不能有相同的子阵营，以及不能有相同的子阵营类型
+             * 假设阵营为A,B,C，子阵营则为A1 A2 A3 A4, B1 B2 B3 B4, C1 C2 C3 C4
+             * 
+             * 目前因为C4做不完，所以允许两个C1
+             */
+            if (gsCustomizeRestriction)
+            {
+                // get players in a team (random teams ignored)
+                Dictionary<int, HashSet<int>> teamsPlayers = new Dictionary<int, HashSet<int>>();
+                for (int pId = 0; pId < Players.Count; pId++)
+                {
+                    PlayerInfo pInfo = Players[pId];
+                    PlayerHouseInfo pHouseInfo = houseInfos[pId];
+
+                    int teamId = pInfo.TeamId;
+                    // teamid 0 -> random
+                    if (teamId > 0)
+                    {
+                        if (!teamsPlayers.ContainsKey(teamId))
+                        {
+                            teamsPlayers[teamId] = new HashSet<int> { };
+                        }
+                        bool existed = teamsPlayers[teamId].Add(pId);
+                        Debug.Assert(!existed);
+                    }
+                }
+
+                foreach (var teamPlayers in teamsPlayers.Values)
+                {
+                    Debug.Assert(GS_Side.FactionSidesCount == 4);
+                    if (teamPlayers.Count > 4)
+                    {
+                        // 队伍多于4人的情况不做任何限制
+                        break;
+                    }
+
+                    HashSet<int> sideUsed = new HashSet<int>(); // 子阵营不能重复
+
+                    IReadOnlyList<int> sideTypeCountMax = new int[4] { 2, 1, 1, 1 }; // 子阵营类型上限
+                    int[] sideTypeCount = new int[4];
+
+                    bool validateSide(int sideId)
+                    {
+                        int sideType = sideId % 4; // 子阵营类型 0 1 2 3
+                        if (sideUsed.Contains(sideId)) return false; // 子阵营重复
+                        if (sideTypeCount[sideType] + 1 > sideTypeCountMax[sideType]) return false; // 子阵营类型上限
+                        return true;
+                    }
+
+                    void applySide(int sideId, int pId)
+                    {
+                        int sideType = sideId % 4; // 子阵营类型 0 1 2 3
+                        bool existed = sideUsed.Add(sideId);
+                        Debug.Assert(!existed);
+                        sideTypeCount[sideType] += 1;
+                        Debug.Assert(sideTypeCount[sideType] <= sideTypeCountMax[sideType]);
+
+                        houseInfos[pId].SideIndex = sideId;
+                    }
+
+                    foreach (var pId in teamPlayers)
+                    {
+                        if (validateSide(houseInfos[pId].SideIndex))
+                        {
+                            applySide(houseInfos[pId].SideIndex, pId);
+                        }
+                        else
+                        {
+                            bool sideAdded = false;
+                            List<int> sidesRoll = new List<int>();
+                            for (int newSide = 0; newSide < SideCount; newSide++) sidesRoll.Add(newSide);
+                            sidesRoll = sidesRoll.OrderBy(a => Guid.NewGuid()).ToList(); // shuffle lists
+                            foreach (int newSide in sidesRoll)
+                            {
+                                if (validateSide(newSide))
+                                {
+                                    applySide(newSide, pId);
+                                    sideAdded = true;
+                                    break;
+                                }
+                            }
+                            if (!sideAdded)
+                            {
+                                throw new Exception("随机算法可能出现问题，每种可能的情况都不符合已有规则。请和游戏开发者联系！");
+                            }
+                        }
+
+                    }
+
+
+
+                }
+
+
+            }
 
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
 

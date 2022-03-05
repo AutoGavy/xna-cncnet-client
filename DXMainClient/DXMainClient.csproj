@@ -416,6 +416,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\GS_Side.cs" />
     <Compile Include="Domain\Multiplayer\AllianceHolder.cs" />
     <Compile Include="Domain\Multiplayer\CnCNet\CnCNetPlayerCountTask.cs" />
     <Compile Include="Domain\Multiplayer\CnCNet\CnCNetTunnel.cs" />
