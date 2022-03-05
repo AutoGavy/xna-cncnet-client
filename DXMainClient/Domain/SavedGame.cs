@@ -86,7 +86,7 @@ namespace DTAClient.Domain
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
                 {
-                    br.BaseStream.Position = 2560;
+                    br.BaseStream.Position = 2560; // This is wrong. Use OpenMCDF to parse it.
                     string strName = String.Empty;
 
                     bool wasLastByteZero = false;
@@ -132,7 +132,7 @@ namespace DTAClient.Domain
             try
             {
                 StreamReader reader = new StreamReader(File.OpenRead(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName));
-                reader.BaseStream.Position = 2256;
+                reader.BaseStream.Position = 2256; // This is wrong. Use OpenMCDF to parse it.
                 string line;
 
                 while ((line = reader.ReadLine()) != null)
@@ -186,7 +186,7 @@ namespace DTAClient.Domain
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
                 {
-                    br.BaseStream.Position = 5146;
+                    br.BaseStream.Position = 5146; // This is wrong. Use OpenMCDF to parse it.
                     string strShaderName = String.Empty;
 
                     byte characterByte = 0;
@@ -218,7 +218,7 @@ namespace DTAClient.Domain
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
                 {
-                    br.BaseStream.Position = 5133;
+                    br.BaseStream.Position = 5133; // This is wrong. Use OpenMCDF to parse it.
                     string strShaderName = String.Empty;
 
                     byte characterByte = 0;
