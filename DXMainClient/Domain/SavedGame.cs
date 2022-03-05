@@ -15,22 +15,6 @@ namespace DTAClient.Domain
         const string SAVED_GAME_PATH = "Saved Games/";
         const string findSample = ".MAP";
 
-        private readonly Dictionary<string, string> SideList = new Dictionary<string, string>
-        {
-            {"GDI-Offense", "GDI"},
-            {"GDI-Defense", "GDI"},
-            {"GDI-Support", "GDI"},
-            {"ZOCOM",       "GDI"},
-            {"Nod-Offense", "Nod"},
-            {"Nod-Defense", "Nod"},
-            {"Nod-Support", "Nod"},
-            {"MarkedOfKane","Nod"},
-            {"Scrin",       "Scrin"},
-            {"Reaper17",    "Scrin"},
-            {"Traveler59",  "Scrin"},
-            {"Destroyer41", "Scrin"}
-        };
-
         public SavedGame(string fileName)
         {
             FileName = fileName;
@@ -111,11 +95,11 @@ namespace DTAClient.Domain
                     if (String.IsNullOrEmpty(strName))
                         return false;
 
-                    if (!SideList.ContainsKey(strName))
+                    if (!GS_Side.SideToFaction.ContainsKey(strName))
                         return false;
 
-                    Logger.Log("SavedGame: Player side is " + SideList[strName]);
-                    SideName = SideList[strName];
+                    Logger.Log("SavedGame: Player side is " + GS_Side.SideToFaction[strName]);
+                    SideName = GS_Side.SideToFaction[strName];
                     return true;
                 }
             }

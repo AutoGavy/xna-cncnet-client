@@ -6,30 +6,8 @@ namespace DTAClient.Domain.Multiplayer
 {
     public class PlayerHouseInfo
     {
-        int tempSideInedex;
-        static public readonly int[] sideIndexReal = {
-            0,  // 0
-            1,  // 1
-            2,  // 2
-            10, // 3
-            3,  // 4
-            4,  // 5
-            5,  // 6
-            11, // 7
-            6,  // 8
-            7,  // 9
-            8,  // 10
-            9,  // 11
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18
-        };
-
-        public int SideIndex { get { return sideIndexReal[tempSideInedex]; } set { tempSideInedex = value; } }
+        public int SideIndex { get; set; }
+        //public int SideIndex { get { return sideIndexReal[tempSideInedex]; } set { tempSideInedex = value; } }
 
         /// <summary>
         /// A side (or, more correctly, house or country depending on the game)
