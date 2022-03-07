@@ -24,7 +24,7 @@ namespace DTAClient.Domain
         public static OSVersion OSId = OSVersion.UNKNOWN;
 
         public static readonly int[] ResolutionList =
-{
+        {
             1920,	// 1920 x 1080
 	        1600,	// 1600 x 900
 	        1366,	// 1366 x 768

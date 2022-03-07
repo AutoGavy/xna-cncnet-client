@@ -40,6 +40,7 @@ namespace DTAClient.DXGUI.Generic
             ClientRectangle = new Rectangle(0, 0, 800, 600);
             Name = "LoadingScreen";
 
+            DrawBorders = false;
             BackgroundTexture = AssetLoader.LoadTexture("loadingscreen.png");
 
             base.Initialize();

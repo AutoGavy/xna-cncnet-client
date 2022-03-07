@@ -29,7 +29,8 @@ namespace ClientGUI
 
         public void SetDisplayText(string text)
         {
-            toolTip.Text = text.Replace("@", Environment.NewLine);
+            if (toolTip != null)
+                toolTip.Text = text.Replace("@", Environment.NewLine);
         }
     }
 }

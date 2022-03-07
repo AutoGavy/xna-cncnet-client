@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rampastring.Tools;
 
 namespace ClientGUI
 {
@@ -18,6 +19,9 @@ namespace ClientGUI
         /// If set to true - makes tooltip not appear and instantly hides it if currently shown.
         /// </summary>
         public bool Blocked { get; set; }
+
+        private float _delay { get; set; }
+        private Point _offset { get; set; }
 
         /// <summary>
         /// Creates a new tool tip and attaches it to the given control.
@@ -35,6 +39,8 @@ namespace ClientGUI
             DrawOrder = int.MaxValue;
             GetParentControl(masterControl.Parent).AddChild(this);
             Visible = false;
+            _delay = ClientConfiguration.Instance.ToolTipDelay;
+            _offset = Point.Zero;
         }
 
         private XNAControl GetParentControl(XNAControl parent)
@@ -70,15 +76,29 @@ namespace ClientGUI
         private XNAControl masterControl;
 
         private TimeSpan cursorTime = TimeSpan.Zero;
-        
+
+        public void SetToolTipDelay(float delay)
+        {
+            _delay = delay;
+        }
+        public void SetOffset(Point offset)
+        {
+            offset.X -= (ClientConfiguration.gs_client_x - UserINISettings.Instance.ClientResolutionX) / 2;
+            offset.Y -= (ClientConfiguration.gs_client_y - UserINISettings.Instance.ClientResolutionY) / 2;
+
+            offset.X += ClientConfiguration.GetResOffsetX();
+            _offset = offset;
+        }
 
         private void MasterControl_MouseEnter(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Text))
                 return;
 
-            DisplayAtLocation(SumPoints(WindowManager.Cursor.Location,
-                new Point(ClientConfiguration.Instance.ToolTipOffsetX, ClientConfiguration.Instance.ToolTipOffsetY)));
+            DisplayAtLocation(_offset == Point.Zero ?
+                SumPoints(WindowManager.Cursor.Location,
+                new Point(ClientConfiguration.Instance.ToolTipOffsetX, ClientConfiguration.Instance.ToolTipOffsetY)) :
+                _offset);
             IsMasterControlOnCursor = true;
         }
 
@@ -94,8 +114,10 @@ namespace ClientGUI
             {
                 // Move the tooltip if the cursor has moved while staying 
                 // on the control area and we're invisible
-                DisplayAtLocation(SumPoints(WindowManager.Cursor.Location,
-                    new Point(ClientConfiguration.Instance.ToolTipOffsetX, ClientConfiguration.Instance.ToolTipOffsetY)));
+                DisplayAtLocation(_offset == Point.Zero ?
+                    SumPoints(WindowManager.Cursor.Location,
+                    new Point(ClientConfiguration.Instance.ToolTipOffsetX, ClientConfiguration.Instance.ToolTipOffsetY)) :
+                    _offset);
             }
         }
 
@@ -123,7 +145,7 @@ namespace ClientGUI
             {
                 cursorTime += gameTime.ElapsedGameTime;
 
-                if (cursorTime > TimeSpan.FromSeconds(ClientConfiguration.Instance.ToolTipDelay))
+                if (cursorTime > TimeSpan.FromSeconds(_delay))
                 {
                     Alpha += ClientConfiguration.Instance.ToolTipAlphaRatePerSecond * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     Visible = true;

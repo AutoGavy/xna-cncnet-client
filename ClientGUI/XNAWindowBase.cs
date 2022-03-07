@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace ClientGUI
 {
@@ -65,6 +66,44 @@ namespace ClientGUI
             {
                 if (!(typeof(XNAWindowBase).IsAssignableFrom(child.GetType())))
                     child.GetAttributes(iniFile);
+
+                if (child is XNAClientButton)
+                {
+                    XNAClientButton button = (XNAClientButton)child;
+                    if (button.AutoPos)
+                    {
+                        int offsetX = ClientConfiguration.GetResOffsetX();
+                        button.X += offsetX;
+                        button.LocationCHS.X += offsetX;
+                        button.ClientRectangle = new Rectangle(button.X, button.Y, button.Width, button.Height);
+                    }
+                }
+                else if (child is XNALinkLabel)
+                {
+                    XNALinkLabel label = (XNALinkLabel)child;
+                    if (label.Tag != null)
+                    {
+                        if ((int)label.Tag == 0) // AutoPos
+                        {
+                            label.X -= ClientConfiguration.GetResOffsetX(0.9);
+                            label.Y -= ClientConfiguration.GetResOffsetY(0.8);
+                            label.ClientRectangle = new Rectangle(label.X, label.Y, label.Width, label.Height);
+                        }
+                    }
+                }
+                else if (child is XNAExtraPanel)
+                {
+                    XNAExtraPanel exPanel = (XNAExtraPanel)child;
+                    if (exPanel.Tag != null)
+                    {
+                        if ((int)exPanel.Tag == 0) // AutoPos
+                        {
+                            exPanel.X -= ClientConfiguration.GetResOffsetX(0.9);
+                            exPanel.Y -= ClientConfiguration.GetResOffsetY(0.8);
+                            exPanel.ClientRectangle = new Rectangle(exPanel.X, exPanel.Y, exPanel.Width, exPanel.Height);
+                        }
+                    }
+                }
             }
         }
 

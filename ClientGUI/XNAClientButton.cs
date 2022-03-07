@@ -2,6 +2,8 @@
 using Rampastring.XNAUI.XNAControls;
 using Rampastring.XNAUI;
 using Rampastring.Tools;
+using ClientCore;
+using System;
 
 namespace ClientGUI
 {
@@ -9,16 +11,21 @@ namespace ClientGUI
     {
         private string _toolTipText { get; set; }
 
-        private ToolTip _toolTip { get; set; }
+        public ToolTip _toolTip { get; set; }
 
         private bool ignoreBorderCheck;
         private bool isNgon;
         private bool enter;
-        private int borderWidth;
-        private int borderHeight;
-        private int textureEndX;
-        private int textureEndY;
         private byte alphaCheckVal;
+
+        public int borderWidth;
+        public int borderHeight;
+        public int textureEndX;
+        public int textureEndY;
+
+        public bool AutoPos;
+        public Point LocationENG;
+        public Point LocationCHS;
 
         public bool bButtonHover = false;
         public bool bButtonOn = false;
@@ -32,6 +39,9 @@ namespace ClientGUI
             alphaCheckVal = 0;
             ignoreBorderCheck = true;
             isNgon = false;
+            AutoPos = false;
+            LocationENG = Point.Zero;
+            LocationCHS = Point.Zero;
         }
 
         public override void Initialize()
@@ -53,9 +63,7 @@ namespace ClientGUI
                 Width = IdleTexture.Width;
 
             _toolTip = new ToolTip(WindowManager, this);
-            SetToolTipText(_toolTipText);
         }
-
 
         private bool IsCursorAboveTexture()
         {
@@ -170,6 +178,27 @@ namespace ClientGUI
                 return;
             }
 
+            if (key == "AutoPos" && Conversions.BooleanFromString(key, true))
+            {
+                AutoPos = true;
+                return;
+            }
+
+            if (key == "Location")
+            {
+                string[] strPoint = value.Split(',');
+                LocationENG.X = Conversions.IntFromString(strPoint[0], 0);
+                LocationENG.Y = Conversions.IntFromString(strPoint[1], 0);
+                //return;
+            }
+            if (key == "LocationCHS")
+            {
+                string[] strPoint = value.Split(',');
+                LocationCHS.X = Conversions.IntFromString(strPoint[0], 0);
+                LocationCHS.Y = Conversions.IntFromString(strPoint[1], 0);
+                return;
+            }
+
             if (key == "BorderWidth")
             {
                 borderWidth = Conversions.IntFromString(value, 0);
@@ -193,14 +222,30 @@ namespace ClientGUI
                 return;
             }
 
+            if (key == "ToolTip")
+            {
+                SetToolTipText(value);
+                return;
+            }
+            if (key == "ToolTip.Delay")
+            {
+                _toolTip.SetToolTipDelay(Conversions.FloatFromString(value, ClientConfiguration.Instance.ToolTipDelay));
+                return;
+            }
+            if (key == "ToolTip.Offset")
+            {
+                string[] strOffset = value.Split(',');
+                _toolTip.SetOffset(new Point(Conversions.IntFromString(strOffset[0], 0), Conversions.IntFromString(strOffset[1], 0)));
+                return;
+            }
+
             base.ParseAttributeFromINI(iniFile, key, value);
         }
 
         public void SetToolTipText(string text)
         {
-            _toolTipText = text ?? string.Empty;
             if (_toolTip != null)
-                _toolTip.Text = _toolTipText;
+                _toolTip.Text = text.Replace("@", Environment.NewLine);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace ClientCore
         private const string VIDEO = "Video";
         private const string MULTIPLAYER = "MultiPlayer";
         private const string OPTIONS = "Options";
+        private const string NETWORK = "Network";
         private const string AUDIO = "Audio";
         private const string CUSTOM_SETTINGS = "CustomSettings";
         private const string COMPATIBILITY = "Compatibility";
@@ -59,10 +60,10 @@ namespace ClientCore
 #endif
             int IngameScreenX = 1024;
             int IngameScreenY = 768;
-            if (Screen.PrimaryScreen.Bounds.Width >= 1920 || Screen.PrimaryScreen.Bounds.Height >= 1080)
+            if (Screen.PrimaryScreen.Bounds.Width >= ClientConfiguration.gs_client_x || Screen.PrimaryScreen.Bounds.Height >= ClientConfiguration.gs_client_y)
             {
-                IngameScreenX = 1920;
-                IngameScreenY = 1080;
+                IngameScreenX = ClientConfiguration.gs_client_x;
+                IngameScreenY = ClientConfiguration.gs_client_y;
             }
             else if (Screen.PrimaryScreen.Bounds.Width >= 1600 || Screen.PrimaryScreen.Bounds.Height >= 900)
             {
@@ -78,15 +79,17 @@ namespace ClientCore
             WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, true);
             BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", true);
 
-            int ScreenX = 1280;
-            int ScreenY = 800;
-            if (Screen.PrimaryScreen.Bounds.Width < 1280 || Screen.PrimaryScreen.Bounds.Height < 800)
+            int ScreenX = ClientConfiguration.gs_client_x;
+            int ScreenY = ClientConfiguration.gs_client_y;
+            if (Screen.PrimaryScreen.Bounds.Width < ScreenX || Screen.PrimaryScreen.Bounds.Height < ScreenY)
             {
                 ScreenX = Screen.PrimaryScreen.Bounds.Width;
                 ScreenY = Screen.PrimaryScreen.Bounds.Height;
             }
             ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", ScreenX);
             ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", ScreenY);
+
+            ClientConfiguration.SizeRatio = (ClientResolutionX.Value * ClientResolutionY.Value) / (1920.0 * 1080.0);
 
             BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", false);
             DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
@@ -181,13 +184,15 @@ namespace ClientCore
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);
             AutoRemoveUnderscoresFromName = new BoolSetting(iniFile, OPTIONS, "AutoRemoveUnderscoresFromName", true);
 
+            MenuTextIsEnglish = new BoolSetting(iniFile, OPTIONS, "MenuTextIsEnglish", true);
+
             CanReShade = new BoolSetting(iniFile, OPTIONS, "CanReShade", false);
 
-            TC2Completed = new BoolSetting(iniFile, "Network", "OTStuID5", false);
-            EggSide1 = new BoolSetting(iniFile, "Network", "OTStuID1", false);
-            EggSide2 = new BoolSetting(iniFile, "Network", "OTStuID2", false);
-            EggSide3 = new BoolSetting(iniFile, "Network", "OTStuID3", false);
-            EggSide4 = new BoolSetting(iniFile, "Network", "OTStuID4", false);
+            TC2Completed = new BoolSetting(iniFile, NETWORK, "OTStuID5", false);
+            EggSide1 = new BoolSetting(iniFile, NETWORK, "OTStuID1", false);
+            EggSide2 = new BoolSetting(iniFile, NETWORK, "OTStuID2", false);
+            EggSide3 = new BoolSetting(iniFile, NETWORK, "OTStuID3", false);
+            EggSide4 = new BoolSetting(iniFile, NETWORK, "OTStuID4", false);
 
             SortState = new IntSetting(iniFile, GAME_FILTERS, "SortState", (int)SortDirection.None);
             ShowFriendGamesOnly = new BoolSetting(iniFile, GAME_FILTERS, "ShowFriendGamesOnly", DEFAULT_SHOW_FRIENDS_ONLY_GAMES);
@@ -341,6 +346,8 @@ namespace ClientCore
         public BoolSetting AutoRemoveUnderscoresFromName { get; private set; }
 
         public StringListSetting FavoriteMaps { get; private set; }
+
+        public BoolSetting MenuTextIsEnglish { get; private set; }
 
         public BoolSetting CanReShade { get; private set; }
 

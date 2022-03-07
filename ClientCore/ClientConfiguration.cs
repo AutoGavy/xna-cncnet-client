@@ -15,6 +15,11 @@ namespace ClientCore
         private const string GAME_OPTIONS = "GameOptions.ini";
         private const string CLIENT_DEFS = "ClientDefinitions.ini";
 
+        public const int gs_client_x = 1920;
+        public const int gs_client_y = 1080;
+
+        public static double SizeRatio = 1.0;
+
         private static ClientConfiguration _instance;
 
         private IniFile gameOptions_ini;
@@ -329,6 +334,10 @@ namespace ClientCore
 
             return OSVersion.UNKNOWN;
         }
+
+        public static int GetResOffsetX(double scale = 0.5) => (int)((gs_client_x - UserINISettings.Instance.ClientResolutionX) * SizeRatio * scale);
+
+        public static int GetResOffsetY(double scale = 0.5) => (int)((gs_client_y - UserINISettings.Instance.ClientResolutionY) * SizeRatio * scale);
     }
 
     /// <summary>
