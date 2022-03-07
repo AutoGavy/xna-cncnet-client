@@ -15,22 +15,6 @@ namespace DTAClient.Domain
         const string SAVED_GAME_PATH = "Saved Games/";
         const string findSample = ".MAP";
 
-        private readonly Dictionary<string, string> SideList = new Dictionary<string, string>
-        {
-            {"GDI-Offense", "GDI"},
-            {"GDI-Defense", "GDI"},
-            {"GDI-Support", "GDI"},
-            {"ZOCOM",       "GDI"},
-            {"Nod-Offense", "Nod"},
-            {"Nod-Defense", "Nod"},
-            {"Nod-Support", "Nod"},
-            {"MarkedOfKane","Nod"},
-            {"Scrin",       "Scrin"},
-            {"Reaper17",    "Scrin"},
-            {"Traveler59",  "Scrin"},
-            {"Destroyer41", "Scrin"}
-        };
-
         public SavedGame(string fileName)
         {
             FileName = fileName;
@@ -86,7 +70,7 @@ namespace DTAClient.Domain
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
                 {
-                    br.BaseStream.Position = 2560;
+                    br.BaseStream.Position = 2560; // This is wrong. Use OpenMCDF to parse it.
                     string strName = String.Empty;
 
                     bool wasLastByteZero = false;
@@ -111,11 +95,11 @@ namespace DTAClient.Domain
                     if (String.IsNullOrEmpty(strName))
                         return false;
 
-                    if (!SideList.ContainsKey(strName))
+                    if (!GS_Side.SideToFaction.ContainsKey(strName))
                         return false;
 
-                    Logger.Log("SavedGame: Player side is " + SideList[strName]);
-                    SideName = SideList[strName];
+                    Logger.Log("SavedGame: Player side is " + GS_Side.SideToFaction[strName]);
+                    SideName = GS_Side.SideToFaction[strName];
                     return true;
                 }
             }
@@ -132,7 +116,7 @@ namespace DTAClient.Domain
             try
             {
                 StreamReader reader = new StreamReader(File.OpenRead(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName));
-                reader.BaseStream.Position = 2256;
+                reader.BaseStream.Position = 2256; // This is wrong. Use OpenMCDF to parse it.
                 string line;
 
                 while ((line = reader.ReadLine()) != null)
@@ -186,7 +170,7 @@ namespace DTAClient.Domain
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
                 {
-                    br.BaseStream.Position = 5146;
+                    br.BaseStream.Position = 5146; // This is wrong. Use OpenMCDF to parse it.
                     string strShaderName = String.Empty;
 
                     byte characterByte = 0;
@@ -218,7 +202,7 @@ namespace DTAClient.Domain
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName, FileMode.Open, FileAccess.Read)))
                 {
-                    br.BaseStream.Position = 5133;
+                    br.BaseStream.Position = 5133; // This is wrong. Use OpenMCDF to parse it.
                     string strShaderName = String.Empty;
 
                     byte characterByte = 0;

@@ -15,13 +15,19 @@ namespace ClientGUI
         {
         }
 
+        private void CreateToolTip()
+        {
+            if (ToolTip == null)
+                ToolTip = new ToolTip(WindowManager, this);
+        }
+
         public override void Initialize()
         {
             CheckSoundEffect = new EnhancedSoundEffect("checkbox.wav");
 
             base.Initialize();
 
-            ToolTip = new ToolTip(WindowManager, this);
+            CreateToolTip();
         }
 
         public override void OnMouseEnter()
@@ -56,6 +62,7 @@ namespace ClientGUI
         {
             if (key == "ToolTip")
             {
+                CreateToolTip();
                 ToolTip.Text = value.Replace("@", Environment.NewLine);
                 return;
             }

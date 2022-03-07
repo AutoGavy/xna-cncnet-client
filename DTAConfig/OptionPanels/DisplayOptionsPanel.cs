@@ -225,16 +225,15 @@ namespace DTAConfig.OptionPanels
             // So we add the optimal resolutions to the list, sort it and then find
             // out the optimal resolution index - it's inefficient, but works
 
-            var preferredResolutions = ClientConfiguration.Instance.PreferedRenderResolutions.Select(s => new ScreenResolution(s));
-            int optimalWindowedResIndex = -1;
-            foreach (var resolution in preferredResolutions)
-            {
-                optimalWindowedResIndex = resolutions.FindIndex(res => res == resolution);
-                if (optimalWindowedResIndex > -1) break;
-            }
+            string[] recommendedResolutions = clientConfig.RecommendedResolutions;
 
-            if (optimalWindowedResIndex > -1)
-                ddClientResolution.PreferredItemIndex = optimalWindowedResIndex;
+            foreach (string resolution in recommendedResolutions)
+            {
+                string trimmedresolution = resolution.Trim();
+                int index = resolutions.FindIndex(res => res.ToString() == trimmedresolution);
+                if (index > -1)
+                    ddClientResolution.PreferredItemIndexes.Add(index);
+            }
 
             chkBorderlessClient = new XNAClientCheckBox(WindowManager);
             chkBorderlessClient.Name = "chkBorderlessClient";
@@ -760,16 +759,9 @@ namespace DTAConfig.OptionPanels
             {
                 ddClientResolution.AllowDropDown = true;
 
-                var preferredResolutions = ClientConfiguration.Instance.PreferedRenderResolutions.Select(s => new ScreenResolution(s));
-                int optimalWindowedResIndex = -1;
-                foreach (var resolution in preferredResolutions)
+                if (ddClientResolution.PreferredItemIndexes.Count > 0)
                 {
-                    optimalWindowedResIndex = ddClientResolution.Items.FindIndex(i => (string)i.Tag == resolution.ToString());
-                    if (optimalWindowedResIndex > -1) break;
-                }
-
-                if (optimalWindowedResIndex > -1)
-                {
+                    int optimalWindowedResIndex = ddClientResolution.PreferredItemIndexes[0];
                     ddClientResolution.SelectedIndex = optimalWindowedResIndex;
                 }
             }

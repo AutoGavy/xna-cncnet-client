@@ -495,6 +495,7 @@ namespace DTAClient.DXGUI.Generic
                 if (ps.IsAI)
                 {
                     items.Add(new XNAListBoxItem(AILevelToString(ps.AILevel, ms.GameMode), textColor));
+                    // items.Add(new XNAListBoxItem(ProgramConstants.GetAILevelName(ps.AILevel), textColor));
                 }
                 else
                     items.Add(new XNAListBoxItem(ps.Name, textColor));
@@ -618,14 +619,14 @@ namespace DTAClient.DXGUI.Generic
 
         #region Statistics reading / game listing code
 
-        void ReadStatistics()
+        private void ReadStatistics()
         {
             StatisticsManager sm = StatisticsManager.Instance;
 
             sm.ReadStatistics(ProgramConstants.GamePath);
         }
 
-        void ListGameModes()
+        private void ListGameModes()
         {
             int gameCount = sm.GetMatchCount();
 
@@ -650,7 +651,7 @@ namespace DTAClient.DXGUI.Generic
             cmbGameModeFilter.SelectedIndex = 0;
         }
 
-        void ListGames()
+        private void ListGames()
         {
             lbGameList.SelectedIndex = -1;
             lbGameList.SetTopIndex(0);
