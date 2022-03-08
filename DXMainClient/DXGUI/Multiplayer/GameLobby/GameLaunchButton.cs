@@ -4,32 +4,29 @@ using Microsoft.Xna.Framework.Graphics;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
     public class GameLaunchButton : XNAClientButton
     {
-        public GameLaunchButton(WindowManager windowManager) : base(windowManager)
+        public GameLaunchButton(WindowManager windowManager, Texture2D[] rankTextures) : base(windowManager)
         {
-        }
-
-        private StarDisplay starDisplay;
-
-        public void InitStarDisplay(Texture2D[] rankTextures)
-        {
-            if (starDisplay != null)
-                throw new InvalidOperationException("The star display is already initialized!");
-
-            starDisplay = new StarDisplay(WindowManager, rankTextures);
+            starDisplay = new StarDisplay(windowManager, rankTextures);
             starDisplay.InputEnabled = false;
-            AddChild(starDisplay);
             ClientRectangleUpdated += (e, sender) => UpdateStarPosition();
-            UpdateStarPosition();
         }
+
+        private readonly StarDisplay starDisplay;
 
         public override void Initialize()
         {
             base.Initialize();
+
+            AddChild(starDisplay);
         }
 
         public override string Text
@@ -40,9 +37,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void UpdateStarPosition()
         {
-            if (starDisplay == null)
-                return;
-
             starDisplay.Y = (Height - starDisplay.Height) / 2;
             starDisplay.X = (Width / 2) + (int)(Renderer.GetTextDimensions(Text, FontIndex).X / 2) + 3;
         }

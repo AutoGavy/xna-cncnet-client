@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Rampastring.XNAUI.XNAControls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Rampastring.XNAUI;
 using Rampastring.Tools;
 using System.Diagnostics;
@@ -15,17 +19,11 @@ namespace ClientGUI
 
         private ToolTip toolTip;
 
-        private void CreateToolTip()
-        {
-            if (toolTip == null)
-                toolTip = new ToolTip(WindowManager, this);
-        }
-
         public override void Initialize()
         {
             base.Initialize();
 
-            CreateToolTip();
+            toolTip = new ToolTip(WindowManager, this);
         }
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
@@ -37,7 +35,6 @@ namespace ClientGUI
             }
             else if (key == "ToolTip")
             {
-                CreateToolTip();
                 toolTip.Text = value.Replace("@", Environment.NewLine);
                 return;
             }

@@ -13,26 +13,19 @@ namespace ClientGUI
         {
         }
 
-        private void CreateToolTip()
-        {
-            if (ToolTip == null)
-                ToolTip = new ToolTip(WindowManager, this);
-        }
-
         public override void Initialize()
         {
             ClickSoundEffect = new EnhancedSoundEffect("dropdown.wav");
 
-            CreateToolTip();
-
             base.Initialize();
+
+            ToolTip = new ToolTip(WindowManager, this);
         }
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
         {
             if (key == "ToolTip")
             {
-                CreateToolTip();
                 ToolTip.Text = value.Replace("@", Environment.NewLine);
                 return;
             }

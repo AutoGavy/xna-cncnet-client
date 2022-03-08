@@ -43,16 +43,12 @@ namespace ClientGUI
             _offset = Point.Zero;
         }
 
-        private XNAControl GetParentControl(XNAControl parent)
+        private static XNAControl GetParentControl(XNAControl parent)
         {
-            if (parent is XNAWindow)
-                return parent as XNAWindow;
-            else if (parent is INItializableWindow)
-                return parent as INItializableWindow;
-            else if (parent.Parent != null)
-                return GetParentControl(parent.Parent);
-            else
-                return parent;
+            if (parent is XNAWindow parentWindow)
+                return parentWindow;
+            
+            return parent.Parent == null ? parent : GetParentControl(parent.Parent);
         }
 
         private void MasterControl_EnabledChanged(object sender, EventArgs e)

@@ -2,7 +2,6 @@
 using Rampastring.Tools;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
-using System.Collections.Generic;
 
 namespace ClientGUI
 {
@@ -19,7 +18,7 @@ namespace ClientGUI
         /// <summary>
         /// Index of the preferred drop-down item.
         /// </summary>
-        public List<int> PreferredItemIndexes { get; set; } = new List<int>();
+        public int PreferredItemIndex { get; set; } = -1;
 
         /// <summary>
         /// Creates a new preferred item drop-down control.
@@ -46,22 +45,15 @@ namespace ClientGUI
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            if (PreferredItemIndexes.Count > 0)
+            if (PreferredItemIndex > -1 && PreferredItemIndex < Items.Count)
             {
-                PreferredItemIndexes.ForEach(i =>
-                {
-                    XNADropDownItem preferredItem = Items[i];
-                    string preferredItemOriginalText = preferredItem.Text;
-                    preferredItem.Text += " " + PreferredItemLabel;
-                });
+                XNADropDownItem preferredItem = Items[PreferredItemIndex];
+                string preferredItemOriginalText = preferredItem.Text;
+                preferredItem.Text += " " + PreferredItemLabel;
 
                 base.Draw(gameTime);
 
-                PreferredItemIndexes.ForEach(i =>
-                {
-                    XNADropDownItem preferredItem = Items[i];
-                    preferredItem.Text = preferredItem.Text.Substring(0, preferredItem.Text.Length - PreferredItemLabel.Length - 1);
-                });
+                preferredItem.Text = preferredItemOriginalText;
             }
             else
             {

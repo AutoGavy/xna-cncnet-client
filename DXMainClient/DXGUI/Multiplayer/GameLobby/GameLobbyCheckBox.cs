@@ -6,7 +6,6 @@ using ClientGUI;
 using System.Collections.Generic;
 using System.Linq;
 using DTAClient.Domain.Multiplayer;
-using Rampastring.XNAUI.XNAControls;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -71,30 +70,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private string enabledSpawnIniValue = "True";
         private string disabledSpawnIniValue = "False";
-
-
-        public override void Initialize()
-        {
-            // Find the game lobby that this control belongs to and register ourselves as a game option.
-
-            XNAControl parent = Parent;
-            while (true)
-            {
-                if (parent == null)
-                    break;
-
-                // oh no, we have a circular class reference here!
-                if (parent is GameLobbyBase gameLobby)
-                {
-                    gameLobby.CheckBoxes.Add(this);
-                    break;
-                }
-
-                parent = parent.Parent;
-            }
-
-            base.Initialize();
-        }
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)
         {
