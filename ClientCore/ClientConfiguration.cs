@@ -218,7 +218,7 @@ namespace ClientCore
 
         public string UnixMapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "UnixMapEditorExePath", Instance.MapEditorExePath);
 
-        public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "ModMode", false);
+        public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "TC_DeveloperMode", false);
 
         public string LongGameName => clientDefinitionsIni.GetStringValue(SETTINGS, "LongGameName", "Tiberian Sun");
 
