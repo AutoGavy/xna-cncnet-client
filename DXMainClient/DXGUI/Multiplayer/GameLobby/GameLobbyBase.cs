@@ -1423,7 +1423,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                     HashSet<int> sideUsed = new HashSet<int>(); // 子阵营不能重复
 
-                    IReadOnlyList<int> sideTypeCountMax = new int[4] { 2, 1, 1, 1 }; // 子阵营类型上限
+                    IList<int> sideTypeCountMax = new int[4] { 2, 1, 1, 1 }; // 子阵营类型上限
                     int[] sideTypeCount = new int[4];
 
                     bool validateSide(int sideId)
