@@ -1,10 +1,11 @@
-﻿using ClientCore;
+using ClientCore;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using DTAClient.Domain;
 using System.IO;
 using ClientGUI;
+using Rampastring.XNAUI.XNAControls;
 using Rampastring.XNAUI;
 using Rampastring.Tools;
 using System.Linq;
@@ -278,6 +279,8 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnSlideDown;
         private XNAClientButton btnOldCampaign;
 
+        private XNAExtraPanel epBackground;
+
         private IniFile campaignOptionsIni;
         private IniFile profileIni;
 
@@ -302,6 +305,14 @@ namespace DTAClient.DXGUI.Generic
             SetAsButton[1] = new gsDelegate(SetAsButton2);
             SetAsButton[2] = new gsDelegate(SetAsButton3);
             SetAsButton[3] = new gsDelegate(SetAsButton4);
+
+            epBackground = new XNAExtraPanel(WindowManager);
+            epBackground.Name = "epBackground";
+            epBackground.ClientRectangle = new Rectangle(0, 0, 1920, 1080);
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/gen_bg.png");
+            epBackground.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
+            epBackground.DrawBorders = false;
+            AddChild(epBackground);
 
             // Difficulty buttons
             foreach (string difficultyName in DifficultyList)
@@ -400,22 +411,19 @@ namespace DTAClient.DXGUI.Generic
 
             btnOldCampaign = new XNAClientButton(WindowManager);
             btnOldCampaign.Name = "btnOldCampaign";
-            btnOldCampaign.ClientRectangle = new Rectangle(5, 0, 86, 33);
-            // english:
-            // btnOldCampaign.ClientRectangle = new Rectangle(5, 0, 112, 33);
+            btnOldCampaign.ClientRectangle = new Rectangle(25, 24, 248, 41);
             btnOldCampaign.SetBorderHeight(10);
             btnOldCampaign.SetBorderWidth(11);
             btnOldCampaign.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn.png");
             btnOldCampaign.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn_c.png");
             btnOldCampaign.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnOldCampaign.Visible = true;
             if (true) //(UserINISettings.Instance.TC2Completed)
             {
-                btnOldCampaign.Visible = true;
                 btnOldCampaign.AllowClick = true;
             }
             else
             {
-                btnOldCampaign.Visible = false;
                 btnOldCampaign.AllowClick = false;
             }
             btnOldCampaign.LeftClick += BtnOldCampaign_LeftClick;
@@ -424,7 +432,7 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnCancel);
             AddChild(btnSlideUp);
             AddChild(btnSlideDown);
-            AddChild(btnOldCampaign);
+            //AddChild(btnOldCampaign);
 
             curMissionIndex = UserINISettings.Instance.SelectedMissionIndex;
             curDifficultyIndex = UserINISettings.Instance.FakeDifficulty;
@@ -461,6 +469,8 @@ namespace DTAClient.DXGUI.Generic
 
             base.Initialize();
 
+            epBackground.AddChild(btnOldCampaign);
+            epBackground.CenterOnParent();
             CenterOnParent();
 
             ParseBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
@@ -621,7 +631,8 @@ namespace DTAClient.DXGUI.Generic
             MissionButtons[index].bButtonHover = false;
             MissionButtons[index].AllowClick = false;
             MissionButtons[index].IdleTexture = AssetLoader.LoadTexture(MissionButtons[index].Tag.ToString() + "_c.png");
-            BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + MissionList[index] + "bg.png");
+            BackgroundTexture = AssetLoader.LoadTexture("empty.png");
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + MissionList[index] + "bg.png");
 
             btnLaunch.AllowClick = campaignOptionsIni.GetBooleanValue(SIDE_ABBR + (currentIndex).ToString(), "Enable", true);
 

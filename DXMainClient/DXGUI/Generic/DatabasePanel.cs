@@ -38,13 +38,14 @@ namespace DTAClient.DXGUI.Generic
         private XNAListBox lbScrDataList;
         private XNATextBlock tbDataText;
         private XNAExtraPanel epDataPic;
+        private XNAExtraPanel epBackground;
 
         private IniFile dataOptionsIni;
         private IniFile profileIni;
 
         public override void Initialize()
         {
-            BackgroundTexture = AssetLoader.LoadTexture("Database/gen_bg.png");
+            BackgroundTexture = AssetLoader.LoadTexture("empty.png");
             ClientRectangle = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
             BorderColor = UISettings.ActiveSettings.PanelBorderColor;
 
@@ -89,9 +90,9 @@ namespace DTAClient.DXGUI.Generic
             btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                btnCancel.ClientRectangle = new Rectangle(1161, 725, 92, 31);
-            /*else
-                btnCancel.ClientRectangle = new Rectangle(1184, 725, 66, 32);*/
+               // btnCancel.ClientRectangle = new Rectangle(1161, 725, 92, 31);
+            //else
+                btnCancel.ClientRectangle = new Rectangle(1184, 725, 66, 32);
             btnCancel.IdleTexture = AssetLoader.LoadTexture("Database/backbtn.png");
             btnCancel.HoverTexture = AssetLoader.LoadTexture("Database/backbtn_c.png");
             btnCancel.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
@@ -141,6 +142,14 @@ namespace DTAClient.DXGUI.Generic
             epDataPic.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             epDataPic.DrawBorders = false;
 
+            epBackground = new XNAExtraPanel(WindowManager);
+            epBackground.Name = "epBackground";
+            epBackground.ClientRectangle = new Rectangle(0, 0, 1920, 1080);
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/gen_bg.png");
+            epBackground.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
+            epBackground.DrawBorders = false;
+            AddChild(epBackground);
+
             AddChild(btnFacGen);
             AddChild(btnFacGDI);
             AddChild(btnFacNod);
@@ -181,6 +190,9 @@ namespace DTAClient.DXGUI.Generic
             btnFacScr.AllowClick = true;
 
             base.Initialize();
+
+            epBackground.CenterOnParent();
+            CenterOnParent();
         }
 
         public string GetSwitchName()
@@ -441,7 +453,7 @@ namespace DTAClient.DXGUI.Generic
                 btnFacScr.bButtonOn = false;
             }
 
-            BackgroundTexture = AssetLoader.LoadTexture("Database/gdi_bg.png");
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/gdi_bg.png");
             UpdateDisplayData(lbGDIDataList);
         }
 
@@ -491,7 +503,7 @@ namespace DTAClient.DXGUI.Generic
                 btnFacScr.bButtonOn = false;
             }
 
-            BackgroundTexture = AssetLoader.LoadTexture("Database/nod_bg.png");
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/nod_bg.png");
             UpdateDisplayData(lbNodDataList);
         }
 
@@ -541,7 +553,7 @@ namespace DTAClient.DXGUI.Generic
             btnFacScr.IdleTexture = AssetLoader.LoadTexture("Database/facscrbtn_c.png");
             btnFacScr.bButtonOn = true;
 
-            BackgroundTexture = AssetLoader.LoadTexture("Database/scr_bg.png");
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/scr_bg.png");
             UpdateDisplayData(lbScrDataList);
         }
 
