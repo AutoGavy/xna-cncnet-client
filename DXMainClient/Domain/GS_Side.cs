@@ -13,7 +13,7 @@ namespace DTAClient.Domain
         /// <summary>
         /// 阵营，0-3 GDI，4-7 Nod，8-11 Scrin
         /// </summary>
-        public static readonly IReadOnlyList<string> Sides = new List<string> {
+        public static readonly IList<string> Sides = new List<string> {
             "GDI-Offense","GDI-Defense","GDI-Support","ZOCOM",
             "Nod-Offense","Nod-Defense","Nod-Support","MarkedOfKane",
             "Scrin","Reaper17","Traveler59","Destroyer41",
@@ -22,7 +22,7 @@ namespace DTAClient.Domain
         /// <summary>
         /// 小阵营到大阵营
         /// </summary>
-        public static readonly IReadOnlyDictionary<string, string> SideToFaction = new Dictionary<string, string>
+        public static readonly IDictionary<string, string> SideToFaction = new Dictionary<string, string>
         {
             {"GDI-Offense", "GDI"},
             {"GDI-Defense", "GDI"},
