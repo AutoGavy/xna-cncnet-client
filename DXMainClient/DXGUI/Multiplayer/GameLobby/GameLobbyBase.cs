@@ -1279,7 +1279,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// and returns the options as an array of PlayerHouseInfos.
         /// </summary>
         /// <returns>An array of PlayerHouseInfos.</returns>
-        protected virtual PlayerHouseInfo[] Randomize(List<TeamStartMapping> teamStartMappings)
+        protected virtual PlayerHouseInfo[] Randomize(List<TeamStartMapping> teamStartMappings, bool gsCustomizeRestriction = true)
         {
             int totalPlayerCount = Players.Count + AIPlayers.Count;
             PlayerHouseInfo[] houseInfos = new PlayerHouseInfo[totalPlayerCount];
@@ -1356,30 +1356,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 pHouseInfo.RandomizeStart(pInfo, random, freeStartingLocations, takenStartingLocations, teamStartMappings.Any());
             }
 
-            return houseInfos;
-        }
-
-        /// <summary>
-        /// Writes spawn.ini. Returns the player house info returned from the randomizer.
-        /// </summary>
-        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = true)
-        {
-            Logger.Log("Writing spawn.ini");
-
-            File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
-
-            if (Map.IsCoop)
-            {
-                foreach (PlayerInfo pInfo in Players)
-                    pInfo.TeamId = 1;
-
-                foreach (PlayerInfo pInfo in AIPlayers)
-                    pInfo.TeamId = 1;
-            }
-
-            var teamStartMappings = PlayerExtraOptionsPanel.GetTeamStartMappings();
-
-            PlayerHouseInfo[] houseInfos = Randomize(teamStartMappings);
 
             /*
              * gsCustomizeRestriction
@@ -1394,10 +1370,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 // get players in a team (random teams ignored)
                 Dictionary<int, HashSet<int>> teamsPlayers = new Dictionary<int, HashSet<int>>();
-                for (int pId = 0; pId < Players.Count; pId++)
+                for (int pId = 0; pId < totalPlayerCount; pId++)
                 {
-                    PlayerInfo pInfo = Players[pId];
+                    PlayerInfo pInfo;
                     PlayerHouseInfo pHouseInfo = houseInfos[pId];
+
+                    if (pId < Players.Count)
+                        pInfo = Players[pId];
+                    else
+                        pInfo = AIPlayers[pId - Players.Count];
 
                     int teamId = pInfo.TeamId;
                     // teamid 0 -> random
@@ -1407,8 +1388,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             teamsPlayers[teamId] = new HashSet<int> { };
                         }
-                        bool existed = teamsPlayers[teamId].Add(pId);
-                        Debug.Assert(!existed);
+                        bool notExisted = teamsPlayers[teamId].Add(pId);
+                        Debug.Assert(notExisted);
                     }
                 }
 
@@ -1437,8 +1418,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     void applySide(int sideId, int pId)
                     {
                         int sideType = sideId % 4; // 子阵营类型 0 1 2 3
-                        bool existed = sideUsed.Add(sideId);
-                        Debug.Assert(!existed);
+                        bool notExisted = sideUsed.Add(sideId);
+                        Debug.Assert(notExisted);
                         sideTypeCount[sideType] += 1;
                         Debug.Assert(sideTypeCount[sideType] <= sideTypeCountMax[sideType]);
 
@@ -1456,7 +1437,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                             bool sideAdded = false;
                             List<int> sidesRoll = new List<int>();
                             for (int newSide = 0; newSide < SideCount; newSide++) sidesRoll.Add(newSide);
-                            sidesRoll = sidesRoll.OrderBy(a => Guid.NewGuid()).ToList(); // shuffle lists
+                            sidesRoll = sidesRoll.OrderBy(a => random.Next()).ToList(); // shuffle lists
                             foreach (int newSide in sidesRoll)
                             {
                                 if (validateSide(newSide))
@@ -1471,15 +1452,34 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                                 throw new Exception("随机算法可能出现问题，每种可能的情况都不符合已有规则。请和游戏开发者联系！");
                             }
                         }
-
                     }
-
-
-
                 }
-
-
             }
+
+            return houseInfos;
+        }
+
+        /// <summary>
+        /// Writes spawn.ini. Returns the player house info returned from the randomizer.
+        /// </summary>
+        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = true)
+        {
+            Logger.Log("Writing spawn.ini");
+
+            File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
+
+            if (Map.IsCoop)
+            {
+                foreach (PlayerInfo pInfo in Players)
+                    pInfo.TeamId = 1;
+
+                foreach (PlayerInfo pInfo in AIPlayers)
+                    pInfo.TeamId = 1;
+            }
+
+            var teamStartMappings = PlayerExtraOptionsPanel.GetTeamStartMappings();
+
+            PlayerHouseInfo[] houseInfos = Randomize(teamStartMappings, gsCustomizeRestriction);
 
             IniFile spawnIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
 
