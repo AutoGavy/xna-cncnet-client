@@ -94,6 +94,14 @@ namespace DTAClient.DXGUI.Multiplayer
 
         public override void Initialize()
         {
+            var epBackground = new XNAExtraPanel(WindowManager);
+            epBackground.Name = "epBackground";
+            epBackground.ClientRectangle = new Rectangle(0, 0, 1920, 1080);
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("multiplayerlobbybg.png");
+            epBackground.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
+            epBackground.DrawBorders = false;
+            AddChild(epBackground);
+
             Name = "LANLobby";
             BackgroundTexture = AssetLoader.LoadTexture("cncnetlobbybg.png");
             ClientRectangle = new Rectangle(0, 0, WindowManager.RenderResolutionX - 64,
@@ -253,6 +261,8 @@ namespace DTAClient.DXGUI.Multiplayer
             lanGameLoadingLobby.GameLeft += LanGameLoadingLobby_GameLeft;
 
             WindowManager.GameClosing += WindowManager_GameClosing;
+
+            epBackground.CenterOnParent();
         }
 
         private void LanGameLoadingLobby_GameLeft(object sender, EventArgs e)

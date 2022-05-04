@@ -90,9 +90,9 @@ namespace DTAClient.DXGUI.Generic
             btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             //if (ClientConfiguration.Instance.ClientLanguage == 0)
-               // btnCancel.ClientRectangle = new Rectangle(1161, 725, 92, 31);
+               // btnCancel.ClientRectangle = new Rectangle(1126, 725, 92, 31);
             //else
-                btnCancel.ClientRectangle = new Rectangle(1184, 725, 66, 32);
+                btnCancel.ClientRectangle = new Rectangle(1126, 725, 66, 32);
             btnCancel.IdleTexture = AssetLoader.LoadTexture("Database/backbtn.png");
             btnCancel.HoverTexture = AssetLoader.LoadTexture("Database/backbtn_c.png");
             btnCancel.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
@@ -403,7 +403,7 @@ namespace DTAClient.DXGUI.Generic
                 btnFacScr.bButtonOn = false;
             }
 
-            BackgroundTexture = AssetLoader.LoadTexture("Database/gen_bg.png");
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/gen_bg.png");
             UpdateDisplayData(lbGenDataList);
         }
 

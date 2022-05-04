@@ -228,7 +228,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             PlayerOptionsPanel = new XNAPanel(WindowManager);
             PlayerOptionsPanel.Name = "PlayerOptionsPanel";
             PlayerOptionsPanel.ClientRectangle = new Rectangle(GameOptionsPanel.X - 401, 12, 395, GameOptionsPanel.Height);
-            PlayerOptionsPanel.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 192), 1, 1);
+            //PlayerOptionsPanel.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 192), 1, 1);
             PlayerOptionsPanel.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
             InitializePlayerExtraOptionsPanel();
@@ -295,7 +295,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lbGameModeMapList.SelectedIndexChanged += LbGameModeMapList_SelectedIndexChanged;
             lbGameModeMapList.RightClick += LbGameModeMapList_RightClick;
             lbGameModeMapList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            lbGameModeMapList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 192), 1, 1);
+            //lbGameModeMapList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 192), 1, 1);
             lbGameModeMapList.LineHeight = 16;
             lbGameModeMapList.DrawListBoxBorders = true;
             lbGameModeMapList.AllowKeyboardInput = true;
@@ -448,7 +448,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             GameOptionsPanel = new XNAPanel(WindowManager);
             GameOptionsPanel.Name = nameof(GameOptionsPanel);
             GameOptionsPanel.ClientRectangle = new Rectangle(Width - 411, 12, 399, 289);
-            GameOptionsPanel.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 192), 1, 1);
+            //GameOptionsPanel.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 192), 1, 1);
             GameOptionsPanel.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
             loadOrSaveGameOptionPresetWindow = new LoadOrSaveGameOptionPresetWindow(WindowManager);
@@ -1237,13 +1237,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public void CheckEggSides()
         {
-            foreach (XNADropDown dd in ddPlayerSides)
+            /*foreach (XNADropDown dd in ddPlayerSides)
             {
                 dd.Items[RandomSelectorCount + 11].Selectable = UserINISettings.Instance.EggSide4 ? true : false;
                 dd.Items[RandomSelectorCount + 12].Selectable = UserINISettings.Instance.EggSide1 ? true : false;
                 dd.Items[RandomSelectorCount + 13].Selectable = UserINISettings.Instance.EggSide2 ? true : false;
                 dd.Items[RandomSelectorCount + 14].Selectable = UserINISettings.Instance.EggSide3 ? true : false;
-            }
+            }*/
         }
 
         /// <summary>

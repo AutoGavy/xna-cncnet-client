@@ -28,7 +28,7 @@ namespace DTAClient.DXGUI.Multiplayer
             base.Initialize();
 
             Name = "GameFiltersWindow";
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0), Width, Height);
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), Width, Height);
 
             const int gap = 12;
 

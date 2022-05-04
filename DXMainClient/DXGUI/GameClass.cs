@@ -45,15 +45,7 @@ namespace DTAClient.DXGUI
 
             base.Initialize();
 
-            string suffixA = ".cur";
-            string suffixB = ".png";
-#if WINDOWSGL
-            string tempSuffix = suffixA;
-            suffixA = suffixB;
-            suffixB = tempSuffix;
-#endif
-            string primaryNativeCursorPath = ProgramConstants.GetResourcePath() + "cursor" + suffixA;
-            string alternativeNativeCursorPath = ProgramConstants.GetBaseResourcePath() + "cursor" + suffixB;
+            string primaryNativeCursorPath = ProgramConstants.GetResourcePath() + "cursor.cur";
 
             AssetLoader.Initialize(GraphicsDevice, content);
             AssetLoader.AssetSearchPaths.Add(ProgramConstants.GetResourcePath());
@@ -124,11 +116,7 @@ namespace DTAClient.DXGUI
                 AssetLoader.LoadTexture("waitCursor.png")
             };
 
-            if (File.Exists(primaryNativeCursorPath))
-                wm.Cursor.LoadNativeCursor(primaryNativeCursorPath);
-            else if (File.Exists(alternativeNativeCursorPath))
-                wm.Cursor.LoadNativeCursor(alternativeNativeCursorPath);
-
+            wm.Cursor.LoadNativeCursor(primaryNativeCursorPath);
             Components.Add(wm);
 
             string playerName = UserINISettings.Instance.PlayerName.Value.Trim();

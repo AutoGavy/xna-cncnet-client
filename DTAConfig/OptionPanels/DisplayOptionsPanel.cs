@@ -230,7 +230,8 @@ namespace DTAConfig.OptionPanels
             foreach (var resolution in preferredResolutions)
             {
                 optimalWindowedResIndex = resolutions.FindIndex(res => res == resolution);
-                if (optimalWindowedResIndex > -1) break;
+                if (optimalWindowedResIndex > -1)
+                    break;
             }
 
             if (optimalWindowedResIndex > -1)
@@ -998,6 +999,17 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.BorderlessWindowedMode.Value = chkBorderlessWindowedMode.Checked &&
                 string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey);
+
+            // force fullscreen
+            string nativeRes = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height;
+
+            int nativeResIndex = ddClientResolution.Items.FindIndex(i => (string)i.Tag == nativeRes);
+            if (ddClientResolution.SelectedIndex == nativeResIndex)
+            {
+                chkBorderlessClient.Checked = true;
+            }
+
+            // force fullscreen end
 
             string[] clientResolution = ((string)ddClientResolution.SelectedItem.Tag).Split('x');
 

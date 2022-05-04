@@ -146,6 +146,14 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
         public override void Initialize()
         {
+            var epBackground = new XNAExtraPanel(WindowManager);
+            epBackground.Name = "epBackground";
+            epBackground.ClientRectangle = new Rectangle(0, 0, 1920, 1080);
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture("multiplayerlobbybg.png");
+            epBackground.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
+            epBackground.DrawBorders = false;
+            AddChild(epBackground);
+
             invitationIndex = new InvitationIndex();
 
             ClientRectangle = new Rectangle(0, 0, WindowManager.RenderResolutionX - 64,
@@ -179,8 +187,10 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             btnLogout.LeftClick += BtnLogout_LeftClick;
 
             var gameListRectangle = new Rectangle(
+                //btnNewGame.X, 41,
+                //btnJoinGame.Right - btnNewGame.X, btnNewGame.Y - 47
                 btnNewGame.X, 41,
-                btnJoinGame.Right - btnNewGame.X, btnNewGame.Y - 47
+                btnJoinGame.Right - btnNewGame.X, btnNewGame.Y - 53
             );
 
             panelGameFilters = new GameFiltersPanel(WindowManager);
@@ -198,9 +208,12 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             lbPlayerList = new PlayerListBox(WindowManager, gameCollection);
             lbPlayerList.Name = nameof(lbPlayerList);
+            //lbPlayerList.ClientRectangle = new Rectangle(Width - 202,
+            //    20, 190,
+            //    btnLogout.Y - 26);
             lbPlayerList.ClientRectangle = new Rectangle(Width - 202,
-                20, 190,
-                btnLogout.Y - 26);
+                lbGameList.Y, 190,
+                lbGameList.Height);
             lbPlayerList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbPlayerList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
             lbPlayerList.LineHeight = 16;
@@ -212,8 +225,12 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
 
             lbChatMessages = new ChatListBox(WindowManager);
             lbChatMessages.Name = nameof(lbChatMessages);
-            lbChatMessages.ClientRectangle = new Rectangle(lbGameList.Right + 12, lbGameList.Y,
-                lbPlayerList.X - lbGameList.Right - 24, lbPlayerList.Height);
+            //lbChatMessages.ClientRectangle = new Rectangle(lbGameList.Right + 12, lbGameList.Y,
+            //    lbPlayerList.X - lbGameList.Right - 24, lbPlayerList.Height);
+            lbChatMessages.ClientRectangle = new Rectangle(lbGameList.Right + 12,
+                lbGameList.Y,
+                lbPlayerList.X - lbGameList.Right - 24,
+                lbGameList.Height);
             lbChatMessages.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbChatMessages.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
             lbChatMessages.LineHeight = 16;
@@ -363,6 +380,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             WindowManager.CenterControlOnScreen(this);
 
             PostUIInit();
+            epBackground.CenterOnParent();
         }
 
         private void BtnGameSortAlpha_LeftClick(object sender, EventArgs e)
