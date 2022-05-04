@@ -1252,7 +1252,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
-            //CheckFactionsSelectable();
+            CheckFactionsSelectable();
         }
 
         public void CheckFactionsSelectable()
