@@ -608,11 +608,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             var gameModeMaps = gameModeMapFilter.GetGameModeMaps();
             var isFavoriteMapsSelected = IsFavoriteMapsSelected();
-            var maps = gameModeMaps.OrderBy(gmm => gmm.Map.Name).ToList();
+            //var maps = gameModeMaps.OrderBy(gmm => gmm.Map.Name).ToList();
 
-            for (int i = 0; i < maps.Count; i++)
+            for (int i = 0; i < gameModeMaps.Count; i++)
             {
-                var gameModeMap = maps[i];
+                var gameModeMap = gameModeMaps[i];
                 if (tbMapSearch.Text != tbMapSearch.Suggestion)
                 {
                     if (!gameModeMap.Map.Name.ToUpper().Contains(tbMapSearch.Text.ToUpper()))
