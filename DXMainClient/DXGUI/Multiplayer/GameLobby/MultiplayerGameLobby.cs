@@ -152,7 +152,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 chkPlayerReady.DisabledCheckedTexture = chkPlayerReady.CheckedTexture;
 
                 ReadyBoxes[i] = chkPlayerReady;
-                ddPlayerSides[i].AddItem("Spectator", AssetLoader.LoadTexture("spectatoricon.png"));
+                ddPlayerSides[i].AddItem("Spectator".L10N("UI:Main:SpectatorSide"), AssetLoader.LoadTexture("spectatoricon.png"));
+                ddPlayerSides[i].HelperTag = true;
             }
 
             ddGameModeMapFilter.ClientRectangle = new Rectangle(

@@ -78,6 +78,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected List<GameLobbyCheckBox> CheckBoxes = new List<GameLobbyCheckBox>();
         protected List<GameLobbyDropDown> DropDowns = new List<GameLobbyDropDown>();
 
+        protected GameLobbyCheckBox chkRandomOnly = null;
+
         protected DiscordHandler discordHandler;
 
         protected MapLoader MapLoader;
@@ -200,6 +202,20 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             "Ground",
             "Ambient"
         };
+
+        private void chkRandomOnly_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!chkRandomOnly.Checked)
+                return;
+ 
+            foreach (var ddSide in ddPlayerSides)
+            {
+                if (!ddSide.HelperTag || ddSide.SelectedIndex != ddSide.Items.Count - 1)
+                    ddSide.SelectedIndex = 0;
+            }
+
+            CheckFactionsSelectable();
+        }
 
         public override void Initialize()
         {
@@ -382,6 +398,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 CheckBoxes.Add(chkBox);
                 chkBox.CheckedChanged += ChkBox_CheckedChanged;
             }
+
+            chkRandomOnly = CheckBoxes.Find(chk => chk.Name == "chkRandomOnly");
+            if (chkRandomOnly != null)
+                chkRandomOnly.CheckedChanged += chkRandomOnly_CheckedChanged;
 
             string[] labels = GameOptionsIni.GetStringValue(_iniSectionName, "Labels", String.Empty).Split(',');
 
@@ -1232,18 +1252,30 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
-            CheckEggSides();
+            //CheckFactionsSelectable();
         }
 
-        public void CheckEggSides()
+        public void CheckFactionsSelectable()
         {
-            /*foreach (XNADropDown dd in ddPlayerSides)
+            // egg sides
+            /*foreach (var dd in ddPlayerSides)
             {
                 dd.Items[RandomSelectorCount + 11].Selectable = UserINISettings.Instance.EggSide4 ? true : false;
                 dd.Items[RandomSelectorCount + 12].Selectable = UserINISettings.Instance.EggSide1 ? true : false;
                 dd.Items[RandomSelectorCount + 13].Selectable = UserINISettings.Instance.EggSide2 ? true : false;
                 dd.Items[RandomSelectorCount + 14].Selectable = UserINISettings.Instance.EggSide3 ? true : false;
             }*/
+
+            // random only
+            foreach (var ddSide in ddPlayerSides)
+            {
+                int totalCount = ddSide.Items.Count;
+                if (ddSide.HelperTag)
+                    totalCount -= 1;
+
+                for (int i = 1; i < totalCount; ++i)
+                    ddSide.Items[i].Selectable = !(chkRandomOnly != null && chkRandomOnly.Checked);
+            }
         }
 
         /// <summary>
@@ -1279,7 +1311,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// and returns the options as an array of PlayerHouseInfos.
         /// </summary>
         /// <returns>An array of PlayerHouseInfos.</returns>
-        protected virtual PlayerHouseInfo[] Randomize(List<TeamStartMapping> teamStartMappings, bool gsCustomizeRestriction = true)
+        protected virtual PlayerHouseInfo[] Randomize(List<TeamStartMapping> teamStartMappings, bool gsCustomizeRestriction = false)
         {
             int totalPlayerCount = Players.Count + AIPlayers.Count;
             PlayerHouseInfo[] houseInfos = new PlayerHouseInfo[totalPlayerCount];
@@ -1462,7 +1494,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <summary>
         /// Writes spawn.ini. Returns the player house info returned from the randomizer.
         /// </summary>
-        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = true)
+        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = false)
         {
             Logger.Log("Writing spawn.ini");
 
@@ -2392,7 +2424,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected virtual void StartGame(bool bCanControlSpeed = true)
         {
-            PlayerHouseInfo[] houseInfos = WriteSpawnIni(!bCanControlSpeed);
+            bool gsCustomizeRestriction = chkRandomOnly != null && chkRandomOnly.Checked;
+
+            PlayerHouseInfo[] houseInfos = WriteSpawnIni(!bCanControlSpeed, gsCustomizeRestriction);
             InitializeMatchStatistics(houseInfos);
             WriteMap(houseInfos, !bCanControlSpeed);
 

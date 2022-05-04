@@ -9,6 +9,8 @@ namespace ClientGUI
     {
         public ToolTip ToolTip { get; set; }
 
+        public bool HelperTag { get; set; }
+
         public XNAClientDropDown(WindowManager windowManager) : base(windowManager)
         {
         }
@@ -20,6 +22,7 @@ namespace ClientGUI
             base.Initialize();
 
             ToolTip = new ToolTip(WindowManager, this);
+            HelperTag = false;
         }
 
         public override void ParseAttributeFromINI(IniFile iniFile, string key, string value)

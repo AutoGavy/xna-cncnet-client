@@ -44,6 +44,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             //MapPreviewBox.EnableContextMenu = true;
 
             ddPlayerSides[0].AddItem("Spectator".L10N("UI:Main:SpectatorSide"), AssetLoader.LoadTexture("spectatoricon.png"));
+            ddPlayerSides[0].HelperTag = true;
 
             MapPreviewBox.LocalStartingLocationSelected += MapPreviewBox_LocalStartingLocationSelected;
             MapPreviewBox.StartingLocationApplied += MapPreviewBox_StartingLocationApplied;
