@@ -284,6 +284,7 @@ namespace DTAClient.DXGUI.Generic
         private IniFile campaignOptionsIni;
         private IniFile profileIni;
 
+        private string CurrentSide;
         private string SIDE_ABBR;
         private int curDifficultyIndex;
         private int curMissionIndex;
@@ -295,6 +296,7 @@ namespace DTAClient.DXGUI.Generic
 
             Name = "CampaignPanel";
 
+            CurrentSide = "gdo";
             SIDE_ABBR = "GDO";
             MissionList = GDOMissionList;
 
@@ -796,6 +798,29 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
+            // Random skirmish loading screen
+            string loadingFilename = String.Empty;
+            int campaignIndex = curMissionIndex + 1;
+
+            foreach (int resolution in MainClientConstants.ResolutionList)
+            {
+                if (UserINISettings.Instance.IngameScreenWidth >= resolution)
+                {
+                    loadingFilename += resolution + "campload" + CurrentSide + campaignIndex + ".big";
+                    break;
+                }
+            }
+
+            if (String.IsNullOrEmpty(loadingFilename))
+                loadingFilename += "1024skirmishloads" + CurrentSide + campaignIndex + ".big";
+
+            string bigPath = ProgramConstants.GetBaseSharedPath() + loadingFilename;
+            if (File.Exists(bigPath))
+                File.Copy(bigPath, ProgramConstants.GamePath + "tcextrab15.big", true);
+            else
+                Logger.Log("Cloud not find campaign loading screen file: " + bigPath);
+
+            // main launch
             LaunchMission(mission);
         }
 
