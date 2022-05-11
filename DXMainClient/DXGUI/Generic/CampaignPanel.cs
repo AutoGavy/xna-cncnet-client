@@ -228,6 +228,12 @@ namespace DTAClient.DXGUI.Generic
             "btnAbyss"
         };
 
+        private readonly string[] PRLMissionList =
+        {
+            "prl1",
+            "prl2"
+        };
+
         private readonly string[] GDOMissionList =
         {
             "gdo1",
@@ -265,7 +271,6 @@ namespace DTAClient.DXGUI.Generic
         private List<XNAClientButton> DifficultyButtons = new List<XNAClientButton>();
         private List<XNAClientButton> MissionButtons = new List<XNAClientButton>();
         private List<XNAClientButton> UnusedButtons = new List<XNAClientButton>();
-        private List<int> UnusedButtonsIndex = new List<int>();
 
         private List<CMedal> Medals = new List<CMedal>(8);
         private CMedal DifficultyMedal;
@@ -298,7 +303,7 @@ namespace DTAClient.DXGUI.Generic
 
             CurrentSide = "gdo";
             SIDE_ABBR = "GDO";
-            MissionList = GDOMissionList;
+            MissionList = PRLMissionList.Concat(GDOMissionList).ToArray();
 
             campaignOptionsIni = new IniFile(ProgramConstants.GetBaseResourcePath() + Name + ".ini");
             profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
@@ -311,7 +316,6 @@ namespace DTAClient.DXGUI.Generic
             epBackground = new XNAExtraPanel(WindowManager);
             epBackground.Name = "epBackground";
             epBackground.ClientRectangle = new Rectangle(0, 0, 1920, 1080);
-            epBackground.BackgroundTexture = AssetLoader.LoadTexture("Database/gen_bg.png");
             epBackground.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             epBackground.DrawBorders = false;
             AddChild(epBackground);
@@ -338,17 +342,32 @@ namespace DTAClient.DXGUI.Generic
             }
 
             // Mission buttons
-            for (int i = 1; i <= MissionList.Length; i++)
+            if (SIDE_ABBR == "GDO")
             {
-                XNAClientButton xNAClientButton = new XNAClientButton(WindowManager);
-                xNAClientButton.Name = "btn" + SIDE_ABBR + i;
-                xNAClientButton.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
-                xNAClientButton.Disable();
-                xNAClientButton.Visible = false;
-                xNAClientButton.LeftClick += MissionButton_LeftClick;
+                for (int i = 1; i <= PRLMissionList.Length; ++i)
+                {
+                    XNAClientButton xNAClientButton = new XNAClientButton(WindowManager);
+                    xNAClientButton.Name = "btnprl" + i;
+                    xNAClientButton.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+                    xNAClientButton.Disable();
+                    xNAClientButton.Visible = false;
+                    xNAClientButton.LeftClick += MissionButton_LeftClick;
 
-                MissionButtons.Add(xNAClientButton);
-                AddChild(xNAClientButton);
+                    MissionButtons.Add(xNAClientButton);
+                    AddChild(xNAClientButton);
+                }
+                for (int i = 1; i <= GDOMissionList.Length; ++i)
+                {
+                    XNAClientButton xNAClientButton = new XNAClientButton(WindowManager);
+                    xNAClientButton.Name = "btn" + SIDE_ABBR.ToLower() + i;
+                    xNAClientButton.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+                    xNAClientButton.Disable();
+                    xNAClientButton.Visible = false;
+                    xNAClientButton.LeftClick += MissionButton_LeftClick;
+
+                    MissionButtons.Add(xNAClientButton);
+                    AddChild(xNAClientButton);
+                }
             }
 
             // Medals
@@ -413,7 +432,8 @@ namespace DTAClient.DXGUI.Generic
 
             btnOldCampaign = new XNAClientButton(WindowManager);
             btnOldCampaign.Name = "btnOldCampaign";
-            btnOldCampaign.ClientRectangle = new Rectangle(25, 24, 248, 41);
+            //btnOldCampaign.ClientRectangle = new Rectangle(25, 24, 248, 41);
+            btnOldCampaign.ClientRectangle = new Rectangle(65, 60, 248, 41);
             btnOldCampaign.SetBorderHeight(10);
             btnOldCampaign.SetBorderWidth(11);
             btnOldCampaign.IdleTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn.png");
@@ -434,7 +454,7 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnCancel);
             AddChild(btnSlideUp);
             AddChild(btnSlideDown);
-            //AddChild(btnOldCampaign);
+            AddChild(btnOldCampaign);
 
             curMissionIndex = UserINISettings.Instance.SelectedMissionIndex;
             curDifficultyIndex = UserINISettings.Instance.FakeDifficulty;
@@ -464,14 +484,11 @@ namespace DTAClient.DXGUI.Generic
             SwitchMission(curMissionIndex, -1, true);
             SwitchDifficulty(curDifficultyIndex, -1, true);
 
-            if (curMissionIndex < 8 && campaignOptionsIni.GetBooleanValue("General", SIDE_ABBR + '5', false))
-            {
+            if (curMissionIndex < 8 && profileIni.GetBooleanValue("General", MissionList[4].ToUpper(), false))
                 btnSlideDown.AllowClick = true;
-            }
 
             base.Initialize();
 
-            epBackground.AddChild(btnOldCampaign);
             epBackground.CenterOnParent();
             CenterOnParent();
 
@@ -490,21 +507,23 @@ namespace DTAClient.DXGUI.Generic
         {
             profileIni.Reload();
 
+            string missionName = MissionList[curMissionIndex].ToString().ToUpper();
+
             foreach (CMedal medal in Medals)
             {
-                string optionName = SIDE_ABBR + (curMissionIndex + 1).ToString() + "_" + medal.Name;
+                string optionName = missionName + "_" + medal.Name;
 
                 medal.SetDisplayText(profileIni.GetBooleanValue(optionName, "Enable", false)
                     ? medal.unlockedText
                     : medal.lockedText);
 
-                medal.DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false)
-                    ? AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + (curMissionIndex + 1).ToString() + "/" + medal.Name + "_c.png")
-                    : AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + (curMissionIndex + 1).ToString() + "/" + medal.Name + ".png");
+                medal.DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false) ?
+                    AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medal.Name + "_c.png") :
+                    AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medal.Name + ".png");
             }
 
             // Difficulty Medal
-            string medalName = profileIni.GetStringValue(SIDE_ABBR + (curMissionIndex + 1).ToString(), "DifficultyMedal", "none");
+            string medalName = profileIni.GetStringValue(missionName, "DifficultyMedal", "none");
             if (!MedalNameList.ContainsKey(medalName))
                 medalName = "none";
 
@@ -515,11 +534,11 @@ namespace DTAClient.DXGUI.Generic
 
         private void GetMissionMedals(int index)
         {
-            string missionIndex = (index + 1).ToString();
-            string[] medalArray = campaignOptionsIni.GetStringValue(SIDE_ABBR + missionIndex, "Medals", String.Empty).Split(',');
+            string missionName = MissionList[index].ToUpper();
+            string[] medalArray = campaignOptionsIni.GetStringValue(missionName, "Medals", String.Empty).Split(',');
             if (medalArray.Length > MEDAL_COUNT)
             {
-                Logger.Log("Error: Mission " + SIDE_ABBR + missionIndex + " exceeds 8 medals!");
+                Logger.Log("Error: Mission " + missionName + " exceeds 8 medals!");
                 return;
             }
 
@@ -533,7 +552,7 @@ namespace DTAClient.DXGUI.Generic
 
             for (int i = 0; i < medalArray.Length; i++)
             {
-                string optionName = SIDE_ABBR + missionIndex + "_" + medalArray[i];
+                string optionName = missionName + "_" + medalArray[i];
                 string[] posArray = campaignOptionsIni.GetStringValue(optionName, "Location", DEFAULT_POS).Split(',');
                 string[] sizeArray = campaignOptionsIni.GetStringValue(optionName, "Size", DEFAULT_SIZE).Split(',');
 
@@ -548,8 +567,8 @@ namespace DTAClient.DXGUI.Generic
                     : Medals[i].lockedText);
 
                 Medals[i].DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false)
-                    ? AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + missionIndex + "/" + medalArray[i] + "_c.png")
-                    : AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR + missionIndex + "/" + medalArray[i] + ".png");
+                    ? AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medalArray[i] + "_c.png")
+                    : AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medalArray[i] + ".png");
 
                 Medals[i].RefreshSize();
                 Medals[i].Enable();
@@ -557,7 +576,7 @@ namespace DTAClient.DXGUI.Generic
             }
 
             // Difficulty Medal
-            string medalName = profileIni.GetStringValue(SIDE_ABBR + missionIndex, "DifficultyMedal", "none");
+            string medalName = profileIni.GetStringValue(missionName, "DifficultyMedal", "none");
             if (!MedalNameList.ContainsKey(medalName))
                 medalName = "none";
 
@@ -607,16 +626,17 @@ namespace DTAClient.DXGUI.Generic
         {
             if (currentIndex >= 0)
             {
+                MissionButtons[currentIndex].bButtonOn = false;
                 MissionButtons[currentIndex].AllowClick = true;
                 //MissionButtons[currentIndex].OnMouseLeave();
-                MissionButtons[currentIndex].IdleTexture = AssetLoader.LoadTexture(MissionButtons[currentIndex].Tag.ToString() + ".png");
-                MissionButtons[index].AllowClick = true;
+
+                if (MissionButtons[currentIndex].Tag != null)
+                    MissionButtons[currentIndex].IdleTexture = AssetLoader.LoadTexture(
+                        RESOURCE_PATH + MissionButtons[currentIndex].Name + MissionButtons[currentIndex].Tag.ToString() + ".png");
             }
 
             if (index >= MissionList.Length)
-            {
                 index = 0;
-            }
 
             if (firstRun)
             {
@@ -630,13 +650,16 @@ namespace DTAClient.DXGUI.Generic
             }
 
             //MissionButtons[index].OnMouseEnter();
+            MissionButtons[index].bButtonOn = true;
             MissionButtons[index].bButtonHover = false;
             MissionButtons[index].AllowClick = false;
-            MissionButtons[index].IdleTexture = AssetLoader.LoadTexture(MissionButtons[index].Tag.ToString() + "_c.png");
+            MissionButtons[index].IdleTexture = AssetLoader.LoadTexture(
+                RESOURCE_PATH + MissionButtons[index].Name + MissionButtons[index].Tag.ToString() + "_c.png");
             BackgroundTexture = AssetLoader.LoadTexture("empty.png");
             epBackground.BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + MissionList[index] + "bg.png");
 
-            btnLaunch.AllowClick = campaignOptionsIni.GetBooleanValue(SIDE_ABBR + (currentIndex).ToString(), "Enable", true);
+            btnLaunch.AllowClick = currentIndex > 0 ?
+                campaignOptionsIni.GetBooleanValue(MissionList[currentIndex - 1].ToUpper(), "Enable", true) : true;
 
             GetMissionMedals(curMissionIndex);
         }
@@ -666,32 +689,39 @@ namespace DTAClient.DXGUI.Generic
             ClickSoundHeavy.Play();
             btnSlideUp.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn_c.png");
 
-            UnusedButtons = MissionButtons;
-
             foreach (XNAClientButton button in MissionButtons)
             {
-                if (button.Tag != null && (int)button.Tag == 1)
+                if (button.Tag != null && button.Tag.ToString() == "a")
                 {
                     int topIndex = Convert.ToInt32(button.Name.Substring(6)) - 1;
+                    if (button.Name != "btnprl1" && button.Name != "btnprl2")
+                        topIndex += 2;
 
-                    for (int i = 0; i < 4; i++)
+                    var readyDeleteButtons = new List<XNAClientButton>();
+                    for (int i = 0; i < 4; ++i)
                     {
-                        SetAsButton[i](MissionButtons[topIndex + i - 1]);
-                        CheckMission(MissionButtons[topIndex + i - 1]);
+                        int listIndex = topIndex + i - 1;
+                        if (listIndex >= MissionButtons.Count())
+                            break;
 
-                        UnusedButtons.RemoveAt(topIndex + i - 1);
-                    }
+                        SetAsButton[i](MissionButtons[listIndex]);
+                        CheckMission(MissionButtons[listIndex]);
 
-                    foreach (XNAClientButton unusedButton in UnusedButtons)
-                    {
-                        UnusedButtonsIndex.Add(Convert.ToInt32(unusedButton.Name.Substring(6)) - 1);
+                        readyDeleteButtons.Add(MissionButtons[listIndex]);
                     }
+                    UnusedButtons = MissionButtons.Except(readyDeleteButtons).ToList();
+
+                    int checkIndex = topIndex + 3;
+                    if (checkIndex < MissionButtons.Count() && CheckMission(MissionButtons[checkIndex]))
+                        btnSlideDown.AllowClick = true;
 
                     ClearUnusedButtonsTag();
-
-                    return;
+                    break;
                 }
             }
+
+            if (MissionButtons[0].Tag != null && MissionButtons[0].Tag.ToString() == "a")
+                btnSlideUp.AllowClick = false;
         }
 
         private void BtnSlideDown_LeftClick(object sender, EventArgs e)
@@ -699,32 +729,39 @@ namespace DTAClient.DXGUI.Generic
             ClickSoundHeavy.Play();
             btnSlideDown.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn_c.png");
 
-            UnusedButtons = MissionButtons;
-
             foreach (XNAClientButton button in MissionButtons)
             {
-                if (button.Tag != null && (int)button.Tag == 4)
+                if (button.Tag != null && button.Tag.ToString() == "d")
                 {
                     int bottomIndex = Convert.ToInt32(button.Name.Substring(6)) - 1;
+                    if (button.Name != "btnprl1" && button.Name != "btnprl2")
+                        bottomIndex += 2;
 
-                    for (int i = 0; i < 4; i++)
+                    var readyDeleteButtons = new List<XNAClientButton>();
+                    for (int i = 0; i < 4; ++i)
                     {
-                        SetAsButton[i](MissionButtons[bottomIndex + i - 2]);
-                        CheckMission(MissionButtons[bottomIndex + i - 2]);
+                        int listIndex = bottomIndex + i - 2;
+                        if (listIndex >= MissionButtons.Count())
+                            break;
 
-                        UnusedButtons.RemoveAt(bottomIndex + i - 2);
-                    }
+                        SetAsButton[i](MissionButtons[listIndex]);
+                        CheckMission(MissionButtons[listIndex]);
 
-                    foreach (XNAClientButton unusedButton in UnusedButtons)
-                    {
-                        UnusedButtonsIndex.Add(Convert.ToInt32(unusedButton.Name.Substring(6)) - 1);
+                        readyDeleteButtons.Add(MissionButtons[listIndex]);
                     }
+                    UnusedButtons = MissionButtons.Except(readyDeleteButtons).ToList();
+
+                    int checkIndex = bottomIndex + 2;
+                    if (checkIndex < MissionButtons.Count() && !CheckMission(MissionButtons[checkIndex]))
+                        btnSlideDown.AllowClick = false;
 
                     ClearUnusedButtonsTag();
-
-                    return;
+                    break;
                 }
             }
+
+            if (MissionButtons[0].Tag == null || MissionButtons[0].Tag.ToString() != "a")
+                btnSlideUp.AllowClick = true;
         }
 
         private void DifficultyButton_LeftClick(object sender, EventArgs e)
@@ -740,7 +777,15 @@ namespace DTAClient.DXGUI.Generic
                 if (button.bButtonHover)
                 {
                     ClickSoundHeavy.Play();
-                    SwitchMission(Convert.ToInt32(button.Name.Substring(6)) - 1, curMissionIndex);
+
+                    int oriIndex = Convert.ToInt32(button.Name.Substring(6));
+                    if (button.Name != "btnprl1" && button.Name != "btnprl2")
+                    {
+                        oriIndex += 2;
+                    }
+                    int btnIndex = oriIndex - 1;
+
+                    SwitchMission(btnIndex, curMissionIndex);
                     return;
                 }
             }
@@ -1394,10 +1439,9 @@ namespace DTAClient.DXGUI.Generic
             return true;
         }
 
-        private void CheckMission(XNAClientButton button)
+        private bool CheckMission(XNAClientButton button)
         {
-            if ((button.Name.Length == 6 && button.Name[button.Name.Length - 1] == '1') ||
-                profileIni.GetBooleanValue("General", button.Name.Substring(3), false))
+            if (button.Name == "btnprl1" || profileIni.GetBooleanValue("General", button.Name.Substring(3).ToUpper(), false))
             {
                 button.Enable();
                 button.Visible = true;
@@ -1407,79 +1451,78 @@ namespace DTAClient.DXGUI.Generic
                 button.Disable();
                 button.Visible = false;
             }
+            return button.Visible;
         }
 
         private void ClearUnusedButtonsTag()
         {
-            foreach (int unusedInex in UnusedButtonsIndex)
+            foreach (var unusedButton in UnusedButtons)
             {
-                MissionButtons[unusedInex].Tag = null;
-                MissionButtons[unusedInex].Disable();
-                MissionButtons[unusedInex].AllowClick = false;
+                unusedButton.Tag = null;
+                unusedButton.Disable();
+                unusedButton.AllowClick = false;
             }
+            UnusedButtons.Clear();
         }
 
         private void SetAsButton1(XNAClientButton button)
         {
-            button.Tag = 1;
+            button.Tag = "a";
             button.X = 894;
             button.Y = 89;
             button.Width = 308;
             button.Height = 133;
-            button.SetAlphaCheckVal(30);
 
-            string strPath = RESOURCE_PATH + button.Name.ToLower() + "a";
-            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
-            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
-            button.Tag = strPath;
-            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
-            button.RefreshSize();
+            //button.SetAlphaCheckVal(30);
+            _SetUpButton(button);
         }
 
         private void SetAsButton2(XNAClientButton button)
         {
-            button.Tag = 2;
+            button.Tag = "b";
             button.X = 893;
             button.Y = 240;
             button.Width = 306;
             button.Height = 127;
 
-            string strPath = RESOURCE_PATH + button.Name.ToLower() + "b";
-            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
-            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
-            button.Tag = strPath;
-            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
-            button.RefreshSize();
+            _SetUpButton(button);
         }
 
         private void SetAsButton3(XNAClientButton button)
         {
-            button.Tag = 3;
+            button.Tag = "c";
             button.X = 893;
             button.Y = 388;
             button.Width = 306;
             button.Height = 128;
 
-            string strPath = RESOURCE_PATH + button.Name.ToLower() + "c";
-            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
-            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
-            button.Tag = strPath;
-            button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
-            button.RefreshSize();
+            _SetUpButton(button);
         }
 
         private void SetAsButton4(XNAClientButton button)
         {
-            button.Tag = 4;
-            button.X = 0;
-            button.Y = 0;
-            button.Width = 0;
-            button.Height = 0;
+            button.Tag = "d";
+            button.X = 894;
+            button.Y = 534;
+            button.Width = 310;
+            button.Height = 134;
+            _SetUpButton(button);
+        }
 
-            string strPath = RESOURCE_PATH + button.Name.ToLower() + "d";
-            button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
-            button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
-            button.Tag = strPath + "d";
+        private void _SetUpButton(XNAClientButton button)
+        {
+            string strPath = RESOURCE_PATH + button.Name + button.Tag.ToString();
+            if (button.bButtonOn)
+            {
+                button.IdleTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+                button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+            }
+            else
+            {
+                button.IdleTexture = AssetLoader.LoadTexture(strPath + ".png");
+                button.HoverTexture = AssetLoader.LoadTexture(strPath + "_c.png");
+                button.AllowClick = true;
+            }
             button.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
             button.RefreshSize();
         }

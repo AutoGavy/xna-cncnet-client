@@ -186,7 +186,12 @@ namespace DTAClient.Domain
                     }
 
                     // TC2 mission?
-                    if (line.Contains("Starting scnenario: GDO"))
+                    if (line.Contains("Starting scnenario: PRL"))
+                    {
+                        Logger.Log("PROL Mission detected");
+                        side = line.Substring(20).ToLower();
+                    }
+                    else if (line.Contains("Starting scnenario: GDO"))
                     {
                         Logger.Log("GDO Mission detected");
                         side = line.Substring(20).ToLower();
@@ -195,6 +200,23 @@ namespace DTAClient.Domain
                     // check SW
                     if (line.Contains("[LAUNCH] MSWIN_")) // check if player won this mission
                     {
+                        if (line.Contains("PRL1"))
+                        {
+                            Logger.Log("PRL1" + " Completed");
+
+                            side = "prl1";
+                            curMission = "PRL1";
+                            profileIni.SetBooleanValue("General", "PRL2", true);
+                        }
+                        else if (line.Contains("PRL2"))
+                        {
+                            Logger.Log("PRL2" + " Completed");
+
+                            side = "prl2";
+                            curMission = "PRL2";
+                            profileIni.SetBooleanValue("General", "GDO1", true);
+                        }
+
                         for (int i = 1; i <= 12; i++)
                         {
                             string missionIndex = i.ToString();
@@ -280,7 +302,7 @@ namespace DTAClient.Domain
                     }
 
                     // check if it's TC2 mission
-                    if (side.Contains("gdo") || side.Contains("nof") || side.Contains("sct"))
+                    if (side.Contains("prl") || side.Contains("gdo") || side.Contains("nof") || side.Contains("sct"))
                     {
                         if (result == "lose") // player lost
                         {
