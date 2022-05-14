@@ -22,22 +22,6 @@ namespace DTAClient.DXGUI.Generic
         private const string SPSOUND_INI = "spsound.ini";
         private const string CREDITS_TXT = "creditstc.txt";
 
-        private static readonly string[] DifficultyNames = new string[]
-        {
-            "Easy".L10N("UI:Main:Easy"),
-            "Normal".L10N("UI:Main:Normal"),
-            "Hard".L10N("UI:Main:Hard"),
-            "Abyss".L10N("UI:Main:Abyss")
-        };
-
-        private static string[] DifficultyIniPaths = new string[]
-        {
-            "INI/Map Code/Difficulty Easy.ini",
-            "INI/Map Code/Difficulty Medium.ini",
-            "INI/Map Code/Difficulty Hard.ini",
-            "INI/Map Code/Difficulty Hell.ini"
-        };
-
         protected int StartMusicIndex { get; set; }
         protected int ConflictMusicIndex { get; set; }
 
@@ -49,181 +33,6 @@ namespace DTAClient.DXGUI.Generic
         }
 
         private DiscordHandler discordHandler;
-
-        static private readonly string[] filesHashArray =
-        {
-            "DAD4D370FCF48F08809058CB5300843442348B31", // Hell Settings
-            "2D22C883B0C6FEB012811FA2D45A63127F7798F5", // Hard Settings
-            "D63191F931C1FEA555E43B13131F2DFB6DE4C9FB", // Normal Settings
-            "A0A68A2C59FE030DE427E701EC5811812DCA1A03", // Easy Settings
-            "C71C34380B7AEC596B8EED889538C50B07FE6EED", // GlobalCode
-
-            "8AAD50B140D2DDD4E1E49CA64492C3E4A7C0F6C3", // Train 01
-            "tttttttttttttttttttttttttttttt", // GDO 01
-            "tttttttttttttttttttttttttttttt", // GDO 02
-            "tttttttttttttttttttttttttttttt", // GDO 03
-            "tttttttttttttttttttttttttttttt", // GDO 04
-            "tttttttttttttttttttttttttttttt", // GDO 05
-            "tttttttttttttttttttttttttttttt", // GDO 06
-            "tttttttttttttttttttttttttttttt", // GDO 07
-            "tttttttttttttttttttttttttttttt", // GDO 08
-            "tttttttttttttttttttttttttttttt", // GDO 09
-            "tttttttttttttttttttttttttttttt", // GDO 10
-            "tttttttttttttttttttttttttttttt", // GDO 11
-            "tttttttttttttttttttttttttttttt", // GDO 12
-
-            "115BF7C325662D2FAE9AAFFEF07B48FA2B0683BE", // GDI 01
-            "4D9F17E4D3FE212469EF30681AED22B0A55D4CEA", // GDI 02
-            "002FCB20E2E5A7B131B51835AE7CC8EA024B1AF2", // GDI 03
-            "459E56532C271317C154C8FF1E8311465AACDE29", // GDI 04
-            "B6DACE5C38801741DCD7419921F6B2531C1D487C", // GDI 05
-            "A6C243453D43636C390388A62FB3A98ABD82195E", // GDI 06
-            "E508FBB7838E39EC36DC490AF58105E9FF3D4F49", // GDI 07
-            "34902BA603F3CE50D52FEEB0DB5465E788A81D9E", // GDI 08
-
-            "0B14E96F9F38989EB804B123287961D162860710", // End 01
-            "61FF1C4549223DA96ABBD4FD53CB5493C42061A8", // End 02
-            "C0E64B2AF809E2B9ECDDBF886267E6C3B037E443", // End 03
-            "F4A6A7BA08D3EE5F8DEB412F80DCD94416C270D0", // End 04
-            "A8BC9E677A904434E966C6E60F44129EE4A59343", // End 05
-            "2C888AC8ADDF6A5BD7D4CA7DCF11A32301914B53", // End 06
-            "2C51E3829DCCBDF1BF48102AED65F641E6F7F215", // End 07
-            "01694E76E5D2FDC284EB62C1FAE81A909E746129", // End 08
-            "E6F96C43C5FF8870FB7057764DADCC99F4113F14", // End 08 Off
-            "E49D70719290B484DE90B92EB9C2377F69D7849B", // End 08 Def
-            "92620A88A5D197223254881B1F836ED282AC23CD", // End 08 Sup
-
-            "B1CBE8F768F06E9A23F39637612DD2C2CAA78187", // Nod 01
-            "33325CC089E85DAA9267D022506CC9A4C836CC9C", // Nod 02
-            "387299AAC98EAE5D977BAF81CFD8B56E4FBEC9FF", // Nod 03
-            "EA3EF0BEF7CAF5C0386C2ABB003E7D35FDF29F26", // Nod 04
-            "00AE5B459D5159A472ED35A387F0BA132B7B0703", // Nod 05
-            "0E67F4A3299E7BE88B94CD8F00168C8AEC504D94", // Nod 06
-            "B04CE4D9C3C062CC0C16A93FAEBCD7985E06B0D0", // Nod 07
-            "237717F0E6D3D4142D9170F61CD4FA14661DABAA", // Nod 08
-
-            "F14CDD8372547122041C73BF81FB0F07E361003E", // Scrin 01
-            "8624FDCE7BC10108761F660F46F7BEDB7EE8FB1B", // Scrin 02
-            "6962F17CE16670482D5A1EBB0C866CBF9E528848", // Scrin 03
-            "301488643E12C2B3203136B1FD2A1860D0B4E136"  // Scrin 04
-        };
-
-        static private readonly string[] filesToCheck =
-        {
-            "INI/Map Code/Difficulty Hell.ini",
-            "INI/Map Code/Difficulty Hard.ini",
-            "INI/Map Code/Difficulty Normal.ini",
-            "INI/Map Code/Difficulty Easy.ini",
-            "INI/Map Code/GlobalCode.ini",
-
-            "MapsTC/Missions/tra01.map",
-            "MapsTC/Missions/gdo01.map",
-            "MapsTC/Missions/gdo02.map",
-            "MapsTC/Missions/gdo03.map",
-            "MapsTC/Missions/gdo04.map",
-            "MapsTC/Missions/gdo05.map",
-            "MapsTC/Missions/gdo06.map",
-            "MapsTC/Missions/gdo07.map",
-            "MapsTC/Missions/gdo08.map",
-            "MapsTC/Missions/gdo09.map",
-            "MapsTC/Missions/gdo10.map",
-            "MapsTC/Missions/gdo11.map",
-            "MapsTC/Missions/gdo12.map",
-
-            "MapsTC/Missions/gdi01.map",
-            "MapsTC/Missions/gdi02.map",
-            "MapsTC/Missions/gdi03.map",
-            "MapsTC/Missions/gdi04.map",
-            "MapsTC/Missions/gdi05.map",
-            "MapsTC/Missions/gdi06.map",
-            "MapsTC/Missions/gdi07.map",
-            "MapsTC/Missions/gdi08.map",
-
-            "MapsTC/Missions/end01.map",
-            "MapsTC/Missions/end02.map",
-            "MapsTC/Missions/end03.map",
-            "MapsTC/Missions/end04.map",
-            "MapsTC/Missions/end05.map",
-            "MapsTC/Missions/end06.map",
-            "MapsTC/Missions/end07.map",
-            "MapsTC/Missions/end08.map",
-            "MapsTC/Missions/end08_off.map",
-            "MapsTC/Missions/end08_def.map",
-            "MapsTC/Missions/end08_sup.map",
-
-            "MapsTC/Missions/nod01.map",
-            "MapsTC/Missions/nod02.map",
-            "MapsTC/Missions/nod03.map",
-            "MapsTC/Missions/nod04.map",
-            "MapsTC/Missions/nod05.map",
-            "MapsTC/Missions/nod06.map",
-            "MapsTC/Missions/nod07.map",
-            "MapsTC/Missions/nod08.map",
-
-            "MapsTC/Missions/scr01.map",
-            "MapsTC/Missions/scr02.map",
-            "MapsTC/Missions/scr03.map",
-            "MapsTC/Missions/scr04.map"
-        };
-
-        private readonly string[] campaignList =
-        {
-            "tra01.map",
-            "gdo01.map",
-            "gdo02.map",
-            "gdo03.map",
-            "gdo04.map",
-            "gdo05.map",
-            "gdo06.map",
-            "gdo07.map",
-            "gdo08.map",
-            "gdo09.map",
-            "gdo10.map",
-            "gdo11.map",
-            "gdo12.map",
-
-            "gdi01.map",
-            "gdi02.map",
-            "gdi03.map",
-            "gdi04.map",
-            "gdi05.map",
-            "gdi06.map",
-            "gdi07.map",
-            "gdi08.map",
-
-            "end01.map",
-            "end02.map",
-            "end03.map",
-            "end04.map",
-            "end05.map",
-            "end06.map",
-            "end07.map",
-            "end08.map",
-
-            "nod01.map",
-            "nod02.map",
-            "nod03.map",
-            "nod04.map",
-            "nod05.map",
-            "nod06.map",
-            "nod07.map",
-            "nod08.map",
-
-            "scr01.map",
-            "scr02.map",
-            "scr03.map",
-            "scr04.map"
-        };
-
-        private readonly string[] LightNameArray =
-        {
-            "Red",
-            "Blue",
-            "Green",
-            "Level",
-            "Ground",
-            "Ambient"
-        };
 
         private List<Mission> Missions = new List<Mission>();
         private XNAListBox lbCampaignList;
@@ -447,19 +256,22 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
+            // use vanilla campaign loading screen
+            File.Delete(ProgramConstants.GamePath + "tcextrab15.big");
+
             LaunchMission(mission);
         }
 
         private bool AreFilesModified()
         {
-            foreach (string filePath in filesToCheck)
+            foreach (string filePath in InfoShared.filesToCheckCamp)
             {
                 if (!CUpdater.IsFileNonexistantOrOriginal(filePath))
                     return true;
             }
 
             int iCount = 0;
-            foreach (string filePath in filesToCheck)
+            foreach (string filePath in InfoShared.filesToCheckCamp)
             {
                 if (!File.Exists(ProgramConstants.GamePath + filePath))
                 {
@@ -467,7 +279,7 @@ namespace DTAClient.DXGUI.Generic
                     return false;
                 }
 
-                if (iCount >= filesHashArray.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != filesHashArray[iCount])
+                if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount])
                 {
                     cheaterWindow.SetDefaultText();
                     Logger.Log("File modified: " + filePath);
@@ -534,8 +346,8 @@ namespace DTAClient.DXGUI.Generic
             swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : trbDifficultySelector.Value.ToString()));
             swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty());
 
-            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + DifficultyIniPaths[trbDifficultySelector.Value]);
-            string difficultyName = DifficultyNames[trbDifficultySelector.Value];
+            IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + InfoShared.DifficultyIniPaths[trbDifficultySelector.Value]);
+            string difficultyName = InfoShared.DifficultyNames[trbDifficultySelector.Value];
 
             swriter.WriteLine();
             swriter.WriteLine();
@@ -887,7 +699,7 @@ namespace DTAClient.DXGUI.Generic
                     mapIni = new IniFile(ProgramConstants.GamePath + "MapsTC/Missions/" + mission.Scenario);
 
                 // Map Settings
-                foreach (string strName in LightNameArray)
+                foreach (string strName in InfoShared.LightNameArray)
                 {
                     mapIni.SetDoubleValue("Lighting", "Ion" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
                     mapIni.SetDoubleValue("Lighting", "Dominator" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
@@ -959,7 +771,7 @@ namespace DTAClient.DXGUI.Generic
 
             ((MainMenuDarkeningPanel)Parent).Hide();
 
-            string strDifficultyName = DifficultyNames[trbDifficultySelector.Value];
+            string strDifficultyName = InfoShared.DifficultyNames[trbDifficultySelector.Value];
             discordHandler?.UpdatePresence(mission.GUIName, strDifficultyName, mission.IconPath, true);
 
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
@@ -973,7 +785,7 @@ namespace DTAClient.DXGUI.Generic
         {
             WindowManager.AddCallback(new Action(GameProcessExited), null);
 
-            foreach (string strMapName in campaignList)
+            foreach (string strMapName in InfoShared.campaignList)
                 File.Delete(ProgramConstants.GamePath + strMapName);
         }
 
