@@ -705,10 +705,11 @@ namespace DTAClient.DXGUI.Generic
                     mapIni.SetDoubleValue("Lighting", "Dominator" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
                 }
                 mapIni.SetStringValue("Basic", "TiberiumDeathToVisceroid", "yes");
-                if (!mapIni.GetBooleanValue("SpecialFlags", "FogOfWar", false))
-                {
+
+                if (mapIni.GetBooleanValue("SpecialFlags", "FogOfWar", false))
+                    mapIni.SetBooleanValue("SpecialFlags", "FogOfWar", false);
+                else
                     mapIni.SetBooleanValue("SpecialFlags", "FogOfWar", true);
-                }
 
                 if (CampaignIni.GetBooleanValue("BaseInfo", "Ambient.Wind.Cold", false))
                     mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_Cold");

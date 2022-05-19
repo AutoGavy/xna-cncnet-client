@@ -106,7 +106,6 @@ namespace DTAClient.DXGUI.Generic
         private IniFile campaignOptionsIni;
         private IniFile profileIni;
 
-        private string CurrentSide;
         private string SIDE_ABBR;
         private int curDifficultyIndex;
         private int curMissionIndex;
@@ -118,7 +117,6 @@ namespace DTAClient.DXGUI.Generic
 
             Name = "CampaignPanel";
 
-            CurrentSide = "gdo";
             SIDE_ABBR = "GDO";
             MissionList = PRLMissionList.Concat(GDOMissionList).ToArray();
 
@@ -353,7 +351,7 @@ namespace DTAClient.DXGUI.Generic
         {
             string missionName = MissionList[index].ToUpper();
             string[] medalArray = campaignOptionsIni.GetStringValue(missionName, "Medals", String.Empty).Split(',');
-            if (medalArray.Length > 0 || medalArray.Length > MEDAL_COUNT)
+            if (medalArray.Length <= 0 || medalArray.Length > MEDAL_COUNT)
             {
                 Logger.Log("Error: Mission " + missionName + " exceeds 8 medals / has no medals!");
                 return;
@@ -662,19 +660,18 @@ namespace DTAClient.DXGUI.Generic
 
             // New Campaign loading screen
             string loadingFilename = String.Empty;
-            int campaignIndex = curMissionIndex + 1;
 
             foreach (int resolution in MainClientConstants.ResolutionList)
             {
                 if (UserINISettings.Instance.IngameScreenWidth >= resolution)
                 {
-                    loadingFilename += resolution + "campload" + CurrentSide + campaignIndex + ".big";
+                    loadingFilename += resolution + "campload" + MissionList[curMissionIndex] + ".big";
                     break;
                 }
             }
 
             if (String.IsNullOrEmpty(loadingFilename))
-                loadingFilename += "1024skirmishloads" + CurrentSide + campaignIndex + ".big";
+                loadingFilename += "1024skirmishloads" + MissionList[curMissionIndex] + ".big";
 
             string bigPath = ProgramConstants.GetBaseSharedPath() + loadingFilename;
             if (File.Exists(bigPath))
@@ -1130,10 +1127,11 @@ namespace DTAClient.DXGUI.Generic
                     mapIni.SetDoubleValue("Lighting", "Dominator" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
                 }
                 mapIni.SetStringValue("Basic", "TiberiumDeathToVisceroid", "yes");
-                if (!mapIni.GetBooleanValue("SpecialFlags", "FogOfWar", false))
-                {
+
+                if (mapIni.GetBooleanValue("SpecialFlags", "FogOfWar", false))
+                    mapIni.SetBooleanValue("SpecialFlags", "FogOfWar", false);
+                else
                     mapIni.SetBooleanValue("SpecialFlags", "FogOfWar", true);
-                }
 
                 if (CampaignIni.GetBooleanValue("BaseInfo", "Ambient.Wind.Cold", false))
                     mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_Cold");
@@ -1190,7 +1188,7 @@ namespace DTAClient.DXGUI.Generic
                 UserINISettings.Instance.Difficulty.Value = curDifficultyIndex - 1;
             UserINISettings.Instance.SaveSettings();
 
-            ((MainMenuDarkeningPanel)Parent).Hide();
+            //((MainMenuDarkeningPanel)Parent).Hide();
 
             string strDifficultyName = InfoShared.DifficultyNames[curDifficultyIndex];
             discordHandler?.UpdatePresence(mission.GUIName, strDifficultyName, mission.IconPath, true);
