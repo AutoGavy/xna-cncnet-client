@@ -78,33 +78,6 @@ namespace DTAClient.DXGUI.Multiplayer
 
         protected int StartMusicIndex { get; set; }
         protected int ConflictMusicIndex { get; set; }
-        private string GetPlayerMusicSide(string SideIndex)
-        {
-            switch (Convert.ToInt32(SideIndex))
-            {
-                case 0:
-                case 1:
-                case 2:
-                case 10:
-                    return "GDI";
-                case 3:
-                case 4:
-                case 5:
-                case 11:
-                    return "Nod";
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    return "Scrin";
-                default:
-                    Random random = new Random();
-                    if (Convert.ToBoolean(random.Next(0, 2)))
-                        return "GDI";
-                    else
-                        return "Nod";
-            }
-        }
 
         public override void Initialize()
         {

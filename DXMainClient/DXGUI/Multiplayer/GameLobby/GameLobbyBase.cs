@@ -1766,17 +1766,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 case 0:
                 case 1:
                 case 2:
-                case 10:
-                    return "GDI";
                 case 3:
+                    return "GDI";
                 case 4:
                 case 5:
-                case 11:
-                    return "Nod";
                 case 6:
                 case 7:
+                    return "Nod";
                 case 8:
                 case 9:
+                case 10:
+                case 11:
                     return "Scrin";
                 default:
                     Random random = new Random();
