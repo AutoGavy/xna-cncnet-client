@@ -24,6 +24,7 @@ namespace DTAClient.DXGUI.Generic
         private DiscordHandler discordHandler;
 
         public CampaignPanel CampaignPanel;
+        public CampaignSelect CampaignSelect;
         public CampaignSelector CampaignSelector;
         public GameLoadingWindow GameLoadingWindow;
         public StatisticsWindow StatisticsWindow;
@@ -31,7 +32,6 @@ namespace DTAClient.DXGUI.Generic
         public UpdateWindow UpdateWindow;
         public ExtrasWindow ExtrasWindow;
         public DatabasePanel DatabasePanel;
-
 
         public override void Initialize()
         {
@@ -47,6 +47,9 @@ namespace DTAClient.DXGUI.Generic
 
             CampaignPanel = new CampaignPanel(WindowManager, discordHandler);
             AddChild(CampaignPanel);
+
+            CampaignSelect = new CampaignSelect(WindowManager, discordHandler);
+            AddChild(CampaignSelect);
 
             CampaignSelector = new CampaignSelector(WindowManager, discordHandler);
             AddChild(CampaignSelector);
@@ -97,6 +100,16 @@ namespace DTAClient.DXGUI.Generic
 
             AlphaRate = DarkeningPanel.ALPHA_RATE;
 
+            if (control != null)
+            {
+                control.Enabled = true;
+                control.Visible = true;
+                control.IgnoreInputOnFrame = true;
+            }
+        }
+
+        public void ShowSubControl(XNAControl control)
+        {
             if (control != null)
             {
                 control.Enabled = true;

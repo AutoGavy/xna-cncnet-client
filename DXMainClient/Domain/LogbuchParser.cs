@@ -196,6 +196,11 @@ namespace DTAClient.Domain
                         Logger.Log("GDO Mission detected");
                         side = line.Substring(20).ToLower();
                     }
+                    else if (line.Contains("Starting scnenario: TRA"))
+                    {
+                        Logger.Log("TRA Mission detected");
+                        side = line.Substring(20).ToLower();
+                    }
 
                     // check SW
                     if (line.Contains("[LAUNCH] MSWIN_")) // check if player won this mission
@@ -301,8 +306,22 @@ namespace DTAClient.Domain
                         }
                     }
 
+                    // training mission?
+                    if (side.Contains("tra"))
+                    {
+                        if (result == "lose") // player lost
+                        {
+                            scoreSong = "gdilose";
+                        }
+                        else // player won
+                        {
+                            UserINISettings.Instance.ReloadSettings();
+                            UserINISettings.Instance.TutorialCompleted.Value = true;
+                            UserINISettings.Instance.SaveSettings();
+                        }
+                    }
                     // check if it's TC2 mission
-                    if (side.Contains("prl") || side.Contains("gdo") || side.Contains("nof") || side.Contains("sct"))
+                    else if (side.Contains("prl") || side.Contains("gdo") || side.Contains("nof") || side.Contains("sct"))
                     {
                         if (result == "lose") // player lost
                         {
@@ -315,14 +334,15 @@ namespace DTAClient.Domain
                                 case "gdo1":
                                     scoreSong = "gdolose1";
                                     break;
-                                case "gdo12":
+                                case "gdo5":
+                                //case "gdo12":
                                     scoreSong = "gdifinalwin";
-                                    break;
-                                default:
-                                    scoreSong = "gdiwin";
                                     UserINISettings.Instance.ReloadSettings();
                                     UserINISettings.Instance.TC2Completed.Value = true;
                                     UserINISettings.Instance.SaveSettings();
+                                    break;
+                                default:
+                                    scoreSong = "gdiwin";
                                     break;
                             }
                         }

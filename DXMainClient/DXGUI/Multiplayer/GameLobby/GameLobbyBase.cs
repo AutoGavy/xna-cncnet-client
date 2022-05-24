@@ -1481,7 +1481,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                             }
                             if (!sideAdded)
                             {
-                                throw new Exception("随机算法可能出现问题，每种可能的情况都不符合已有规则。请和游戏开发者联系！");
+                                throw new Exception("开心的笔：随机算法可能出现问题，每种可能的情况都不符合已有规则。请和游戏开发者联系！");
                             }
                         }
                     }

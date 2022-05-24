@@ -188,6 +188,9 @@ namespace ClientCore
 
             CanReShade = new BoolSetting(iniFile, OPTIONS, "CanReShade", false);
 
+            TutorialCompleted = new BoolSetting(iniFile, OPTIONS, "TutorialCompleted", false);
+            TooHardHint = new BoolSetting(iniFile, OPTIONS, "TooHardHint", true);
+
             TC2Completed = new BoolSetting(iniFile, NETWORK, "OTStuID5", false);
             EggSide1 = new BoolSetting(iniFile, NETWORK, "OTStuID1", false);
             EggSide2 = new BoolSetting(iniFile, NETWORK, "OTStuID2", false);
@@ -350,6 +353,9 @@ namespace ClientCore
         public BoolSetting MenuTextIsEnglish { get; private set; }
 
         public BoolSetting CanReShade { get; private set; }
+
+        public BoolSetting TutorialCompleted { get; private set; }
+        public BoolSetting TooHardHint { get; private set; }
 
         public BoolSetting TC2Completed { get; private set; }
         public BoolSetting EggSide1 { get; private set; }

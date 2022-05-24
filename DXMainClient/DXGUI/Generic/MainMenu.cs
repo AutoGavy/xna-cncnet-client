@@ -1030,7 +1030,7 @@ namespace DTAClient.DXGUI.Generic
         private void BtnOptions_LeftClick(object sender, EventArgs e) => optionsWindow.Open();
 
         private void BtnNewCampaign_LeftClick(object sender, EventArgs e) =>
-            innerPanel.Show(innerPanel.CampaignPanel);
+            innerPanel.Show(innerPanel.CampaignSelect);
 
         private void BtnLoadGame_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.GameLoadingWindow);

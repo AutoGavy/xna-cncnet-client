@@ -218,6 +218,7 @@ namespace ClientGUI
             if (key == "AlphaCheckVal")
             {
                 alphaCheckVal = (byte)Conversions.IntFromString(value, 0);
+                ignoreBorderCheck = false;
                 isNgon = true;
                 return;
             }

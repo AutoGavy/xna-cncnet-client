@@ -16,8 +16,8 @@ namespace DTAClient.DXGUI.Generic
 {
     public class CampaignSelector : XNAWindow
     {
-        private const int DEFAULT_WIDTH = 650;
-        private const int DEFAULT_HEIGHT = 600;
+        private const int DEFAULT_WIDTH = 1280;
+        private const int DEFAULT_HEIGHT = 768;
         private const string SPMUSIC_SETTINGS = "Client/MusicSettings.ini";
         private const string SPSOUND_INI = "spsound.ini";
         private const string CREDITS_TXT = "creditstc.txt";
@@ -37,6 +37,7 @@ namespace DTAClient.DXGUI.Generic
         private List<Mission> Missions = new List<Mission>();
         private XNAListBox lbCampaignList;
         private XNAClientButton btnLaunch;
+        private XNAClientButton btnCancel;
         private XNATextBlock tbMissionDescription;
         private XNATrackbar trbDifficultySelector;
 
@@ -47,8 +48,8 @@ namespace DTAClient.DXGUI.Generic
 
         public override void Initialize()
         {
-            BackgroundTexture = AssetLoader.LoadTexture("missionselectorbg.png");
             ClientRectangle = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+            BackgroundTexture = AssetLoader.LoadTexture("missionselectorbg.png");
             BorderColor = UISettings.ActiveSettings.PanelBorderColor;
 
             Name = "CampaignSelector";
@@ -147,7 +148,7 @@ namespace DTAClient.DXGUI.Generic
             btnLaunch.AllowClick = false;
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
 
-            var btnCancel = new XNAClientButton(WindowManager);
+            btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(Width - 145,
                 btnLaunch.Y, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
@@ -175,7 +176,7 @@ namespace DTAClient.DXGUI.Generic
 
             trbDifficultySelector.Value = UserINISettings.Instance.FakeDifficulty;
 
-            ParseBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
+            ReloadBattleIni(false);
 
             cheaterWindow = new CheaterWindow(WindowManager);
             DarkeningPanel dp = new DarkeningPanel(WindowManager);
@@ -185,6 +186,8 @@ namespace DTAClient.DXGUI.Generic
             cheaterWindow.CenterOnParent();
             cheaterWindow.Disable();
         }
+
+        public void ReloadBattleIni(bool ShowTutorialOnly) => ParseBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName, ShowTutorialOnly);
 
         private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -803,7 +806,7 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         /// <param name="path">The path of the file, relative to the game directory.</param>
         /// <returns>True if succesful, otherwise false.</returns>
-        private bool ParseBattleIni(string path)
+        private bool ParseBattleIni(string path, bool bShowTutorialOnly)
         {
             Logger.Log("Attempting to parse " + path + " to populate mission list.");
 
@@ -821,6 +824,13 @@ namespace DTAClient.DXGUI.Generic
             if (battleKeys == null)
                 return false; // File exists but [Battles] doesn't
 
+            // Clear up stuff
+            lbCampaignList.SelectedIndex = -1;
+            tbMissionDescription.Text = string.Empty;
+            btnLaunch.AllowClick = false;
+            Missions.Clear();
+            lbCampaignList.Clear();
+
             foreach (string battleEntry in battleKeys)
             {
                 string battleSection = battleIni.GetStringValue("Battles", battleEntry, "NOT FOUND");
@@ -830,8 +840,13 @@ namespace DTAClient.DXGUI.Generic
 
                 var mission = new Mission(battleIni, battleSection);
 
-                // Skip TC2 missions
-                if (mission.Hide)
+                // Skip Hidden missions
+                if (bShowTutorialOnly)
+                {
+                    if (!mission.IsTutorial)
+                        continue;
+                }
+                else if (mission.Hide)
                     continue;
 
                 Missions.Add(mission);

@@ -15,8 +15,8 @@ namespace DTAClient.DXGUI.Generic
 {
     public class CampaignPanel : XNAWindow
     {
-        private const int DEFAULT_WIDTH = 650;
-        private const int DEFAULT_HEIGHT = 600;
+        private const int DEFAULT_WIDTH = 1280;
+        private const int DEFAULT_HEIGHT = 768;
         private const int MEDAL_COUNT = 8;
         private const string DEFAULT_POS = "0,0";
         private const string DEFAULT_SIZE = "1,1";
@@ -113,6 +113,7 @@ namespace DTAClient.DXGUI.Generic
         public override void Initialize()
         {
             ClientRectangle = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+            BackgroundTexture = AssetLoader.LoadTexture("empty.png");
             BorderColor = UISettings.ActiveSettings.PanelBorderColor;
 
             Name = "CampaignPanel";
@@ -310,10 +311,13 @@ namespace DTAClient.DXGUI.Generic
             ParseBattleIni("INI/" + ClientConfiguration.Instance.BattleFSFileName);
 
             cheaterWindow = new CheaterWindow(WindowManager);
+
             DarkeningPanel dp = new DarkeningPanel(WindowManager);
             dp.AddChild(cheaterWindow);
+
             AddChild(dp);
             dp.CenterOnParent();
+
             cheaterWindow.CenterOnParent();
             cheaterWindow.Disable();
         }
@@ -470,7 +474,6 @@ namespace DTAClient.DXGUI.Generic
             MissionButtons[index].AllowClick = false;
             MissionButtons[index].IdleTexture = AssetLoader.LoadTexture(
                 RESOURCE_PATH + MissionButtons[index].Name + MissionButtons[index].Tag.ToString() + "_c.png");
-            BackgroundTexture = AssetLoader.LoadTexture("empty.png");
             epBackground.BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + MissionList[index] + "bg.png");
 
             btnLaunch.AllowClick = currentIndex > 0 ?
@@ -614,24 +617,19 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            if (curDifficultyIndex != 0)
-            {
-                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "以非简单难度进行",
-                string.Format("您确定不从简单难度开始任务吗?" + Environment.NewLine +
-                "moreblabla"));
-                TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
-            }
-            else if (curDifficultyIndex > 2)
-            {
-                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "以地狱难度进行",
-                string.Format("您确定要以地狱难度进行此任务吗?" + Environment.NewLine +
-                "高难度为困难难度。"));
-                TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
-            }
-            else
+            if (!UserINISettings.Instance.TooHardHint)
             {
                 //ClickSoundLight.Play();
                 PrepareToLaunch();
+            }
+
+            if (curDifficultyIndex != 0)
+            {
+                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Start With Non-Easy Difficulty".L10N("UI:Main:StartWithNonEasyDiff"),
+                string.Format("Are you sure not starting with easy difficulty?".L10N("UI:Main:StartWithNonEasyDiffDesc") + Environment.NewLine +
+                "This is your first time to play campaign. If you have played\nCommand & Conquer Series before, you can start with normal difficulty.".L10N("UI:Main:StartWithNonEasyDiffLongDesc")));;
+                TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
+                UserINISettings.Instance.TooHardHint.Value = false;
             }
         }
 
@@ -639,7 +637,8 @@ namespace DTAClient.DXGUI.Generic
         {
             //ClickSoundLight.Play();
             MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
-            parent.Show(parent.CampaignSelector);
+            parent.CampaignSelector.ReloadBattleIni(false);
+            parent.ShowSubControl(parent.CampaignSelector);
         }
 
         private void TooHardMessageBox_YesClicked(XNAMessageBox messageBox)
