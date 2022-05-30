@@ -617,19 +617,18 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            if (!UserINISettings.Instance.TooHardHint)
-            {
-                //ClickSoundLight.Play();
-                PrepareToLaunch();
-            }
-
-            if (curDifficultyIndex != 0)
+            if (UserINISettings.Instance.TooHardHint && curDifficultyIndex != 0)
             {
                 TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Start With Non-Easy Difficulty".L10N("UI:Main:StartWithNonEasyDiff"),
                 string.Format("Are you sure not starting with easy difficulty?".L10N("UI:Main:StartWithNonEasyDiffDesc") + Environment.NewLine +
                 "This is your first time to play campaign. If you have played\nCommand & Conquer Series before, you can start with normal difficulty.".L10N("UI:Main:StartWithNonEasyDiffLongDesc")));;
                 TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
                 UserINISettings.Instance.TooHardHint.Value = false;
+            }
+            else
+            {
+                //ClickSoundLight.Play();
+                PrepareToLaunch();
             }
         }
 
