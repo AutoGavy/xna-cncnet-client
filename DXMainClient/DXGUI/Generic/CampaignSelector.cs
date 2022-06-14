@@ -225,18 +225,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            if (trbDifficultySelector.Value > 2)
-            {
-                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
-                    "HELL Difficulty to Start".L10N("UI:Main:HellDifficultyStart"),
-                    string.Format("Are you sure to play this mission at HELL difficulty?" + Environment.NewLine +
-                    "High difficulty is named Hard.").L10N("UI:Main:HellDifficultyStart_Desc"));
-                TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
-            }
-            else
-            {
-                PrepareToLaunch();
-            }
+            PrepareToLaunch();
         }
 
         private void TooHardMessageBox_YesClicked(XNAMessageBox messageBox)
