@@ -19,7 +19,7 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_WIDTH = 1280;
         private const int DEFAULT_HEIGHT = 768;
         private const string RESOURCE_PATH = "CampaignSelect/";
-
+        public event EventHandler WindowExited;
         public CampaignSelect(WindowManager windowManager, DiscordHandler discordHandler) : base(windowManager)
         {
             this.discordHandler = discordHandler;
@@ -107,7 +107,9 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnBack_LeftClick(object sender, EventArgs e)
         {
+            // 退外层菜单
             Enabled = false;
+            WindowExited?.Invoke(this,EventArgs.Empty);
         }
     }
 }

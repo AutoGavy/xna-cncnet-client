@@ -49,6 +49,10 @@ namespace DTAClient.DXGUI.Generic
             AddChild(CampaignPanel);
 
             CampaignSelect = new CampaignSelect(WindowManager, discordHandler);
+            CampaignSelect.WindowExited += (sender, arg) =>
+            {
+                Hide();
+            };
             AddChild(CampaignSelect);
 
             CampaignSelector = new CampaignSelector(WindowManager, discordHandler);
@@ -76,15 +80,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 child.Visible = false;
                 child.Enabled = false;
-                child.EnabledChanged += Child_EnabledChanged;
             }
-        }
-
-        private void Child_EnabledChanged(object sender, EventArgs e)
-        {
-            XNAWindow child = (XNAWindow)sender;
-            if (!child.Enabled)
-                Hide();
         }
 
         public void Show(XNAControl control)
@@ -121,7 +117,8 @@ namespace DTAClient.DXGUI.Generic
         public void Hide()
         {
             AlphaRate = -DarkeningPanel.ALPHA_RATE;
-
+            Enabled = false;
+            Visible = false;
             foreach (XNAControl child in Children)
             {
                 child.Enabled = false;
