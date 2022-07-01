@@ -220,7 +220,9 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
+            // 退内层菜单
             Enabled = false;
+            Visible = false;
         }
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
