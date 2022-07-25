@@ -20,6 +20,7 @@ namespace DTAClient.DXGUI.Generic
         private const int LISTBOX_HEIGHT = 649;
         private const string PROFILE_NAME = "Client/profile_data";
 
+        public event EventHandler WindowExited;
         public DatabasePanel(WindowManager windowManager) : base(windowManager)
         {
 
@@ -559,7 +560,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
-            Enabled = false;
+            WindowExited?.Invoke(this, EventArgs.Empty);
         }
     }
 }
