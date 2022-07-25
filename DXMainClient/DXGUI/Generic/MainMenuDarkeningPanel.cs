@@ -45,6 +45,7 @@ namespace DTAClient.DXGUI.Generic
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             Alpha = 1.0f;
 
+            // Note: this is actually a child of CampaignSelect
             CampaignPanel = new CampaignPanel(WindowManager, discordHandler);
             AddChild(CampaignPanel);
 
