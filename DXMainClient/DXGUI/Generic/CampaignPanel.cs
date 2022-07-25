@@ -27,6 +27,7 @@ namespace DTAClient.DXGUI.Generic
         private const string RESOURCE_PATH = "CampaignRes/";
         private const string MSMEDAL_PREFIX = "MSMEDAL_";
 
+        public event EventHandler WindowExited;
         protected int StartMusicIndex { get; set; }
         protected int ConflictMusicIndex { get; set; }
 
@@ -612,7 +613,8 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
-            Enabled = false;
+            // 退内层菜单
+            WindowExited?.Invoke(this, EventArgs.Empty);
         }
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)

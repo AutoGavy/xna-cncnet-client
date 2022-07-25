@@ -80,7 +80,7 @@ namespace DTAClient.DXGUI.Generic
 
             epBackground.CenterOnParent();
             CenterOnParent();
-            epBackground.BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "background.png");;
+            epBackground.BackgroundTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "background.png");
         }
 
         private void BtnTutorial_LeftClick(object sender, EventArgs e)
@@ -96,6 +96,10 @@ namespace DTAClient.DXGUI.Generic
             {
                 Disable();
                 MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+                parent.CampaignPanel.WindowExited += (sub_sender, sub_arg) =>
+                {
+                    parent.Show(this);
+                };
                 parent.Show(parent.CampaignPanel);
             }
             else
@@ -109,7 +113,7 @@ namespace DTAClient.DXGUI.Generic
         {
             // 退外层菜单
             Enabled = false;
-            WindowExited?.Invoke(this,EventArgs.Empty);
+            WindowExited?.Invoke(this, EventArgs.Empty);
         }
     }
 }
