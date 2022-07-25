@@ -63,6 +63,10 @@ namespace DTAClient.DXGUI.Generic
             AddChild(GameLoadingWindow);
 
             StatisticsWindow = new StatisticsWindow(WindowManager);
+            StatisticsWindow.WindowExited += (sender, arg) =>
+            {
+                Hide();
+            };
             AddChild(StatisticsWindow);
 
             UpdateQueryWindow = new UpdateQueryWindow(WindowManager);
@@ -75,6 +79,10 @@ namespace DTAClient.DXGUI.Generic
             AddChild(ExtrasWindow);
 
             DatabasePanel = new DatabasePanel(WindowManager);
+            DatabasePanel.WindowExited += (sender, arg) =>
+            {
+                Hide();
+            };
             AddChild(DatabasePanel);
 
             foreach (XNAControl child in Children)
