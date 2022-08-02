@@ -305,6 +305,7 @@
     <None Include="Resources\faicon.png" />
     <None Include="Resources\fcsicon.png" />
     <None Include="Resources\fricon.png" />
+    <None Include="Resources\mlpicon.png" />
     <Content Include="Resources\raicon.png" />
     <None Include="Resources\reicon.png" />
     <None Include="Resources\rnicon.png" />

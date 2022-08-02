@@ -133,6 +133,16 @@ namespace ClientCore.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap mlpicon {
+            get {
+                object obj = ResourceManager.GetObject("mlpicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap moicon {
             get {
                 object obj = ResourceManager.GetObject("moicon", resourceCulture);

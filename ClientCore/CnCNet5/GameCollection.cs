@@ -167,6 +167,17 @@ namespace ClientCore.CnCNet5
 
                 new CnCNetGame()
                 {
+                    ChatChannel = "#cncnet-mlp",
+                    ClientExecutableName = "开始游戏.exe",
+                    GameBroadcastChannel = "#cncnet-mlp-games",
+                    InternalName = "mlp",
+                    RegistryInstallPath = "HKCU\\Software\\MLP AI",
+                    UIName = "MLP AI",
+                    Texture = AssetLoader.TextureFromImage(Resources.mlpicon)
+                },
+
+                new CnCNetGame()
+                {
                     ChatChannel = "#cncnet-tc",
                     ClientExecutableName = "TiberiumCrisis.exe",
                     GameBroadcastChannel = "#cncnet-tc-games",
