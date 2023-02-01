@@ -135,7 +135,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             WindowManager.AddAndInitializeControl(gameBroadcastTimer);
         }
 
-        private void BtnChangeTunnel_LeftClick(object sender, EventArgs e) => ShowTunnelSelectionWindow("Select tunnel server:");
+        private void BtnChangeTunnel_LeftClick(object sender, EventArgs e) =>
+            ShowTunnelSelectionWindow("Select tunnel server:".L10N("UI:Main:Selecttunnelserver"));
 
         private void GameBroadcastTimer_TimeElapsed(object sender, EventArgs e) => BroadcastGame();
 

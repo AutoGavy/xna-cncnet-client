@@ -50,6 +50,8 @@ namespace DTAConfig.OptionPanels
 
             Name = "GameOptionsPanel";
 
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
+
             var lblScrollRate = new XNALabel(WindowManager);
             lblScrollRate.Name = "lblScrollRate";
             lblScrollRate.ClientRectangle = new Rectangle(12,

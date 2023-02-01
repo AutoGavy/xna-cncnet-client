@@ -42,6 +42,8 @@ namespace DTAClient.DXGUI.Generic
 
         private List<SavedGame> savedGames = new List<SavedGame>();
 
+        public event EventHandler WindowExited;
+
         public override void Initialize()
         {
             Name = "GameLoadingWindow";
@@ -107,18 +109,19 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
-            Enabled = false;
+            //Enabled = false;
+            WindowExited?.Invoke(this, EventArgs.Empty);
         }
 
         private void BtnDelete_LeftClick(object sender, EventArgs e)
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             var msgBox = new XNAMessageBox(WindowManager, "Delete Confirmation".L10N("UI:Main:DeleteConfirmationTitle"),
-                string.Format("The following saved game will be deleted permanently:" + Environment.NewLine +
+                string.Format("The following saved game will be deleted permanently:".L10N("UI:Main:DeleteTitle") + Environment.NewLine +
                     Environment.NewLine +
-                    "Filename: {0}" + Environment.NewLine +
-                    "Saved game name: {1}" + Environment.NewLine +
-                    "Date and time: {2}" + Environment.NewLine +
+                    "Filename".L10N("UI:Main:Filename") + "£º {0}" + Environment.NewLine +
+                    "Saved game name".L10N("UI:Main:SavedGameName") + "£º {1}" + Environment.NewLine +
+                    "Date and time".L10N("UI:Main:DateAndTime") + ": {2}" + Environment.NewLine +
                     Environment.NewLine +
                     "Are you sure you want to proceed?".L10N("UI:Main:DeleteConfirmationText"),
                     sg.FileName, Renderer.GetSafeString(sg.GUIName, lbSaveGameList.FontIndex), sg.LastModified.ToString()),
@@ -636,7 +639,7 @@ namespace DTAClient.DXGUI.Generic
                 {
                     strTechniques += ",Magnifier";
                 }
-                switch (UserINISettings.Instance.AntiAliasing)
+                /*switch (UserINISettings.Instance.AntiAliasing)
                 {
                     case 1:
                         strTechniques += ",SMAA";
@@ -644,6 +647,10 @@ namespace DTAClient.DXGUI.Generic
                     case 2:
                         strTechniques += ",FXAA";
                         break;
+                }*/
+                if (UserINISettings.Instance.AntiAliasing == 1)
+                {
+                    strTechniques += ",FXAA";
                 }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);

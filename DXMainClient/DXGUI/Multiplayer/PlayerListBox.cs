@@ -124,7 +124,8 @@ namespace DTAClient.DXGUI.Multiplayer
                 */
 
                 // Player Name
-                string name = user.IsAdmin ? user.IRCUser.Name + " " + "(Admin)".L10N("UI:Main:AdminSuffix") : user.IRCUser.Name;
+                //string name = user.IsAdmin ? user.IRCUser.Name + " " + "(Admin)".L10N("UI:Main:AdminSuffix") : user.IRCUser.Name;
+                string name = user.IRCUser.Name;
                 x += lbItem.TextXPadding;
 
                 DrawStringWithShadow(name, FontIndex,
@@ -144,7 +145,7 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             item.Tag = user;
 
-            if (user.IsAdmin)
+            if (false/*user.IsAdmin*/)
             {
                 item.Text = user.IRCUser.Name + " " + "(Admin)".L10N("UI:Main:AdminSuffix");
                 item.TextColor = Color.Red;

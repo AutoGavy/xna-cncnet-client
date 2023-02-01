@@ -181,7 +181,7 @@ namespace DTAClient.DXGUI
                 {
                     XNAMessageBox.Show(WindowManager, "Failed to enable Enhanced Quality".L10N("UI:Main:ReShadeFailed"),
                         string.Format("Please try to close your anti-virus softwares," + Environment.NewLine +
-                        "and make sure reshade.dll is your Resources folder.").L10N("UI:Main:ReShadeFailed_Desc2"));
+                        "and make sure GScript.ext, d3d9.ext, dx3d9_29.ext, Crisis.ext are your game folder.").L10N("UI:Main:ReShadeFailed_Desc2"));
                 }
             }
         }
@@ -229,9 +229,9 @@ namespace DTAClient.DXGUI
             try
             {
                 //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=8109");
                 /*else
-                    System.Diagnostics.Process.Start("http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");*/
+                    System.Diagnostics.Process.Start("https://www.microsoft.com/zh-cn/download/details.aspx?id=8109");*/
             }
             catch (Exception)
             {

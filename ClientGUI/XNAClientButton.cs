@@ -57,6 +57,9 @@ namespace ClientGUI
             if (HoverSoundEffect == null)
                 HoverSoundEffect = new EnhancedSoundEffect("button.wav");
 
+            if (ClickSoundEffect == null)
+                ClickSoundEffect = new EnhancedSoundEffect("checkbox.wav");
+
             base.Initialize();
 
             if (Width == 0)

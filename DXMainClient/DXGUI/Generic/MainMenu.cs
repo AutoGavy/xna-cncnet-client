@@ -1237,13 +1237,13 @@ namespace DTAClient.DXGUI.Generic
             if (LogbuchParser.SongEnded && UserINISettings.Instance.StopMusicOnMenu)
                 PlayMusic();
 
-            if (/*!ClientConfiguration.Instance.ModMode &&*/ UserINISettings.Instance.CheckForUpdates)
+            /*if (!ClientConfiguration.Instance.ModMode && UserINISettings.Instance.CheckForUpdates)
             {
                 // Re-check for updates
 
                 if ((DateTime.Now - lastUpdateCheckTime) > TimeSpan.FromSeconds(UPDATE_RE_CHECK_THRESHOLD))
                     CheckForUpdates();
-            }
+            }*/
         }
 
         public void SwitchOff()
@@ -1293,7 +1293,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void LaunchMapEditor()
         {
-            OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
+            /*OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
             Process mapEditorProcess = new Process();
 
             if (osVersion != OSVersion.UNIX)
@@ -1306,7 +1306,7 @@ namespace DTAClient.DXGUI.Generic
                 mapEditorProcess.StartInfo.UseShellExecute = false;
             }
 
-            mapEditorProcess.Start();
+            mapEditorProcess.Start();*/
         }
 
         public string GetSwitchName() => "Main Menu".L10N("UI:Main:MainMenu");

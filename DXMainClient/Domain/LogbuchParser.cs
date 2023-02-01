@@ -207,22 +207,32 @@ namespace DTAClient.Domain
                     {
                         if (line.Contains("PRL1"))
                         {
-                            Logger.Log("PRL1" + " Completed");
+                            Logger.Log("PRL1 Completed");
 
                             side = "prl1";
                             curMission = "PRL1";
                             profileIni.SetBooleanValue("General", "PRL2", true);
+
+                            Logger.Log("PRL1 Completed, skip 1");
+                            profileIni.SetBooleanValue("General", "GDO1", true);
                         }
                         else if (line.Contains("PRL2"))
                         {
-                            Logger.Log("PRL2" + " Completed");
+                            Logger.Log("PRL2 Completed");
 
                             side = "prl2";
                             curMission = "PRL2";
                             profileIni.SetBooleanValue("General", "GDO1", true);
                         }
+                        else if (line.Contains("GDO2"))
+                        {
+                            Logger.Log("GDO2 Completed, skip 1");
 
-                        for (int i = 1; i <= 12; i++)
+                            profileIni.SetBooleanValue("General", "GDO4", true);
+                        }
+
+                        //for (int i = 1; i <= 12; i++)
+                        for (int i = 1; i <= 4; i++) // max enabled to gdo5
                         {
                             string missionIndex = i.ToString();
                             if (line.Contains("GDO" + missionIndex))
@@ -232,6 +242,20 @@ namespace DTAClient.Domain
                                 side = "gdo" + missionIndex;
                                 curMission = "GDO" + missionIndex;
                                 profileIni.SetBooleanValue("General", "GDO" + (i + 1).ToString(), true);
+                            }
+                        }
+
+                        // unlocking database
+                        IniFile campaignPanelIni = new IniFile(ProgramConstants.GetBaseResourcePath() + "CampaignPanel.ini");
+
+                        string strUnlockData = campaignPanelIni.GetStringValue(curMission, "DataUnlock", String.Empty);
+                        if (!string.IsNullOrEmpty(strUnlockData))
+                        {
+                            string[] unlockData = strUnlockData.Split(',');
+                            foreach (string data in unlockData)
+                            {
+                                profileIni.SetBooleanValue(data, "Enable", true);
+                                profileIni.SetBooleanValue(data, "New", true);
                             }
                         }
                     }
@@ -299,7 +323,7 @@ namespace DTAClient.Domain
                                 finalSide = "scrin";
                                 side = "nodfinal";
                                 break;
-                            case "end08":
+                            case "end02":
                                 finalSide = "end";
                                 side = "gdifinal";
                                 break;

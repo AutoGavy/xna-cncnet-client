@@ -116,6 +116,7 @@ namespace DTAClient
             PreprocessorBackgroundTask.Instance.Run();
 
             GameClass gameClass = new GameClass();
+
             gameClass.Run();
         }
 

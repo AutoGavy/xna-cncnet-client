@@ -881,9 +881,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
                 else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
                 {
-                    ddPlayerName.AddItem("Abyss+1 AI".L10N("UI:Main:Abyss1AI"));
-                    ddPlayerName.AddItem("Abyss+2 AI".L10N("UI:Main:Abyss2AI"));
-                    ddPlayerName.AddItem("Abyss+3 AI".L10N("UI:Main:Abyss3AI"));
+                    ddPlayerName.AddItem("Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI"));
+                    ddPlayerName.AddItem("Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI"));
+                    ddPlayerName.AddItem("Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI"));
                 }
                 else
                 {
@@ -2173,7 +2173,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 {
                     strTechniques += ",Magnifier";
                 }
-                switch (UserINISettings.Instance.AntiAliasing)
+                /*switch (UserINISettings.Instance.AntiAliasing)
                 {
                     case 1:
                         strTechniques += ",SMAA";
@@ -2181,6 +2181,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     case 2:
                         strTechniques += ",FXAA";
                         break;
+                }*/
+                if (UserINISettings.Instance.AntiAliasing == 1)
+                {
+                    strTechniques += ",FXAA";
                 }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
@@ -2719,9 +2723,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
                 else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
                 {
-                    ddPlayerName.Items[1].Text = "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
-                    ddPlayerName.Items[2].Text = "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
-                    ddPlayerName.Items[3].Text = "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                    ddPlayerName.Items[1].Text = "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
+                    ddPlayerName.Items[2].Text = "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
+                    ddPlayerName.Items[3].Text = "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
                 }
                 else
                 {
@@ -2763,9 +2767,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
                 else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
                 {
-                    ddPlayerName.Items[1].Text = "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
-                    ddPlayerName.Items[2].Text = "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
-                    ddPlayerName.Items[3].Text = "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                    ddPlayerName.Items[1].Text = "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
+                    ddPlayerName.Items[2].Text = "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
+                    ddPlayerName.Items[3].Text = "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
                 }
                 else
                 {
@@ -3016,11 +3020,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 switch (aiLevel)
                 {
                     case 0:
-                        return "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                        return "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
                     case 1:
-                        return "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
+                        return "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
                     case 2:
-                        return "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
+                        return "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
                 }
             }
             else

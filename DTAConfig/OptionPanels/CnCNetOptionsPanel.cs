@@ -51,7 +51,9 @@ namespace DTAConfig.OptionPanels
         private void InitOptions()
         {
             // LEFT COLUMN
-            
+
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
+
             chkPingUnofficialTunnels = new XNAClientCheckBox(WindowManager);
             chkPingUnofficialTunnels.Name = nameof(chkPingUnofficialTunnels);
             chkPingUnofficialTunnels.ClientRectangle = new Rectangle(12, 12, 0, 0);
@@ -310,7 +312,7 @@ namespace DTAConfig.OptionPanels
                     continue;
                 }
 
-                chkBox.Checked = IniSettings.IsGameFollowed(chkBox.Name);
+                chkBox.Checked = false; //IniSettings.IsGameFollowed(chkBox.Name);
             }
         }
 

@@ -595,12 +595,12 @@ namespace DTAClient.DXGUI.Generic
                     switch (aiLevel)
                     {
                         case 2:
-                            return "Abyss+3 AI".L10N("UI:Main:Abyss3AI");
+                            return "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
                         case 1:
-                            return "Abyss+2 AI".L10N("UI:Main:Abyss2AI");
+                            return "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
                         case 0:
                         default:
-                            return "Abyss+1 AI".L10N("UI:Main:Abyss1AI");
+                            return "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
                     }
                 }
             }

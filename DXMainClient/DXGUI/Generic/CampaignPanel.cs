@@ -80,7 +80,7 @@ namespace DTAClient.DXGUI.Generic
         private string[] MissionList;
 
         //private EnhancedSoundEffect ClickSoundLight = new EnhancedSoundEffect("button.wav");
-        private EnhancedSoundEffect ClickSoundHeavy = new EnhancedSoundEffect("checkbox.wav");
+        //private EnhancedSoundEffect ClickSoundHeavy = new EnhancedSoundEffect("checkbox.wav");
 
         private delegate void gsDelegate(XNAClientButton button);
         private readonly gsDelegate[] SetAsButton = new gsDelegate[4];
@@ -329,17 +329,21 @@ namespace DTAClient.DXGUI.Generic
 
             string missionName = MissionList[curMissionIndex].ToString().ToUpper();
 
-            foreach (CMedal medal in Medals)
+            // 8 Medals
+            if (!string.IsNullOrEmpty(campaignOptionsIni.GetStringValue(missionName, "Medals", String.Empty)))
             {
-                string optionName = missionName + "_" + medal.Name;
+                foreach (CMedal medal in Medals)
+                {
+                    string optionName = missionName + "_" + medal.Name;
 
-                medal.SetDisplayText(profileIni.GetBooleanValue(optionName, "Enable", false)
-                    ? medal.unlockedText
-                    : medal.lockedText);
+                    medal.SetDisplayText(profileIni.GetBooleanValue(optionName, "Enable", false)
+                        ? medal.unlockedText
+                        : medal.lockedText);
 
-                medal.DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false) ?
-                    AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medal.Name + "_c.png") :
-                    AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medal.Name + ".png");
+                    medal.DisabledClearTexture = profileIni.GetBooleanValue(optionName, "Enable", false) ?
+                        AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medal.Name + "_c.png") :
+                        AssetLoader.LoadTexture(RESOURCE_PATH + missionName + "/" + medal.Name + ".png");
+                }
             }
 
             // Difficulty Medal
@@ -355,12 +359,20 @@ namespace DTAClient.DXGUI.Generic
         private void GetMissionMedals(int index)
         {
             string missionName = MissionList[index].ToUpper();
-            string[] medalArray = campaignOptionsIni.GetStringValue(missionName, "Medals", String.Empty).Split(',');
-            if (medalArray.Length <= 0 || medalArray.Length > MEDAL_COUNT)
-            {
-                Logger.Log("Error: Mission " + missionName + " exceeds 8 medals / has no medals!");
-                return;
-            }
+
+            // Difficulty Medal
+            string medalName = profileIni.GetStringValue(missionName, "DifficultyMedal", "none");
+            if (!MedalNameList.ContainsKey(medalName))
+                medalName = "none";
+
+            string[] rectArray = MedalNameList[medalName].Split(',');
+            DifficultyMedal.ClientRectangle = new Rectangle(Convert.ToInt32(rectArray[0]), Convert.ToInt32(rectArray[1]),
+                Convert.ToInt32(rectArray[2]), Convert.ToInt32(rectArray[3]));
+
+            DifficultyMedal.SetDisplayText(campaignOptionsIni.GetStringValue(MSMEDAL_PREFIX + medalName.ToUpper(), "Text", String.Empty));
+            DifficultyMedal.DisabledClearTexture = AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR.ToLower() + medalName + ".png");
+            DifficultyMedal.RefreshSize();
+            DifficultyMedal.Enable();
 
             // Disable all medals
             foreach (CMedal medal in Medals)
@@ -370,6 +382,15 @@ namespace DTAClient.DXGUI.Generic
                 medal.Visible = false;
             }
 
+            // Check if this mission has 8 medals
+            string[] medalArray = campaignOptionsIni.GetStringValue(missionName, "Medals", String.Empty).Split(',');
+            if (medalArray.Length != MEDAL_COUNT)
+            {
+                Logger.Log("Error: Mission " + missionName + " does not reach 8 medals!");
+                return;
+            }
+
+            // Init medals
             for (int i = 0; i < medalArray.Length; i++)
             {
                 string optionName = missionName + "_" + medalArray[i];
@@ -394,20 +415,6 @@ namespace DTAClient.DXGUI.Generic
                 Medals[i].Enable();
                 Medals[i].Visible = true;
             }
-
-            // Difficulty Medal
-            string medalName = profileIni.GetStringValue(missionName, "DifficultyMedal", "none");
-            if (!MedalNameList.ContainsKey(medalName))
-                medalName = "none";
-
-            string[] rectArray = MedalNameList[medalName].Split(',');
-            DifficultyMedal.ClientRectangle = new Rectangle(Convert.ToInt32(rectArray[0]), Convert.ToInt32(rectArray[1]),
-                Convert.ToInt32(rectArray[2]), Convert.ToInt32(rectArray[3]));
-
-            DifficultyMedal.SetDisplayText(campaignOptionsIni.GetStringValue(MSMEDAL_PREFIX + medalName.ToUpper(), "Text", String.Empty));
-            DifficultyMedal.DisabledClearTexture = AssetLoader.LoadTexture(RESOURCE_PATH + SIDE_ABBR.ToLower() + medalName + ".png");
-            DifficultyMedal.RefreshSize();
-            DifficultyMedal.Enable();
         }
 
         private void SwitchDifficulty(int index, int currentIndex = -1, bool firstRun = false)
@@ -505,7 +512,6 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnSlideUp_LeftClick(object sender, EventArgs e)
         {
-            ClickSoundHeavy.Play();
             btnSlideUp.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slideupbtn_c.png");
 
             foreach (XNAClientButton button in MissionButtons)
@@ -545,7 +551,6 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnSlideDown_LeftClick(object sender, EventArgs e)
         {
-            ClickSoundHeavy.Play();
             btnSlideDown.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "slidedownbtn_c.png");
 
             foreach (XNAClientButton button in MissionButtons)
@@ -595,7 +600,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 if (button.bButtonHover)
                 {
-                    ClickSoundHeavy.Play();
+                    //ClickSoundHeavy.Play();
 
                     int oriIndex = Convert.ToInt32(button.Name.Substring(6));
                     if (button.Name != "btnprl1" && button.Name != "btnprl2")
@@ -619,7 +624,14 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            if (UserINISettings.Instance.TooHardHint && curDifficultyIndex != 0)
+            string missionName = MissionList[curMissionIndex].ToUpper();
+            if (!campaignOptionsIni.GetBooleanValue(missionName, "IsValid", true))
+            {
+                XNAMessageBox.Show(WindowManager,
+                    "Cannot Start Mission".L10N("UI:Main:CantStartMission"),
+                    string.Format("Uncompleted Mission.".L10N("UI:Main:InvalidMission")));
+            }
+            else if (UserINISettings.Instance.TooHardHint && curDifficultyIndex != 0)
             {
                 TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Start With Non-Easy Difficulty".L10N("UI:Main:StartWithNonEasyDiff"),
                 string.Format("Are you sure not starting with easy difficulty?".L10N("UI:Main:StartWithNonEasyDiffDesc") + Environment.NewLine +
@@ -997,7 +1009,7 @@ namespace DTAClient.DXGUI.Generic
                 {
                     strTechniques += ",Magnifier";
                 }
-                switch (UserINISettings.Instance.AntiAliasing)
+                /*switch (UserINISettings.Instance.AntiAliasing)
                 {
                     case 1:
                         strTechniques += ",SMAA";
@@ -1005,6 +1017,10 @@ namespace DTAClient.DXGUI.Generic
                     case 2:
                         strTechniques += ",FXAA";
                         break;
+                }*/
+                if (UserINISettings.Instance.AntiAliasing == 1)
+                {
+                    strTechniques += ",FXAA";
                 }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);

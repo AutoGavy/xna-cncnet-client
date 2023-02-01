@@ -30,6 +30,8 @@ namespace DTAConfig.OptionPanels
 
             Name = "ComponentsPanel";
 
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
+
             int componentIndex = 0;
 
             if (CUpdater.CustomComponents == null)

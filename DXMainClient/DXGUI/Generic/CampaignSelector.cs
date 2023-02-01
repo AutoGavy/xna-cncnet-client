@@ -42,7 +42,6 @@ namespace DTAClient.DXGUI.Generic
         private XNATrackbar trbDifficultySelector;
 
         private CheaterWindow cheaterWindow;
-        private XNAMessageBox TooHardMessageBox;
 
         private Mission missionToLaunch;
 
@@ -226,11 +225,6 @@ namespace DTAClient.DXGUI.Generic
         }
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
-        {
-            PrepareToLaunch();
-        }
-
-        private void TooHardMessageBox_YesClicked(XNAMessageBox messageBox)
         {
             PrepareToLaunch();
         }
@@ -569,7 +563,7 @@ namespace DTAClient.DXGUI.Generic
                 {
                     strTechniques += ",Magnifier";
                 }
-                switch (UserINISettings.Instance.AntiAliasing)
+                /*switch (UserINISettings.Instance.AntiAliasing)
                 {
                     case 1:
                         strTechniques += ",SMAA";
@@ -577,6 +571,10 @@ namespace DTAClient.DXGUI.Generic
                     case 2:
                         strTechniques += ",FXAA";
                         break;
+                }*/
+                if (UserINISettings.Instance.AntiAliasing == 1)
+                {
+                    strTechniques += ",FXAA";
                 }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);

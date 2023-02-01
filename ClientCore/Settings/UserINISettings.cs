@@ -76,8 +76,8 @@ namespace ClientCore
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
             Renderer = new StringSetting(iniFile, COMPATIBILITY, "Renderer", string.Empty);
-            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, true);
-            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", true);
+            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
+            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
 
             int ScreenX = ClientConfiguration.gs_client_x;
             int ScreenY = ClientConfiguration.gs_client_y;
@@ -91,8 +91,11 @@ namespace ClientCore
 
             ClientConfiguration.SizeRatio = (ClientResolutionX.Value * ClientResolutionY.Value) / (1920.0 * 1080.0);
 
-            BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", false);
-            DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
+            bool bDefault = ClientResolutionX.Value == ClientConfiguration.gs_client_x || ClientResolutionY.Value == ClientConfiguration.gs_client_y;
+            BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", true);
+
+            //DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
+            DebugReShade.Value = false;
             ClientFPS = new IntSetting(iniFile, VIDEO, "ClientFPS", 60);
 
             System.Management.ManagementObjectSearcher objvide = new System.Management.ManagementObjectSearcher("select * from Win32_VideoController");
@@ -129,7 +132,7 @@ namespace ClientCore
             SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.7);
             VoiceVolume = new DoubleSetting(iniFile, AUDIO, "VoiceVolume", 0.7);
             IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", true);
-            ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 1.0);
+            ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 0.7);
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
             StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);

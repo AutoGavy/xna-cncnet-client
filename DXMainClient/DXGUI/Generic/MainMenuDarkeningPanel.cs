@@ -60,6 +60,10 @@ namespace DTAClient.DXGUI.Generic
             AddChild(CampaignSelector);
 
             GameLoadingWindow = new GameLoadingWindow(WindowManager, discordHandler);
+            GameLoadingWindow.WindowExited += (sender, arg) =>
+            {
+                Hide();
+            };
             AddChild(GameLoadingWindow);
 
             StatisticsWindow = new StatisticsWindow(WindowManager);

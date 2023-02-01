@@ -26,7 +26,7 @@ namespace DTAClient.DXGUI.Generic
 
         }
 
-        private EnhancedSoundEffect ClickSound = new EnhancedSoundEffect("checkbox.wav");
+        //private EnhancedSoundEffect ClickSound = new EnhancedSoundEffect("checkbox.wav");
 
         private XNAClientButton btnFacGen;
         private XNAClientButton btnFacGDI;
@@ -257,7 +257,7 @@ namespace DTAClient.DXGUI.Generic
                 }
 
                 // check if player has achieved it
-                if (dataOptionsIni.GetBooleanValue(Name, "EnableAllData", false) || profileIni.GetBooleanValue(dataSection, "Enable", false))
+                if (profileIni.GetBooleanValue(dataSection, "Enable", true))
                 {
                     item.TextColor = dataList.DefaultItemColor;
                 }
@@ -269,8 +269,7 @@ namespace DTAClient.DXGUI.Generic
                 }
 
                 // check if it's new
-                if (!dataOptionsIni.GetBooleanValue(Name, "EnableAllData", false) &&
-                    profileIni.GetBooleanValue(dataSection, "IsNew", true))
+                if (profileIni.GetBooleanValue(dataSection, "New", false))
                 {
                     switch (strSide)
                     {
@@ -360,7 +359,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnFacGen_LeftClick(object sender, EventArgs e)
         {
-            ClickSound.Play();
+            //ClickSound.Play();
 
             if (!(bool)btnFacGen.Tag)
             {
@@ -410,7 +409,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnFacGDI_LeftClick(object sender, EventArgs e)
         {
-            ClickSound.Play();
+            //ClickSound.Play();
 
             lbGenDataList.Disable();
             lbGenDataList.Visible = false;
@@ -460,7 +459,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnFacNod_LeftClick(object sender, EventArgs e)
         {
-            ClickSound.Play();
+            //ClickSound.Play();
 
             lbGenDataList.Disable();
             lbGenDataList.Visible = false;
@@ -510,7 +509,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnFacScr_LeftClick(object sender, EventArgs e)
         {
-            ClickSound.Play();
+            //ClickSound.Play();
 
             lbGenDataList.Disable();
             lbGenDataList.Visible = false;

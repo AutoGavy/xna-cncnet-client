@@ -29,6 +29,8 @@ namespace DTAConfig.OptionPanels
 
             Name = "UpdaterOptionsPanel";
 
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
+
             var lblDescription = new XNALabel(WindowManager);
             lblDescription.Name = "lblDescription";
             lblDescription.ClientRectangle = new Rectangle(12, 12, 0, 0);

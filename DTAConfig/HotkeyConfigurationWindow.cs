@@ -542,8 +542,7 @@ namespace DTAConfig
                 ININame = iniSection.SectionName;
                 UIName = iniSection.GetStringValue("UIName", "Unnamed command");
                 Category = iniSection.GetStringValue("Category", "Unknown category");
-                Description = iniSection.GetStringValue("Description", "Unknown description");
-                Description.Replace("@", Environment.NewLine);
+                Description = iniSection.GetStringValue("Description", "Unknown description").Replace("@", Environment.NewLine);
                 DefaultHotkey = new Hotkey(iniSection.GetIntValue("DefaultKey", 0));
             }
 
@@ -614,7 +613,7 @@ namespace DTAConfig
             public string ToStringWithNone()
             {
                 if (Key == Keys.None && Modifier == KeyModifiers.None)
-                    return "None";
+                    return "None".L10N("UI:DTAConfig:None");
 
                 return GetString();
             }

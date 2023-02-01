@@ -81,6 +81,8 @@ namespace DTAConfig.OptionPanels
 
             Name = "DisplayOptionsPanel";
 
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
+
             var lblIngameResolution = new XNALabel(WindowManager);
             lblIngameResolution.Name = "lblIngameResolution";
             lblIngameResolution.ClientRectangle = new Rectangle(12, 14, 0, 0);
@@ -408,8 +410,9 @@ namespace DTAConfig.OptionPanels
                 lblCloudsEffect.ClientRectangle.Y - 2,
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
+                //ddAntiAliasing.AddItem("Invalid Setting".L10N("UI:DTAConfig:Invalid"));
                 ddAntiAliasing.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
-                ddAntiAliasing.AddItem("Subpixel Morphological (SMAA)".L10N("UI:DTAConfig:SMAA"));
+                //ddAntiAliasing.AddItem("Subpixel Morphological (SMAA)".L10N("UI:DTAConfig:SMAA"));
                 ddAntiAliasing.AddItem("Fast Approximate (FXAA)".L10N("UI:DTAConfig:FXAA"));
             ddAntiAliasing.AllowDropDown = true;
 
@@ -491,11 +494,12 @@ namespace DTAConfig.OptionPanels
                 Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
             else
                 Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");*/
+            Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
         }
 
         private void BtnTestGame_LeftClick(object sender, EventArgs e)
         {
-           SureToTextBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Test Game".L10N("UI:DTAConfig:TestGame"),
+           SureToTextBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Test Game Quality".L10N("UI:DTAConfig:TestGame"),
                string.Format("Are you sure to test right now?").L10N("UI:DTAConfig:TestGame_Desc"));
 
             SureToTextBox.YesClickedAction = SureToTextBox_YesClicked;
@@ -858,7 +862,8 @@ namespace DTAConfig.OptionPanels
             base.Load();
 
             LoadRenderer();
-            ddDetailLevel.SelectedIndex = UserINISettings.Instance.DetailLevel;
+            //ddDetailLevel.SelectedIndex = UserINISettings.Instance.DetailLevel;
+            ddDetailLevel.SelectedIndex = 2;
 
             string currentRes = UserINISettings.Instance.IngameScreenWidth.Value +
                 "x" + UserINISettings.Instance.IngameScreenHeight.Value;
@@ -921,6 +926,7 @@ namespace DTAConfig.OptionPanels
             ddEnhancedLight.SelectedIndex = UserINISettings.Instance.EnhancedLight;
             ddDisplacement.SelectedIndex = UserINISettings.Instance.Displacement;
             ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing;
+            //ddAntiAliasing.SelectedIndex = 0;
 
             chkBackBufferInVRAM.Checked = false;
 
@@ -978,7 +984,8 @@ namespace DTAConfig.OptionPanels
         {
             bool restartRequired = base.Save();
 
-            IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
+            //IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
+            IniSettings.DetailLevel.Value = 2;
 
             string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
 
@@ -1039,6 +1046,7 @@ namespace DTAConfig.OptionPanels
             IniSettings.EnhancedLight.Value = ddEnhancedLight.SelectedIndex;
             IniSettings.Displacement.Value = ddDisplacement.SelectedIndex;
             IniSettings.AntiAliasing.Value = ddAntiAliasing.SelectedIndex;
+            //IniSettings.AntiAliasing.Value = 0;
 
             IniSettings.AlphaLight.Value = chkAlphaLight.Checked;
 
@@ -1170,7 +1178,8 @@ namespace DTAConfig.OptionPanels
 
             base.Save();
 
-            IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
+            //IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
+            IniSettings.DetailLevel.Value = 2;
 
             string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
 
@@ -1538,7 +1547,7 @@ namespace DTAConfig.OptionPanels
                 {
                     strTechniques += ",Magnifier";
                 }
-                switch (UserINISettings.Instance.AntiAliasing)
+                /*switch (UserINISettings.Instance.AntiAliasing)
                 {
                     case 1:
                         strTechniques += ",SMAA";
@@ -1546,6 +1555,10 @@ namespace DTAConfig.OptionPanels
                     case 2:
                         strTechniques += ",FXAA";
                         break;
+                }*/
+                if (UserINISettings.Instance.AntiAliasing == 1)
+                {
+                    strTechniques += ",FXAA";
                 }
 
                 strTechniques += ",UI_After";

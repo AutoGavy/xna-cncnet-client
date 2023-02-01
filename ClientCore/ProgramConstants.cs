@@ -99,9 +99,9 @@ namespace ClientCore
             "Insane AI".L10N("UI:Main:InsaneAI"),
             "Brutal AI".L10N("UI:Main:BrutalAI"),
             "Abyss AI".L10N("UI:Main:AbyssAI"),
-            "Abyss+1 AI".L10N("UI:Main:Abyss1AI"),
-            "Abyss+2 AI".L10N("UI:Main:Abyss2AI"),
-            "Abyss+3 AI".L10N("UI:Main:Abyss3AI")
+            "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI"),
+            "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI"),
+            "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI")
         };
 
         public static string GetBaseSharedPath()

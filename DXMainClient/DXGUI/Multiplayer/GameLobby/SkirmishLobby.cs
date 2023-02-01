@@ -161,6 +161,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 return "Co-op missions cannot be spectated. You'll have to show a bit more effort to cheat here.".L10N("UI:Main:CoOpMissionSpectatorPrompt");
             }
 
+            if (Map.IsCoop)
+            {
+                foreach (PlayerInfo pInfo in Players)
+                {
+                    if (pInfo.StartingLocation == 0)
+                        return "This mission is not allowed to select random starting location.".L10N("UI:Main:CannotUseRandomLoc");
+                }
+            }
+
             var teamMappingsError = GetTeamMappingsError();
             if (!string.IsNullOrEmpty(teamMappingsError))
                 return teamMappingsError;

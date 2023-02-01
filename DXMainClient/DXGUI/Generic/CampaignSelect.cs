@@ -20,6 +20,7 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_HEIGHT = 768;
         private const string RESOURCE_PATH = "CampaignSelect/";
         public event EventHandler WindowExited;
+
         public CampaignSelect(WindowManager windowManager, DiscordHandler discordHandler) : base(windowManager)
         {
             this.discordHandler = discordHandler;
@@ -92,7 +93,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnGDI_LeftClick(object sender, EventArgs e)
         {
-            if (UserINISettings.Instance.TutorialCompleted)
+            if (true/*UserINISettings.Instance.TutorialCompleted*/)
             {
                 Disable();
                 MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;

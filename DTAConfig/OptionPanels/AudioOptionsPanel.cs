@@ -42,6 +42,8 @@ namespace DTAConfig.OptionPanels
 
             Name = "AudioOptionsPanel";
 
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
+
             var lblScoreVolume = new XNALabel(WindowManager);
             lblScoreVolume.Name = "lblScoreVolume";
             lblScoreVolume.ClientRectangle = new Rectangle(12, 14, 0, 0);
@@ -176,7 +178,7 @@ namespace DTAConfig.OptionPanels
             var lblMusicType = new XNALabel(WindowManager);
             lblMusicType.Name = "lblMusicType";
             lblMusicType.ClientRectangle = new Rectangle(12, 14, 0, 0);
-            lblMusicType.Text = "Music Type".L10N("UI:DTAConfig:MusicType");
+            lblMusicType.Text = "Music Type:".L10N("UI:DTAConfig:MusicType");
 
             ddMusicType = new XNAClientDropDown(WindowManager);
             ddMusicType.Name = "ddMusicType";
@@ -199,6 +201,7 @@ namespace DTAConfig.OptionPanels
             AddChild(trbVoiceVolume);
 
             AddChild(chkScoreShuffle);
+            AddChild(chkSmartMusic);
             AddChild(lblMusicType);
             AddChild(ddMusicType);
 

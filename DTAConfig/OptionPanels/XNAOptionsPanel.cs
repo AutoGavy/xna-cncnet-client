@@ -32,7 +32,7 @@ namespace DTAConfig.OptionPanels
             ClientRectangle = new Rectangle(12, 47,
                 Parent.Width - 24,
                 Parent.Height - 94);
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 2, 2);
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
             base.Initialize();
