@@ -206,7 +206,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 btnLaunchGame.Y + 2, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             chkAutoReady.Text = "Auto-Ready".L10N("UI:Main:AutoReady");
             chkAutoReady.CheckedChanged += ChkAutoReady_CheckedChanged;
-            chkAutoReady.Disable();
+            chkAutoReady.Checked = false;
 
             AddChild(lbChatMessages);
             AddChild(tbChatInput);
@@ -664,6 +664,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 btnLockGame.Enabled = false;
                 btnLockGame.Visible = false;
+                chkAutoReady.Enable();
                 chkAutoReady.GetAttributes(ThemeIni);
 
                 foreach (GameLobbyDropDown dd in DropDowns)
@@ -802,53 +803,50 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 return;
             }
 
-            if (Map.EnforceMaxPlayers)
+            foreach (PlayerInfo pInfo in Players)
             {
-                foreach (PlayerInfo pInfo in Players)
+                if (pInfo.StartingLocation == 0)
+                    continue;
+
+                if (Players.Concat(AIPlayers).ToList().Find(
+                    p => p.StartingLocation == pInfo.StartingLocation &&
+                    p.Name != pInfo.Name) != null)
                 {
-                    if (pInfo.StartingLocation == 0)
-                        continue;
-
-                    if (Players.Concat(AIPlayers).ToList().Find(
-                        p => p.StartingLocation == pInfo.StartingLocation &&
-                        p.Name != pInfo.Name) != null)
-                    {
-                        SharedStartingLocationNotification();
-                        return;
-                    }
-                }
-
-                for (int aiId = 0; aiId < AIPlayers.Count; aiId++)
-                {
-                    int startingLocation = AIPlayers[aiId].StartingLocation;
-
-                    if (startingLocation == 0)
-                        continue;
-
-                    int index = AIPlayers.FindIndex(aip => aip.StartingLocation == startingLocation);
-
-                    if (index > -1 && index != aiId)
-                    {
-                        SharedStartingLocationNotification();
-                        return;
-                    }
-                }
-
-                int totalPlayerCount = Players.Count(p => p.SideId < ddPlayerSides[0].Items.Count - 1)
-                    + AIPlayers.Count;
-
-                int minPlayers = GameMode.MinPlayersOverride > -1 ? GameMode.MinPlayersOverride : Map.MinPlayers;
-                if (totalPlayerCount < minPlayers)
-                {
-                    InsufficientPlayersNotification();
+                    SharedStartingLocationNotification();
                     return;
                 }
+            }
 
-                if (Map.EnforceMaxPlayers && totalPlayerCount > Map.MaxPlayers)
+            for (int aiId = 0; aiId < AIPlayers.Count; aiId++)
+            {
+                int startingLocation = AIPlayers[aiId].StartingLocation;
+
+                if (startingLocation == 0)
+                    continue;
+
+                int index = AIPlayers.FindIndex(aip => aip.StartingLocation == startingLocation);
+
+                if (index > -1 && index != aiId)
                 {
-                    TooManyPlayersNotification();
+                    SharedStartingLocationNotification();
                     return;
                 }
+            }
+
+            int totalPlayerCount = Players.Count(p => p.SideId < ddPlayerSides[0].Items.Count - 1) + AIPlayers.Count;
+
+            int minPlayers = GameMode.MinPlayersOverride > -1 ? GameMode.MinPlayersOverride : Map.MinPlayers;
+            if (totalPlayerCount < minPlayers)
+            {
+                InsufficientPlayersNotification();
+                return;
+            }
+
+            int maxPlayers = GameMode.MaxPlayersOverride > -1 ? GameMode.MaxPlayersOverride : Map.MaxPlayers;
+            if (totalPlayerCount > maxPlayers)
+            {
+                TooManyPlayersNotification();
+                return;
             }
 
             int iId = 0;
@@ -929,7 +927,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected virtual void TooManyPlayersNotification()
         {
-            if (Map != null)
+            if (GameMode != null && GameMode.MaxPlayersOverride > -1)
+                AddNotice(String.Format("Unable to launch game: {0} cannot be played with more than {1} players".L10N("UI:Main:TooManyPlayersNotification2"),
+                    GameMode.UIName, GameMode.MaxPlayersOverride));
+            else if (Map != null)
                 AddNotice(String.Format("Unable to launch game: this map cannot be played with more than {0} players.".L10N("UI:Main:TooManyPlayersNotification"),
                     Map.MaxPlayers));
         }

@@ -20,8 +20,8 @@ namespace DTAClient.Online
 
         public static int ChannelUserComparison(ChannelUser u1, ChannelUser u2)
         {
-            if (u1.IsAdmin != u2.IsAdmin)
-                return u1.IsAdmin ? -1 : 1;
+            /*if (u1.IsAdmin != u2.IsAdmin)
+                return u1.IsAdmin ? -1 : 1;*/
             
             if (u1.IsFriend != u2.IsFriend)
                 return u1.IsFriend ? -1 : 1;

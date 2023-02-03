@@ -629,7 +629,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 XNAMessageBox.Show(WindowManager,
                     "Cannot Start Mission".L10N("UI:Main:CantStartMission"),
-                    string.Format("Uncompleted Mission.".L10N("UI:Main:InvalidMission")));
+                    string.Format("Mission is not completed yet,\nplease select next mission.".L10N("UI:Main:InvalidMission")));
             }
             else if (UserINISettings.Instance.TooHardHint && curDifficultyIndex != 0)
             {

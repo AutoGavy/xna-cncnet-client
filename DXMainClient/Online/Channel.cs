@@ -140,7 +140,7 @@ namespace DTAClient.Online
                 {
                     users.Add(user.IRCUser.Name, user);
                 }
-                else if (IsChatChannel)
+                /*else if (IsChatChannel)
                 {
                     if (existingUser.IsAdmin != user.IsAdmin)
                     {
@@ -148,7 +148,7 @@ namespace DTAClient.Online
                         existingUser.IsFriend = user.IsFriend;
                         users.Reinsert(user.IRCUser.Name);
                     }
-                }
+                }*/
             }
 
             UserListReceived?.Invoke(this, EventArgs.Empty);

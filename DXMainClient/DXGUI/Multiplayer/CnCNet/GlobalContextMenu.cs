@@ -135,7 +135,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         {
             var ircUser = GetIrcUser();
             var isOnline = ircUser != null && connectionManager.UserList.Any(u => u.Name == ircUser.Name);
-            var isAdmin = contextMenuData.ChannelUser?.IsAdmin ?? false;
+            //var isAdmin = contextMenuData.ChannelUser?.IsAdmin ?? false;
 
             toggleFriendItem.Visible = ircUser != null;
             privateMessageItem.Visible = ircUser != null && isOnline;
@@ -143,7 +143,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             invitePlayerItem.Visible = ircUser != null && isOnline && !string.IsNullOrEmpty(contextMenuData.inviteChannelName);
             joinPlayerItem.Visible = ircUser != null && !contextMenuData.PreventJoinGame && isOnline;
 
-            toggleIgnoreItem.Selectable = !isAdmin;
+            toggleIgnoreItem.Selectable = true;//!isAdmin;
 
             if (ircUser == null)
                 return;

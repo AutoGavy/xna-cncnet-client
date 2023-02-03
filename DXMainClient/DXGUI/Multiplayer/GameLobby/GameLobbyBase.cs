@@ -565,6 +565,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected virtual void OnGameOptionChanged()
         {
             CheckDisallowedSides();
+            CheckTeamLimit();
 
             btnLaunchGame.SetRank(GetRank());
         }
@@ -614,6 +615,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 string.Format("The game host has disabled {0}".L10N("UI:Main:HostDisableSection"), type) :
                 string.Format("The game host has enabled {0}".L10N("UI:Main:HostEnableSection"), type));
 
+        private List<GameModeMap> GetSortedGameModeMaps()
+        {
+            var gameModeMaps = gameModeMapFilter.GetGameModeMaps();
+
+            return gameModeMaps;
+        }
+
         protected void ListMaps()
         {
             lbGameModeMapList.SelectedIndexChanged -= LbGameModeMapList_SelectedIndexChanged;
@@ -626,13 +634,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             int mapIndex = -1;
             int skippedMapsCount = 0;
 
-            var gameModeMaps = gameModeMapFilter.GetGameModeMaps();
             var isFavoriteMapsSelected = IsFavoriteMapsSelected();
-            //var maps = gameModeMaps.OrderBy(gmm => gmm.Map.Name).ToList();
+            var maps = GetSortedGameModeMaps();
 
-            for (int i = 0; i < gameModeMaps.Count; i++)
+            for (int i = 0; i < maps.Count; i++)
             {
-                var gameModeMap = gameModeMaps[i];
+                var gameModeMap = maps[i];
                 if (tbMapSearch.Text != tbMapSearch.Suggestion)
                 {
                     if (!gameModeMap.Map.Name.ToUpper().Contains(tbMapSearch.Text.ToUpper()))
@@ -1006,6 +1013,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             PlayerOptionsPanel.AddChild(lblTeam);
 
             CheckDisallowedSides();
+            CheckTeamLimit();
         }
 
         protected virtual void PlayerExtraOptions_OptionsChanged(object sender, EventArgs e)
@@ -1124,6 +1132,64 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         }
 
         private int GetSpectatorSideIndex() => SideCount + RandomSelectorCount;
+
+        protected void CheckTeamLimit()
+        {
+            // Player
+            for (int pId = 0; pId < Players.Count; pId++)
+                for (int i = 0; i < ddPlayerTeams[pId].Items.Count; i++)
+                    ddPlayerTeams[pId].Items[i].Selectable = true;
+
+            // AI
+            for (int aiId = 0; aiId < AIPlayers.Count; aiId++)
+            {
+                int index = Players.Count + aiId;
+                for (int i = 0; i < ddPlayerTeams[index].Items.Count; i++)
+                    ddPlayerTeams[index].Items[i].Selectable = true;
+            }
+
+            if (GameMode != null && GameMode.TeamsLimited)
+            {
+                // Player
+                for (int pId = 0; pId < Players.Count; pId++)
+                {
+                    PlayerInfo pInfo = Players[pId];
+                    ddPlayerTeams[pId].Items[0].Selectable = pInfo.SideId == GetSpectatorSideIndex();
+                    ddPlayerTeams[pId].Items[3].Selectable = false;
+                    ddPlayerTeams[pId].Items[4].Selectable = false;
+
+                    switch (ddPlayerTeams[pId].SelectedIndex)
+                    {
+                        case 0:
+                            if (pInfo.SideId != GetSpectatorSideIndex())
+                                ddPlayerTeams[pId].SelectedIndex = 1;
+                            break;
+                        case 3:
+                        case 4:
+                            ddPlayerTeams[pId].SelectedIndex = 1;
+                            break;
+                    }
+                }
+                // AI
+                for (int aiId = 0; aiId < AIPlayers.Count; aiId++)
+                {
+                    int index = Players.Count + aiId;
+
+                    ddPlayerTeams[index].Items[0].Selectable = false;
+                    ddPlayerTeams[index].Items[3].Selectable = false;
+                    ddPlayerTeams[index].Items[4].Selectable = false;
+
+                    switch (ddPlayerTeams[index].SelectedIndex)
+                    {
+                        case 0:
+                        case 3:
+                        case 4:
+                            ddPlayerTeams[index].SelectedIndex = 1;
+                            break;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Applies disallowed side indexes to the side option drop-downs
@@ -2322,7 +2388,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             if (RemoveStartingLocations)
             {
-                if (Map.EnforceMaxPlayers)
+                if (true/*Map.EnforceMaxPlayers*/)
                     return;
 
                 // All random starting locations given by the game
@@ -2792,6 +2858,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerTeams[ddIndex].AllowDropDown = false;
             }
 
+            CheckTeamLimit();
+
             if (allowOptionsChange && Players.Count + AIPlayers.Count < MAX_PLAYER_COUNT)
                 ddPlayerNames[Players.Count + AIPlayers.Count].AllowDropDown = true;
 
@@ -2936,7 +3004,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             CheckDisallowedSides();
-
 
             if (Map.CoopInfo != null)
             {

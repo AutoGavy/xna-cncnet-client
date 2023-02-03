@@ -12,6 +12,7 @@ using System.IO;
 using DTAClient.Domain;
 using DTAClient.Online;
 using Microsoft.Xna.Framework;
+using System.Windows.Forms;
 using Localization;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
@@ -123,6 +124,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                          GameMode.UIName, GameMode.MinPlayersOverride);
             }
 
+            if (GameMode.MaxPlayersOverride > -1 && totalPlayerCount > GameMode.MaxPlayersOverride)
+            {
+                return String.Format("{0} cannot be played with more than {1} players.".L10N("UI:Main:GameModeTooManyPlayers"),
+                         GameMode.UIName, GameMode.MaxPlayersOverride);
+            }
+
             if (Map.MultiplayerOnly)
             {
                 return "The selected map can only be played on CnCNet and LAN.".L10N("UI:Main:MapMultiplayerOnly");
@@ -134,25 +141,22 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     Map.MinPlayers);
             }
 
-            if (Map.EnforceMaxPlayers)
+            if (totalPlayerCount > Map.MaxPlayers)
             {
-                if (totalPlayerCount > Map.MaxPlayers)
+                return String.Format("The selected map cannot be played with more than {0} players.".L10N("UI:Main:MapTooManyPlayers"),
+                    Map.MaxPlayers);
+            }
+
+            IEnumerable<PlayerInfo> concatList = Players.Concat(AIPlayers);
+
+            foreach (PlayerInfo pInfo in concatList)
+            {
+                if (pInfo.StartingLocation == 0)
+                    continue;
+
+                if (concatList.Count(p => p.StartingLocation == pInfo.StartingLocation) > 1)
                 {
-                    return String.Format("The selected map cannot be played with more than {0} players.".L10N("UI:Main:MapTooManyPlayers"),
-                        Map.MaxPlayers);
-                }
-
-                IEnumerable<PlayerInfo> concatList = Players.Concat(AIPlayers);
-
-                foreach (PlayerInfo pInfo in concatList)
-                {
-                    if (pInfo.StartingLocation == 0)
-                        continue;
-
-                    if (concatList.Count(p => p.StartingLocation == pInfo.StartingLocation) > 1)
-                    {
-                        return "Multiple players cannot share the same starting location on the selected map.".L10N("UI:Main:StartLocationOccupied");
-                    }
+                    return "Multiple players cannot share the same starting location on the selected map.".L10N("UI:Main:StartLocationOccupied");
                 }
             }
 
@@ -190,7 +194,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             XNAMessageBox.Show(WindowManager, "Cannot launch game".L10N("UI:Main:LaunchGameErrorTitle"), error);
         }
-
         protected override void BtnLeaveGame_LeftClick(object sender, EventArgs e)
         {
             this.Enabled = false;

@@ -90,8 +90,9 @@ namespace DTAClient.DXGUI.Multiplayer
                         FocusColor);
                 }
 
-                DrawTexture(user.IsAdmin ? adminGameIcon : lbItem.Texture, new Rectangle(x, height,
-                        adminGameIcon.Width, adminGameIcon.Height), Color.White);
+                //DrawTexture(user.IsAdmin ? adminGameIcon : lbItem.Texture, new Rectangle(x, height,
+                //        adminGameIcon.Width, adminGameIcon.Height), Color.White);
+                DrawTexture(lbItem.Texture, new Rectangle(x, height, adminGameIcon.Width, adminGameIcon.Height), Color.White);
 
                 x += adminGameIcon.Width + MARGIN;
 
@@ -128,9 +129,12 @@ namespace DTAClient.DXGUI.Multiplayer
                 string name = user.IRCUser.Name;
                 x += lbItem.TextXPadding;
 
+                //DrawStringWithShadow(name, FontIndex,
+                //    new Vector2(x, height),
+                //    user.IsAdmin ? Color.Red : lbItem.TextColor);
                 DrawStringWithShadow(name, FontIndex,
                     new Vector2(x, height),
-                    user.IsAdmin ? Color.Red : lbItem.TextColor);
+                    lbItem.TextColor);
 
                 height += LineHeight;
             }

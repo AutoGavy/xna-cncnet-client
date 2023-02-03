@@ -369,7 +369,7 @@ namespace DTAClient.Online
                 message = message.Remove(message.Length - 1);
 
             ChannelUser user = channel.Users.Find(senderName);
-            bool senderIsAdmin = user != null && user.IsAdmin;
+            bool senderIsAdmin = user != null && false;//user.IsAdmin;
 
             channel.AddMessage(new ChatMessage(senderName, ident, senderIsAdmin, foreColor, DateTime.Now, message.Replace('\r', ' ')));
         }
@@ -617,7 +617,7 @@ namespace DTAClient.Online
             }
 
             var channelUser = new ChannelUser(ircUser);
-            channelUser.IsAdmin = isAdmin;
+            channelUser.IsAdmin = false;//isAdmin;
             channelUser.IsFriend = cncNetUserData.IsFriend(channelUser.IRCUser.Name);
 
             ircUser.Channels.Add(channelName);
@@ -761,7 +761,7 @@ namespace DTAClient.Online
                 }
 
                 var channelUser = new ChannelUser(ircUser);
-                channelUser.IsAdmin = isAdmin;
+                channelUser.IsAdmin = false;//isAdmin;
                 channelUser.IsFriend = cncNetUserData.IsFriend(channelUser.IRCUser.Name);
 
                 channelUserList.Add(channelUser);

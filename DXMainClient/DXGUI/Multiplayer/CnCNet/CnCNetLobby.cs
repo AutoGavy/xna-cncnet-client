@@ -1435,7 +1435,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             if (channelUser == null)
                 return;
 
-            if (localGame != null &&
+            /*if (localGame != null &&
                 channel.ChannelName == localGame.GameBroadcastChannel &&
                 !updateDenied &&
                 channelUser.IsAdmin &&
@@ -1451,7 +1451,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                     updateMessageBox.NoClickedAction = UpdateMessageBox_NoClicked;
                     updateMessageBox.YesClickedAction = UpdateMessageBox_YesClicked;
                 }
-            }
+            }*/
 
             if (!e.Message.StartsWith("GAME "))
                 return;

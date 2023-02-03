@@ -215,13 +215,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             SoundPlayer.Play(sndDropdownSound);
 
-            if (GameModeMap.Map.EnforceMaxPlayers)
+            foreach (PlayerInfo pInfo in players.Concat(aiPlayers))
             {
-                foreach (PlayerInfo pInfo in players.Concat(aiPlayers))
-                {
-                    if (pInfo.StartingLocation == (int)contextMenu.Tag + 1)
-                        pInfo.StartingLocation = 0;
-                }
+                if (pInfo.StartingLocation == (int)contextMenu.Tag + 1)
+                    pInfo.StartingLocation = 0;
             }
 
             PlayerInfo player;
@@ -256,13 +253,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             if (!EnableContextMenu)
             {
-                if (GameModeMap.Map.EnforceMaxPlayers)
+                foreach (PlayerInfo pInfo in players.Concat(aiPlayers))
                 {
-                    foreach (PlayerInfo pInfo in players.Concat(aiPlayers))
-                    {
-                        if (pInfo.StartingLocation == (int)indicator.Tag + 1)
-                            return;
-                    }
+                    if (pInfo.StartingLocation == (int)indicator.Tag + 1)
+                        return;
                 }
 
                 LocalStartingLocationSelected?.Invoke(this, new LocalStartingLocationEventArgs((int)indicator.Tag + 1));

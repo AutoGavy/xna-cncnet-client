@@ -48,6 +48,7 @@ namespace DTAClient.Domain.Multiplayer
         /// If set, players are forced to different teams on this game mode.
         /// </summary>
         public bool ForceNoTeams { get; private set; }
+        public bool TeamsLimited { get; private set; }
 
         /// <summary>
         /// List of side indices players cannot select in this game mode.
@@ -58,6 +59,7 @@ namespace DTAClient.Domain.Multiplayer
         /// Override for minimum amount of players needed to play any map in this game mode.
         /// </summary>
         public int MinPlayersOverride { get; private set; } = -1;
+        public int MaxPlayersOverride { get; private set; } = -1;
 
         private string mapCodeININame;
 
@@ -82,7 +84,9 @@ namespace DTAClient.Domain.Multiplayer
             HumanPlayersOnly = forcedOptionsIni.GetBooleanValue(Name, "HumanPlayersOnly", false);
             ForceRandomStartLocations = forcedOptionsIni.GetBooleanValue(Name, "ForceRandomStartLocations", false);
             ForceNoTeams = forcedOptionsIni.GetBooleanValue(Name, "ForceNoTeams", false);
+            TeamsLimited = forcedOptionsIni.GetBooleanValue(Name, "TeamsLimited", false);
             MinPlayersOverride = forcedOptionsIni.GetIntValue(Name, "MinPlayersOverride", -1);
+            MaxPlayersOverride = forcedOptionsIni.GetIntValue(Name, "MaxPlayersOverride", -1);
             forcedOptionsSection = forcedOptionsIni.GetStringValue(Name, "ForcedOptions", string.Empty);
             mapCodeININame = forcedOptionsIni.GetStringValue(Name, "MapCodeININame", Name + ".ini");
 
