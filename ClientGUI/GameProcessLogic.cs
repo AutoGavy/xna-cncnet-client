@@ -6,6 +6,8 @@ using ClientCore;
 using Rampastring.Tools;
 using ClientCore.INIProcessing;
 using System.Threading;
+using System.Globalization;
+using System.Linq;
 
 namespace ClientGUI
 {
@@ -117,7 +119,37 @@ namespace ClientGUI
                 }
             }
 
-            string extraCommandLine = ClientConfiguration.Instance.ExtraExeCommandLineParameters + " -LegalUse ";
+            const int MAX_THREADS = 24;
+
+            int cpuCount = Math.Min(Environment.ProcessorCount, MAX_THREADS);
+            int affinity = (1 << cpuCount) - 1;
+
+            string extraCommandLine = ClientConfiguration.Instance.ExtraExeCommandLineParameters;
+
+            // Remove -AFFINITY params
+            var options = extraCommandLine.Split(' ').ToList();
+            do
+            {
+                int? toBeDeleted = null;
+                for (int i = 0; i < options.Count; ++i)
+                {
+                    if (options[i].ToUpper(CultureInfo.InvariantCulture).StartsWith("-AFFINITY:", StringComparison.Ordinal))
+                    {
+                        toBeDeleted = i;
+                        break;
+                    }
+                }
+                if (toBeDeleted != null)
+                {
+                    options.RemoveAt(toBeDeleted.Value);
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
+
+            extraCommandLine += " -LegalUse -AFFINITY:" + affinity.ToString(CultureInfo.InvariantCulture) + " ";
 
             File.Delete(ProgramConstants.GamePath + "DTA.LOG");
             File.Delete(ProgramConstants.GamePath + "TI.LOG");
