@@ -1,14 +1,10 @@
-﻿using ClientCore;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using DTAClient.Domain;
-using System.IO;
 using ClientGUI;
+using ClientCore;
 using Rampastring.XNAUI.XNAControls;
 using Rampastring.XNAUI;
-using Rampastring.Tools;
-using System.Linq;
 using Localization;
 
 namespace DTAClient.DXGUI.Generic
@@ -17,7 +13,7 @@ namespace DTAClient.DXGUI.Generic
     {
         // offset is 320, 156
         private const int DEFAULT_WIDTH = 1280;
-        private const int DEFAULT_HEIGHT = 768;
+        private const int DEFAULT_HEIGHT = 800;
         private const string RESOURCE_PATH = "CampaignSelect/";
         public event EventHandler WindowExited;
 
@@ -93,7 +89,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnGDI_LeftClick(object sender, EventArgs e)
         {
-            if (true/*UserINISettings.Instance.TutorialCompleted*/)
+            if (UserINISettings.Instance.TutorialCompleted)
             {
                 Disable();
                 MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;

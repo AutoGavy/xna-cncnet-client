@@ -202,8 +202,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             chkAutoReady = new XNAClientCheckBox(WindowManager);
             chkAutoReady.Name = "chkAutoReady";
-            chkAutoReady.ClientRectangle = new Rectangle(btnLaunchGame.Right + 12,
-                btnLaunchGame.Y + 2, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
+            chkAutoReady.ClientRectangle = new Rectangle(UIDesignConstants.BUTTON_WIDTH_133 + 15, 14,
+                UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             chkAutoReady.Text = "Auto-Ready".L10N("UI:Main:AutoReady");
             chkAutoReady.CheckedChanged += ChkAutoReady_CheckedChanged;
             chkAutoReady.Checked = false;

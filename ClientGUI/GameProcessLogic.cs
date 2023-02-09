@@ -45,6 +45,7 @@ namespace ClientGUI
                 ReShadeIni.SetStringValue("OVERLAY", "TutorialProgress", "4");
                 ReShadeIni.SetStringValue("INPUT", "KeyEffects", "0,0,0,0");
                 ReShadeIni.SetStringValue("INPUT", "KeyMenu", "0,0,0,0");
+                ReShadeIni.SetStringValue("INPUT", "KeyOverlay", "0,0,0,0");
                 ReShadeIni.WriteIniFile(ProgramConstants.GamePath + "ReShade.ini");
             }
 
@@ -149,7 +150,7 @@ namespace ClientGUI
                 }
             } while (true);
 
-            extraCommandLine += " -LegalUse -AFFINITY:" + affinity.ToString(CultureInfo.InvariantCulture) + " ";
+            extraCommandLine += " -LegalUse -AFFINITY:" + affinity.ToString(CultureInfo.InvariantCulture) + " -NOLOGO ";
 
             File.Delete(ProgramConstants.GamePath + "DTA.LOG");
             File.Delete(ProgramConstants.GamePath + "TI.LOG");

@@ -32,6 +32,7 @@ namespace DTAClient.DXGUI.Generic
         public UpdateWindow UpdateWindow;
         public ExtrasWindow ExtrasWindow;
         public DatabasePanel DatabasePanel;
+        public CreditsPanel CreditsPanel;
 
         public override void Initialize()
         {
@@ -55,6 +56,13 @@ namespace DTAClient.DXGUI.Generic
                 Hide();
             };
             AddChild(CampaignSelect);
+
+            CreditsPanel = new CreditsPanel(WindowManager, discordHandler);
+            CreditsPanel.WindowExited += (sender, arg) =>
+            {
+                Hide();
+            };
+            AddChild(CreditsPanel);
 
             CampaignSelector = new CampaignSelector(WindowManager, discordHandler);
             AddChild(CampaignSelector);

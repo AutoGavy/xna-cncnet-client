@@ -178,6 +178,17 @@ namespace ClientCore.CnCNet5
 
                 new CnCNetGame()
                 {
+                    ChatChannel = "#cncnet-ra1.5",
+                    ClientExecutableName = "Red Alert 1.5.exe",
+                    GameBroadcastChannel = "#cncnet-ra1.5-games",
+                    InternalName = "ra15",
+                    RegistryInstallPath = "HKCU\\Software\\Red Alert 1.5",
+                    UIName = "Red Alert 1.5",
+                    Texture = AssetLoader.TextureFromImage(Resources.ra15icon)
+                },
+
+                new CnCNetGame()
+                {
                     ChatChannel = "#cncnet-tc",
                     ClientExecutableName = "TiberiumCrisis.exe",
                     GameBroadcastChannel = "#cncnet-tc-games",

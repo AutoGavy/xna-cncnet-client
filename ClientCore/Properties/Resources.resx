@@ -136,9 +136,6 @@
   <data name="tsicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tsicon.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="unknownicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\unknownicon.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="yricon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yricon.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -180,5 +177,14 @@
   </data>
   <data name="mlpicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mlpicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ra15" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ra15.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ra15icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ra15icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="unknownicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\unknownicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

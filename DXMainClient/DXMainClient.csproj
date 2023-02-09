@@ -467,6 +467,7 @@
     <Compile Include="Domain\MainClientConstants.cs" />
     <Compile Include="Domain\UserAgentHandler.cs" />
     <Compile Include="DXGUI\Generic\CampaignSelector.cs" />
+    <Compile Include="DXGUI\Generic\CreditsPanel.cs" />
     <Compile Include="DXGUI\Generic\DatabasePanel.cs" />
     <Compile Include="DXGUI\Generic\InfoShared.cs" />
     <Compile Include="DXGUI\Generic\PrivacyNotification.cs" />

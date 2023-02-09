@@ -257,15 +257,22 @@ namespace DTAClient.DXGUI.Generic
                 }
 
                 // check if player has achieved it
-                if (profileIni.GetBooleanValue(dataSection, "Enable", true))
+                if (dataOptionsIni.GetBooleanValue(dataSection, "Locked", false))
                 {
-                    item.TextColor = dataList.DefaultItemColor;
+                    if (profileIni.GetBooleanValue(dataSection, "Enable", false))
+                    {
+                        item.TextColor = dataList.DefaultItemColor;
+                    }
+                    else
+                    {
+                        continue;
+                        //item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
+                        //item.Selectable = false;
+                    }
                 }
                 else
                 {
-                    continue;
-                    //item.TextColor = UISettings.ActiveSettings.DisabledItemColor;
-                    //item.Selectable = false;
+                    item.TextColor = dataList.DefaultItemColor;
                 }
 
                 // check if it's new
@@ -326,9 +333,11 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            if (profileIni.GetBooleanValue((string)dataList.SelectedItem.Tag, "IsNew", true))
+            string dataName = (string)dataList.SelectedItem.Tag;
+            if (profileIni.SectionExists(dataName) && profileIni.GetBooleanValue(dataName, "New", true))
             {
-                profileIni.SetBooleanValue((string)dataList.SelectedItem.Tag, "IsNew", false);
+                profileIni.SetBooleanValue((string)dataList.SelectedItem.Tag, "New", false);
+                profileIni.WriteIniFile();
                 dataList.SelectedItem.Texture = AssetLoader.LoadTexture("Database/dataicon.png");
             }
 

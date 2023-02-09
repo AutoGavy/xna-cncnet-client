@@ -254,7 +254,7 @@ namespace DTAConfig
             UserINISettings.Instance.SaveSettings();
         }
 
-        public void Open()
+        public void Open(bool bFirstTime = false)
         {
             foreach (var panel in optionsPanels)
                 panel.Load();
@@ -264,6 +264,9 @@ namespace DTAConfig
             componentsPanel.Open();
 
             Enable();
+
+            if (bFirstTime)
+                System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
         }
 
         public void ToggleMainMenuOnlyOptions(bool enable)

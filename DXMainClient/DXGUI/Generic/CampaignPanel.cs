@@ -257,7 +257,7 @@ namespace DTAClient.DXGUI.Generic
             btnOldCampaign.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn_c.png");
             btnOldCampaign.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
             btnOldCampaign.Visible = true;
-            if (true) //(UserINISettings.Instance.TC2Completed)
+            if (UserINISettings.Instance.TC2Completed)
             {
                 btnOldCampaign.AllowClick = true;
             }
@@ -631,11 +631,11 @@ namespace DTAClient.DXGUI.Generic
                     "Cannot Start Mission".L10N("UI:Main:CantStartMission"),
                     string.Format("Mission is not completed yet,\nplease select next mission.".L10N("UI:Main:InvalidMission")));
             }
-            else if (UserINISettings.Instance.TooHardHint && curDifficultyIndex != 0)
+            else if (UserINISettings.Instance.TooHardHint)
             {
-                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Start With Non-Easy Difficulty".L10N("UI:Main:StartWithNonEasyDiff"),
-                string.Format("Are you sure not starting with easy difficulty?".L10N("UI:Main:StartWithNonEasyDiffDesc") + Environment.NewLine +
-                "This is your first time to play campaign. If you have played\nCommand & Conquer Series before, you can start with normal difficulty.".L10N("UI:Main:StartWithNonEasyDiffLongDesc")));;
+                TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                    "Start With This Difficulty".L10N("UI:Main:StartWithThisDiff"),
+                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\nSave / Load currently is not available, please read game text and dialogue at any difficulty,\nand be careful, otherwise you may lose in a unexpected plot.\n*Abyss difficulty is a hardcore plot background mode!! This difficulty is not recommended for the first time to play!".L10N("UI:Main:StartWithThisDiffDesc")));
                 TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
                 UserINISettings.Instance.TooHardHint.Value = false;
             }
@@ -708,8 +708,7 @@ namespace DTAClient.DXGUI.Generic
 
                 if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount])
                 {
-                    cheaterWindow.SetDefaultText();
-                    Logger.Log("File modified: " + filePath);
+                    cheaterWindow.SetDefaultText(filePath);
                     return false;
                 }
                 iCount++;
@@ -1118,85 +1117,35 @@ namespace DTAClient.DXGUI.Generic
             }
             musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
 
-            if (copyMapsToSpawnmapINI)
+            if (CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
+            {
+                IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
+
+                List<string> sections = themeIni.GetSections();
+                foreach (string sectionName in sections)
+                {
+                    if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
+                    {
+                        themeIni.SetStringValue(sectionName, "Normal", "no");
+                    }
+
+                    if (!String.IsNullOrEmpty(themeIni.GetStringValue(sectionName, "Side", null)))
+                    {
+                        themeIni.SetStringValue(sectionName, "Side", "none");
+                    }
+                }
+                themeIni.WriteIniFile();
+            }
+
+            if (ClientConfiguration.Instance.ModMode && copyMapsToSpawnmapINI)
             {
                 IniFile mapIni;
-                if (mission.Scenario.ToUpper() == "END08.MAP")
-                {
-                    string[] mapNameArray =
-                    {
-                        "END08.MAP",
-                        "END08_OFF.MAP",
-                        "END08_DEF.MAP",
-                        "END08_SUP.MAP"
-                    };
-                    Random random = new Random();
-                    mapIni = new IniFile(ProgramConstants.GamePath + "MapsTC/Missions/" + mapNameArray[random.Next(0, 4)]);
-                }
-                else
-                    mapIni = new IniFile(ProgramConstants.GamePath + "MapsTC/Missions/" + mission.Scenario);
-
-                // Map Settings
-                foreach (string strName in InfoShared.LightNameArray)
-                {
-                    mapIni.SetDoubleValue("Lighting", "Ion" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
-                    mapIni.SetDoubleValue("Lighting", "Dominator" + strName, mapIni.GetDoubleValue("Lighting", strName, 0.35f));
-                }
-                mapIni.SetStringValue("Basic", "TiberiumDeathToVisceroid", "yes");
-
-                if (mapIni.GetBooleanValue("SpecialFlags", "FogOfWar", false))
-                    mapIni.SetBooleanValue("SpecialFlags", "FogOfWar", false);
-                else
-                    mapIni.SetBooleanValue("SpecialFlags", "FogOfWar", true);
-
-                if (CampaignIni.GetBooleanValue("BaseInfo", "Ambient.Wind.Cold", false))
-                    mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_Cold");
-                else if (CampaignIni.GetBooleanValue("BaseInfo", "Ambient.Wind.MountLow", false))
-                    mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_MountLow");
-                else if (CampaignIni.GetBooleanValue("BaseInfo", "Ambient.Wind.MountHigh", false))
-                    mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "AmbS_Wind_MountHigh");
-                else if (CampaignIni.GetBooleanValue("BaseInfo", "Ambient.Wind.Disable", false))
-                    mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "NULLQAQ");
-
-                if (!File.Exists(ProgramConstants.GamePath + "tcextrab04.big"))
-                    mapIni.SetStringValue("Basic", "Win", "dummymovie_win");
-
-                // other settings in BaseInfo
-                if (CampaignIni.GetBooleanValue("BaseInfo", "DifficultyAdjust", true))
-                {
-                    IniFile.ConsolidateIniFiles(mapIni, difficultyIni);
-                }
-                if (CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
-                {
-                    IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
-
-                    List<string> sections = themeIni.GetSections();
-                    foreach (string sectionName in sections)
-                    {
-                        if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
-                        {
-                            themeIni.SetStringValue(sectionName, "Normal", "no");
-                        }
-
-                        if (!String.IsNullOrEmpty(themeIni.GetStringValue(sectionName, "Side", null)))
-                        {
-                            themeIni.SetStringValue(sectionName, "Side", "none");
-                        }
-                    }
-                    themeIni.WriteIniFile();
-                }
-                else if (CampaignIni.GetBooleanValue("BaseInfo", "SmartMusic", true))
-                {
-                    IniFile.ConsolidateIniFiles(mapIni, globalCodeIni);
-                }
+                mapIni = new IniFile(ProgramConstants.GamePath + "MapsTC/Missions/" + mission.Scenario);
 
                 mapIni.WriteIniFile(ProgramConstants.GamePath + mission.Scenario.ToLower());
             }
 
-            if (mission.Scenario.ToLower() == "gdi08.map" || mission.Scenario.ToLower() == "nod08.map" || mission.Scenario.ToLower() == "scr04.map" || mission.Scenario.ToLower() == "end08.map")
-                File.Copy(ProgramConstants.GetBaseResourcePath() + CREDITS_TXT, ProgramConstants.GamePath + CREDITS_TXT, true);
-            else
-                File.Delete(ProgramConstants.GamePath + CREDITS_TXT);
+            File.Delete(ProgramConstants.GamePath + CREDITS_TXT);
 
             if (curDifficultyIndex <= 0)
                 UserINISettings.Instance.Difficulty.Value = 0;
@@ -1227,10 +1176,8 @@ namespace DTAClient.DXGUI.Generic
             LogbuchParser.ParseForCampaign(null, null, curDifficultyIndex);
             LogbuchParser.ClearTrash();
             UpdateMissionMedals();
-            if (true) //(UserINISettings.Instance.TC2Completed)
+            if (UserINISettings.Instance.TC2Completed)
             {
-                btnOldCampaign.Enable();
-                btnOldCampaign.Visible = true;
                 btnOldCampaign.AllowClick = true;
             }
             discordHandler?.UpdatePresence();

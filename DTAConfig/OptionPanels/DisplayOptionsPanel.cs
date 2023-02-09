@@ -98,7 +98,8 @@ namespace DTAConfig.OptionPanels
 
             var resolutions = GetResolutions(clientConfig.MinimumIngameWidth,
                 clientConfig.MinimumIngameHeight,
-                clientConfig.MaximumIngameWidth, clientConfig.MaximumIngameHeight);
+                1920, 1080);
+                //clientConfig.MaximumIngameWidth, clientConfig.MaximumIngameHeight);
 
             resolutions.Sort();
 
@@ -413,7 +414,7 @@ namespace DTAConfig.OptionPanels
                 //ddAntiAliasing.AddItem("Invalid Setting".L10N("UI:DTAConfig:Invalid"));
                 ddAntiAliasing.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
                 //ddAntiAliasing.AddItem("Subpixel Morphological (SMAA)".L10N("UI:DTAConfig:SMAA"));
-                ddAntiAliasing.AddItem("Fast Approximate (FXAA)".L10N("UI:DTAConfig:FXAA"));
+                ddAntiAliasing.AddItem("FXAA (recommended for large screen)".L10N("UI:DTAConfig:FXAA"));
             ddAntiAliasing.AllowDropDown = true;
 
             lblDetailTip = new XNALabel(WindowManager);
@@ -1146,6 +1147,21 @@ namespace DTAConfig.OptionPanels
             else if (File.Exists(strBigPath))
             {
                 File.Delete(strBigPath);
+            }
+
+            // Airflow Effect
+            strBigPath = ProgramConstants.GamePath + "tcextrab13.big";
+            string strMusicPath = ProgramConstants.GamePath + "music.big";
+            if (chkVideoMode.Checked)
+            {
+                // move out big
+                if (File.Exists(strBigPath))
+                    File.Move(strBigPath, strMusicPath);
+            }
+            else if (!File.Exists(strBigPath) && File.Exists(strMusicPath))
+            {
+                // move in big
+                File.Move(strMusicPath, strBigPath);
             }
         }
 

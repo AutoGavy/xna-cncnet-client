@@ -146,7 +146,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         {
             _isLoad = isLoad;
             lblHeader.Text = _isLoad ? "Load Preset".L10N("UI:Main:LoadPreset") : "Save Preset".L10N("UI:Main:SavePreset");
-            btnLoadSave.Text = _isLoad ? "Load".L10N("UI:Main:ButtonLoad") : "Save".L10N("UI:Main:ButtonSave");
+            btnLoadSave.Text = _isLoad ? "Load".L10N("UI:Main:LoadPreset") : "Save".L10N("UI:Main:SavePreset");
 
             if (_isLoad)
                 ShowLoad();

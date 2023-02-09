@@ -478,12 +478,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             loadOrSaveGameOptionPresetWindow.Disable();
             var loadConfigMenuItem = new XNAContextMenuItem()
             {
-                Text = "Load".L10N("UI:Main:Load"),
+                Text = "Load".L10N("UI:Main:LoadPreset"),
                 SelectAction = () => loadOrSaveGameOptionPresetWindow.Show(true)
             };
             var saveConfigMenuItem = new XNAContextMenuItem()
             {
-                Text = "Save".L10N("UI:Main:Save"),
+                Text = "Save".L10N("UI:Main:SavePreset"),
                 SelectAction = () => loadOrSaveGameOptionPresetWindow.Show(false)
             };
 

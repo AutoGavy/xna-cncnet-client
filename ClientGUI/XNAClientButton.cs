@@ -251,5 +251,19 @@ namespace ClientGUI
             if (_toolTip != null)
                 _toolTip.Text = text.Replace("@", Environment.NewLine);
         }
+
+        public void MuteSound()
+        {
+            if (HoverSoundEffect != null)
+            {
+                HoverSoundEffect.Dispose();
+                HoverSoundEffect = null;
+            }
+            if (ClickSoundEffect != null)
+            {
+                ClickSoundEffect.Dispose();
+                ClickSoundEffect = null;
+            }
+        }
     }
 }

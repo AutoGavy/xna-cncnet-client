@@ -442,6 +442,8 @@ namespace DTAClient.Domain
             {
                 Logger.Log("LogbuchsParser: Error parsing log file! Message: " + ex.Message);
             }
+
+            return;
         }
 
         public static void ParseForSkirmish(MatchStatistics ms)

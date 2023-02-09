@@ -1,6 +1,7 @@
 ﻿using ClientGUI;
 using ClientCore;
 using System;
+using System.IO;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,7 @@ namespace DTAClient.DXGUI.Generic
         private XNAPanel imagePanel;
         private XNAClientButton btnCancel;
         private XNAClientButton btnYes;
+        private string strFilePath;
 
         public CheaterWindow(WindowManager windowManager) : base(windowManager)
         {
@@ -27,6 +29,7 @@ namespace DTAClient.DXGUI.Generic
             Name = "CheaterScreen";
             ClientRectangle = new Rectangle(0, 0, 334, 453);
             BackgroundTexture = AssetLoader.LoadTexture("cheaterbg.png");
+            strFilePath = String.Empty;
 
             lblCheater = new XNALabel(WindowManager);
             lblCheater.Name = "lblCheater";
@@ -37,11 +40,11 @@ namespace DTAClient.DXGUI.Generic
             lblDescription = new XNALabel(WindowManager);
             lblDescription.Name = "lblDescription";
             lblDescription.ClientRectangle = new Rectangle(12, 40, 0, 0);
-            lblDescription.Text = ("Modified game files have been detected. They could affect" + Environment.NewLine +
-                "the game experience." +
+            lblDescription.Text = ("Modified game files have been detected. They could" + Environment.NewLine +
+                "affect the game experience." +
                 Environment.NewLine + Environment.NewLine +
-                "Do you really lack the skill for winning the mission without" + Environment.NewLine + "cheating?").
-                L10N("UI:Main:CheaterDesc");
+                "Do you really lack the skill for winning the mission" + Environment.NewLine + "without cheating?").
+                L10N("UI:Main:CheaterText");
 
             imagePanel = new XNAPanel(WindowManager);
             imagePanel.Name = "imagePanel";
@@ -85,23 +88,30 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnYes_LeftClick(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(strFilePath))
+            {
+                string backupFilePath = ProgramConstants.GetBaseSharedPath() + "BackupFiles/" + strFilePath;
+                if (File.Exists(backupFilePath))
+                {
+                    File.Copy(backupFilePath, ProgramConstants.GamePath + strFilePath);
+                }
+            }
+
             Disable();
             YesClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetDefaultText()
+        public void SetDefaultText(string filePath)
         {
             imagePanel.BackgroundTexture = AssetLoader.LoadTextureUncached("tds" + Convert.ToString(new Random().Next(1, 5)) + ".ctcb");
             lblCheater.ClientRectangle = new Rectangle(lblCheater.ClientRectangle.X, 12,
                 lblCheater.ClientRectangle.Width, lblCheater.ClientRectangle.Height);
-            lblCheater.Text = "CHEATER!".L10N("UI:Main:Cheater");
-            lblDescription.Text = ("Modified game files have been detected. They could affect" + Environment.NewLine +
-                  "the game experience." +
-                  Environment.NewLine + Environment.NewLine +
-                  "Do you really lack the skill for winning the mission without" + Environment.NewLine + "cheating?")
-                  .L10N("UI:Main:CheaterDesc");
-            btnCancel.Text = "OK".L10N("UI:Main:OK");
-            btnYes.Text = "No".L10N("UI:Main:No");
+            lblCheater.Text = "File Modified".L10N("UI:Main:FileModified");
+            lblDescription.Text = ("Game file " + filePath + "has been modified," + Environment.NewLine +
+                  "it can affect the game experience." + Environment.NewLine + Environment.NewLine +
+                  "Do you want to restore this file?")
+                  .L10N("UI:Main:FileModifiedText");
+            strFilePath = filePath;
         }
 
         public void SetCantFindText(string filePath)
@@ -114,8 +124,7 @@ namespace DTAClient.DXGUI.Generic
                 ("Cannot find file\"" + filePath + "\"" +
                 Environment.NewLine + "Failed to start game.").
                 L10N("UI:Main:GameNotFound_Desc");
-            btnCancel.Text = "OK".L10N("UI:Main:OK");
-            btnYes.Text = "OK".L10N("UI:Main:OK");
+            strFilePath = String.Empty;
         }
     }
 }

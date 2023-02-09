@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading;
 using Updater;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -750,7 +751,7 @@ namespace DTAClient.DXGUI.Generic
                 CUpdater_OnCustomComponentsOutdated();
         }
 
-        private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox) => optionsWindow.Open();
+        private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox) => optionsWindow.Open(UserINISettings.Instance.IsFirstRun);
 
         private void SharedUILogic_GameProcessStarted()
         {
@@ -1063,8 +1064,13 @@ namespace DTAClient.DXGUI.Generic
         private void BtnStatistics_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.StatisticsWindow);
 
-        private void BtnCredits_LeftClick(object sender, EventArgs e) =>
-            Process.Start(MainClientConstants.CREDITS_URL);
+        private void BtnCredits_LeftClick(object sender, EventArgs e)
+        {
+            if (UserINISettings.Instance.TC2Completed)
+                Process.Start("http://www.bilibili.com/video/BV1cJ411X7pi?p=3");
+            else
+                innerPanel.Show(innerPanel.CreditsPanel);
+        }
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.DatabasePanel); //innerPanel.Show(innerPanel.ExtrasWindow);

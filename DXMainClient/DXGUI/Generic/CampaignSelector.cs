@@ -269,8 +269,7 @@ namespace DTAClient.DXGUI.Generic
 
                 if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount])
                 {
-                    cheaterWindow.SetDefaultText();
-                    Logger.Log("File modified: " + filePath);
+                    cheaterWindow.SetDefaultText(filePath);
                     return false;
                 }
                 iCount++;
@@ -675,7 +674,7 @@ namespace DTAClient.DXGUI.Generic
             if (copyMapsToSpawnmapINI)
             {
                 IniFile mapIni;
-                if (mission.Scenario.ToUpper() == "END08.MAP")
+                /*if (mission.Scenario.ToUpper() == "END08.MAP")
                 {
                     string[] mapNameArray =
                     {
@@ -687,7 +686,7 @@ namespace DTAClient.DXGUI.Generic
                     Random random = new Random();
                     mapIni = new IniFile(ProgramConstants.GamePath + "MapsTC/Missions/" + mapNameArray[random.Next(0, 4)]);
                 }
-                else
+                else*/
                     mapIni = new IniFile(ProgramConstants.GamePath + "MapsTC/Missions/" + mission.Scenario);
 
                 // Map Settings
