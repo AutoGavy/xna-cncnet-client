@@ -185,6 +185,7 @@ namespace ClientCore
             ForceLowestDetailLevel = new BoolSetting(iniFile, VIDEO, "ForceLowestDetailLevel", false);
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);
             AutoRemoveUnderscoresFromName = new BoolSetting(iniFile, OPTIONS, "AutoRemoveUnderscoresFromName", true);
+            AutoRemoveNonASCIIFromName = new BoolSetting(iniFile, OPTIONS, "AutoRemoveNonASCIIFromName", true);
 
             MenuTextIsEnglish = new BoolSetting(iniFile, OPTIONS, "MenuTextIsEnglish", true);
 
@@ -349,6 +350,7 @@ namespace ClientCore
         public BoolSetting MinimizeWindowsOnGameStart { get; private set; }
 
         public BoolSetting AutoRemoveUnderscoresFromName { get; private set; }
+        public BoolSetting AutoRemoveNonASCIIFromName { get; private set; }
 
         public StringListSetting FavoriteMaps { get; private set; }
 
