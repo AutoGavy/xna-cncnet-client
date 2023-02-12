@@ -880,17 +880,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     locationY + (DROP_DOWN_HEIGHT + playerOptionVecticalMargin) * i,
                     playerNameWidth, DROP_DOWN_HEIGHT);
                 ddPlayerName.AddItem(String.Empty);
-                if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                if (GameMode != null && GameMode.Name == "Difficulty Tier")
                 {
                     ddPlayerName.AddItem("Insane AI".L10N("UI:Main:InsaneAI"));
                     ddPlayerName.AddItem("Brutal AI".L10N("UI:Main:BrutalAI"));
                     ddPlayerName.AddItem("Abyss AI".L10N("UI:Main:AbyssAI"));
-                }
-                else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
-                {
-                    ddPlayerName.AddItem("Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI"));
-                    ddPlayerName.AddItem("Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI"));
-                    ddPlayerName.AddItem("Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI"));
                 }
                 else
                 {
@@ -2781,17 +2775,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 XNADropDown ddPlayerName = ddPlayerNames[index];
                 ddPlayerName.Items[0].Text = "-";
-                if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                if (GameMode != null && GameMode.Name == "Difficulty Tier")
                 {
                     ddPlayerName.Items[1].Text = "Insane AI".L10N("UI:Main:InsaneAI");
                     ddPlayerName.Items[2].Text = "Brutal AI".L10N("UI:Main:BrutalAI");
                     ddPlayerName.Items[3].Text = "Abyss AI".L10N("UI:Main:AbyssAI");
-                }
-                else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
-                {
-                    ddPlayerName.Items[1].Text = "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
-                    ddPlayerName.Items[2].Text = "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
-                    ddPlayerName.Items[3].Text = "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
                 }
                 else
                 {
@@ -2825,17 +2813,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 XNADropDown ddPlayerName = ddPlayerNames[ddIndex];
                 ddPlayerName.AllowDropDown = false;
                 ddPlayerName.Items[0].Text = string.Empty;
-                if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                if (GameMode != null && GameMode.Name == "Difficulty Tier")
                 {
                     ddPlayerName.Items[1].Text = "Insane AI".L10N("UI:Main:InsaneAI");
                     ddPlayerName.Items[2].Text = "Brutal AI".L10N("UI:Main:BrutalAI");
                     ddPlayerName.Items[3].Text = "Abyss AI".L10N("UI:Main:AbyssAI");
-                }
-                else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
-                {
-                    ddPlayerName.Items[1].Text = "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
-                    ddPlayerName.Items[2].Text = "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
-                    ddPlayerName.Items[3].Text = "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
                 }
                 else
                 {
@@ -3070,7 +3052,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected string AILevelToName(int aiLevel)
         {
-            if (GameMode != null && GameMode.Name == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+            if (GameMode != null && GameMode.Name == "Difficulty Tier")
             {
                 switch (aiLevel)
                 {
@@ -3080,18 +3062,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         return "Brutal AI".L10N("UI:Main:BrutalAI");
                     case 2:
                         return "Insane AI".L10N("UI:Main:InsaneAI");
-                }
-            }
-            else if (GameMode != null && GameMode.Name == "Difficulty Tier 2".L10N("UI:Main:DT2"))
-            {
-                switch (aiLevel)
-                {
-                    case 0:
-                        return "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
-                    case 1:
-                        return "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
-                    case 2:
-                        return "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
                 }
             }
             else

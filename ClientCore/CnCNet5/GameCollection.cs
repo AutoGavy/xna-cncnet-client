@@ -83,7 +83,7 @@ namespace ClientCore.CnCNet5
                     ClientExecutableName = "RRLauncher.exe",
                     GameBroadcastChannel = "#redres-games",
                     InternalName = "rr",
-                    RegistryInstallPath = "HKML\\Software\\RedResurrection",
+                    RegistryInstallPath = "HKLM\\Software\\RedResurrection",
                     UIName = "YR Red-Resurrection",
                     Texture = AssetLoader.TextureFromImage(Resources.rricon)
                 },
@@ -149,7 +149,7 @@ namespace ClientCore.CnCNet5
                     ClientExecutableName = "FRLauncher.exe",
                     GameBroadcastChannel = "#cncnet-fr-games",
                     InternalName = "fr",
-                    RegistryInstallPath = "HKML\\Software\\FinaleReturn",
+                    RegistryInstallPath = "HKCU\\Software\\FinaleReturn",
                     UIName = "Finale Return",
                     Texture = AssetLoader.TextureFromImage(Resources.fricon)
                 },

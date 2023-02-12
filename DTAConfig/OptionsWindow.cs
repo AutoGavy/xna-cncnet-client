@@ -265,8 +265,8 @@ namespace DTAConfig
 
             Enable();
 
-            if (bFirstTime)
-                System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
+            //if (bFirstTime)
+            //   System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
         }
 
         public void ToggleMainMenuOnlyOptions(bool enable)

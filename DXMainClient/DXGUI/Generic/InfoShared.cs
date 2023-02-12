@@ -169,7 +169,7 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArray =
         {
-            "64EDBE30CEA75009F2241C2A6B475F9C8A090086", // Maps Settings
+            "B8A56596B54C6AED89B7B0ECD391216B7B2A2121", // Maps Settings
             "2A2104D8A42117EFEE7453C44D14A97F78B1E81C", // GameOptions
 
             "F916EB9299891FB954F5E21256430002E6BAD834", // Auto Handle
@@ -200,8 +200,7 @@ namespace DTAClient.DXGUI.Generic
             "95025F487A6FF22F596DD92B8FEB6F5BE574863E", // Co-Op Hard.ini
             "AFD6C3EB0EA8A572EA5EB42F6B49229A778E6149", // Co-Op Medium.ini
             "E42E4B2478B7CFF648DCCD5BEAC8C8B1C7122E25", // Crazy Crates.ini
-            "C7B56BFD2604A4A257A299CA13742B599058502A", // Difficulty Tier 1.ini
-            "0FBC9BCFF5F5DECFFFB25E4A7418572EA670E2DC", // Difficulty Tier 2.ini
+            "B1A8F627485B4BE77C252C2698A7E7904566989D", // Difficulty Tier.ini
             "D42ECB8AE645547E361AF96DB4B7320F61EE29C3", // Duel.ini
             "38F3655B98432FF1601316C42F44A0E049DF730A", // FastOptions.ini
             "575B300FBE5A5900B9D072AF73B0CE5FC0680E1C", // Fortress.ini
@@ -246,8 +245,7 @@ namespace DTAClient.DXGUI.Generic
             "INI/Map Code/Co-Op Hard.ini",
             "INI/Map Code/Co-Op Medium.ini",
             "INI/Map Code/Crazy Crates.ini",
-            "INI/Map Code/Difficulty Tier 1.ini",
-            "INI/Map Code/Difficulty Tier 2.ini",
+            "INI/Map Code/Difficulty Tier.ini",
             "INI/Map Code/Duel.ini",
             "INI/Map Code/FastOptions.ini",
             "INI/Map Code/Fortress.ini",

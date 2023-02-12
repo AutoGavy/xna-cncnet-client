@@ -577,7 +577,7 @@ namespace DTAClient.DXGUI.Generic
         {
             if (!String.IsNullOrEmpty(gameMode))
             {
-                if (gameMode == "Difficulty Tier 1".L10N("UI:Main:DT1"))
+                if (gameMode == "Difficulty Tier")
                 {
                     switch (aiLevel)
                     {
@@ -590,19 +590,7 @@ namespace DTAClient.DXGUI.Generic
                             return "Insane AI".L10N("UI:Main:InsaneAI");
                     }
                 }
-                else if (gameMode == "Difficulty Tier 2".L10N("UI:Main:DT2"))
-                {
-                    switch (aiLevel)
-                    {
-                        case 2:
-                            return "Abyss Ⅳ AI".L10N("UI:Main:Abyss3AI");
-                        case 1:
-                            return "Abyss Ⅲ AI".L10N("UI:Main:Abyss2AI");
-                        case 0:
-                        default:
-                            return "Abyss Ⅱ AI".L10N("UI:Main:Abyss1AI");
-                    }
-                }
+         
             }
 
             switch (aiLevel)
