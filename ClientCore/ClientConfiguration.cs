@@ -360,9 +360,9 @@ namespace ClientCore
             return OSVersion.UNKNOWN;
         }
 
-        public static int GetResOffsetX(double scale = 0.5) => (int)((gs_client_x - UserINISettings.Instance.ClientResolutionX) * SizeRatio * scale);
+        public int GetResOffsetX(double scale = 0.5) => (int)((gs_client_x - UserINISettings.Instance.ClientResolutionX) * SizeRatio * scale);
 
-        public static int GetResOffsetY(double scale = 0.5) => (int)((gs_client_y - UserINISettings.Instance.ClientResolutionY) * SizeRatio * scale);
+        public int GetResOffsetY(double scale = 0.5) => (int)((gs_client_y - UserINISettings.Instance.ClientResolutionY) * SizeRatio * scale);
     }
 
     /// <summary>

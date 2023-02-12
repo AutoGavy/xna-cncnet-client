@@ -72,7 +72,7 @@ namespace ClientGUI
                     XNAClientButton button = (XNAClientButton)child;
                     if (button.AutoPos)
                     {
-                        int offsetX = ClientConfiguration.GetResOffsetX();
+                        int offsetX = ClientConfiguration.Instance.GetResOffsetX();
                         button.X += offsetX;
                         button.LocationCHS.X += offsetX;
                         button.ClientRectangle = new Rectangle(button.X, button.Y, button.Width, button.Height);
@@ -85,8 +85,8 @@ namespace ClientGUI
                     {
                         if ((int)label.Tag == 0) // AutoPos
                         {
-                            label.X -= ClientConfiguration.GetResOffsetX(0.9);
-                            label.Y -= ClientConfiguration.GetResOffsetY(0.8);
+                            label.X -= ClientConfiguration.Instance.GetResOffsetX(0.9);
+                            label.Y -= ClientConfiguration.Instance.GetResOffsetY(0.8);
                             label.ClientRectangle = new Rectangle(label.X, label.Y, label.Width, label.Height);
                         }
                     }
@@ -98,8 +98,8 @@ namespace ClientGUI
                     {
                         if ((int)exPanel.Tag == 0) // AutoPos
                         {
-                            exPanel.X -= ClientConfiguration.GetResOffsetX(0.9);
-                            exPanel.Y -= ClientConfiguration.GetResOffsetY(0.8);
+                            exPanel.X -= ClientConfiguration.Instance.GetResOffsetX(0.9);
+                            exPanel.Y -= ClientConfiguration.Instance.GetResOffsetY(0.8);
                             exPanel.ClientRectangle = new Rectangle(exPanel.X, exPanel.Y, exPanel.Width, exPanel.Height);
                         }
                     }

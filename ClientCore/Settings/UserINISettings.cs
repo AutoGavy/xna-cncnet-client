@@ -94,8 +94,7 @@ namespace ClientCore
             bool bDefault = ClientResolutionX.Value == ClientConfiguration.gs_client_x || ClientResolutionY.Value == ClientConfiguration.gs_client_y;
             BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", true);
 
-            //DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
-            DebugReShade.Value = false;
+            DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
             ClientFPS = new IntSetting(iniFile, VIDEO, "ClientFPS", 60);
 
             System.Management.ManagementObjectSearcher objvide = new System.Management.ManagementObjectSearcher("select * from Win32_VideoController");
@@ -134,7 +133,7 @@ namespace ClientCore
             IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", true);
             ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 0.7);
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
-            StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
+            StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", false);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);
             SmartMusic = new BoolSetting(iniFile, AUDIO, "SmartMusic", true);
             MusicType = new IntSetting(iniFile, AUDIO, "MusicType", 0);
@@ -164,7 +163,7 @@ namespace ClientCore
             SkipConnectDialog = new BoolSetting(iniFile, MULTIPLAYER, "SkipConnectDialog", false);
             PersistentMode = new BoolSetting(iniFile, MULTIPLAYER, "PersistentMode", false);
             AutomaticCnCNetLogin = new BoolSetting(iniFile, MULTIPLAYER, "AutomaticCnCNetLogin", false);
-            DiscordIntegration = new BoolSetting(iniFile, MULTIPLAYER, "DiscordIntegration", true);
+            DiscordIntegration = new BoolSetting(iniFile, MULTIPLAYER, "DiscordIntegration", false);
             AllowGameInvitesFromFriendsOnly = new BoolSetting(iniFile, MULTIPLAYER, "AllowGameInvitesFromFriendsOnly", false);
             NotifyOnUserListChange = new BoolSetting(iniFile, MULTIPLAYER, "NotifyOnUserListChange", true);
             DisablePrivateMessagePopups = new BoolSetting(iniFile, MULTIPLAYER, "DisablePrivateMessagePopups", false);

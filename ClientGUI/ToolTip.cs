@@ -82,7 +82,7 @@ namespace ClientGUI
             offset.X -= (ClientConfiguration.gs_client_x - UserINISettings.Instance.ClientResolutionX) / 2;
             offset.Y -= (ClientConfiguration.gs_client_y - UserINISettings.Instance.ClientResolutionY) / 2;
 
-            offset.X += ClientConfiguration.GetResOffsetX();
+            offset.X += ClientConfiguration.Instance.GetResOffsetX();
             _offset = offset;
         }
 
