@@ -731,8 +731,6 @@ namespace DTAClient.DXGUI.Generic
             if (UserINISettings.Instance.IsFirstRun)
             {
                 UserINISettings.Instance.IsFirstRun.Value = false;
-                UserINISettings.Instance.WindowedMode.Value = true;
-                UserINISettings.Instance.BorderlessWindowedMode.Value = true;
                 UserINISettings.Instance.SaveSettings();
 
                 firstRunMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Initial Installation".L10N("UI:Main:InitialInstallationTitle"),
@@ -752,7 +750,12 @@ namespace DTAClient.DXGUI.Generic
                 CUpdater_OnCustomComponentsOutdated();
         }
 
-        private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox) => optionsWindow.Open(UserINISettings.Instance.IsFirstRun);
+        private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox)
+        {
+            optionsWindow.Open(UserINISettings.Instance.EnhancedQualityGuideRead);
+            UserINISettings.Instance.EnhancedQualityGuideRead.Value = true;
+            UserINISettings.Instance.SaveSettings();
+        }
 
         private void SharedUILogic_GameProcessStarted()
         {

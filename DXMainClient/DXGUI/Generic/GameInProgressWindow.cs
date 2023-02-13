@@ -191,29 +191,29 @@ namespace DTAClient.DXGUI
             try
             {
                // if (ClientConfiguration.Instance.ClientLanguage == 0)
-                    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
-                /*else
-                    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");*/
+               //    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
+               // else
+                    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
             }
             catch (Exception)
             {
                 XNAMessageBox.Show(WindowManager, "Cannot open readme doc", "Please manually open this document:"
-                    + Environment.NewLine + ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
+                    + Environment.NewLine + ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
                 try
                 {
                    // if (ClientConfiguration.Instance.ClientLanguage == 0)
-                        System.Diagnostics.Process.Start("http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
-                    /*else
-                         System.Diagnostics.Process.Start("http://shimo.im/docs/cHPR9d6RYpcpV9r3");*/
+                   //     System.Diagnostics.Process.Start("http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
+                   //else
+                         System.Diagnostics.Process.Start("http://shimo.im/docs/cHPR9d6RYpcpV9r3");
                 }
                 catch (Exception)
                 {
                     try
                     {
                         //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                            System.Diagnostics.Process.Start("iexplore.exe", "http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
-                        /*else
-                            System.Diagnostics.Process.Start("iexplore.exe", "http://shimo.im/docs/cHPR9d6RYpcpV9r3");*/
+                        //    System.Diagnostics.Process.Start("iexplore.exe", "http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
+                        //else
+                            System.Diagnostics.Process.Start("iexplore.exe", "http://shimo.im/docs/cHPR9d6RYpcpV9r3");
 
                     }
                     catch (Exception)
@@ -229,27 +229,27 @@ namespace DTAClient.DXGUI
             try
             {
                 //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=8109");
-                /*else
-                    System.Diagnostics.Process.Start("https://www.microsoft.com/zh-cn/download/details.aspx?id=8109");*/
+                //    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=8109");
+                //else
+                    System.Diagnostics.Process.Start("https://www.microsoft.com/zh-cn/download/details.aspx?id=8109");
             }
             catch (Exception)
             {
                 try
                 {
                     //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                        System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
-                    /*else
-                        System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");*/
+                    //    System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                    //else
+                        System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");
                 }
                 catch (Exception ex)
                 {
                     //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                        XNAMessageBox.Show(WindowManager, "Cannot open website", "Need to manually put this link into your browser:"
-                            + Environment.NewLine + "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
-                    /*else
+                    //    XNAMessageBox.Show(WindowManager, "Cannot open website", "Need to manually put this link into your browser:"
+                    //        + Environment.NewLine + "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                    //else
                         XNAMessageBox.Show(WindowManager, "无法打开网址", "需要手动复制到浏览器地址。"
-                            + Environment.NewLine + "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");*/
+                            + Environment.NewLine + "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");
 
                     Logger.Log("Error opening microsoft website, message: " + ex.Message);
                 }

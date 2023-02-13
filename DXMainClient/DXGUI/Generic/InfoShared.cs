@@ -30,8 +30,8 @@ namespace DTAClient.DXGUI.Generic
             "DB0CE24FD8FE75E5E7C03649D04D17E14483A24D", // GlobalCode.ini
 
             "8F04CA0591D7EFA927CAB025BB78DE247526EBEF", // Train 00
-            "EEB2DB30A734DEAB17C3DF0EC0051C193337CF56", // Train 01
-            "DA25840CF2AE58592CEB864A7FD938EF048AE2A4", // Train 02
+            "ABCCAE22040F0D15D1A38040B8EBD7C49EC67645", // Train 01
+            "D2667A1933D81F9D15BA0C04D611F96F3F4FEC1F", // Train 02
             "C462419F78ADB09E43EBEE2E66E954196003F3FF", // Train 03
 
             "DA58C000780455BB7A2E1F561FA52ED43E19573B", // GDI 01
@@ -169,14 +169,14 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArray =
         {
-            "B8A56596B54C6AED89B7B0ECD391216B7B2A2121", // Maps Settings
-            "2A2104D8A42117EFEE7453C44D14A97F78B1E81C", // GameOptions
+            "8A228187C5C91D5CAF51F77CCC3F8CDBB69AACC7", // Maps Settings
+            "4D9AC0721EC1EF5400492D3CAD82E015B6CBE41C", // GameOptions
 
-            "F916EB9299891FB954F5E21256430002E6BAD834", // Auto Handle
+            "6C0F1F00BDC1EE2CDAC67119E21CA816CF30271E", // Auto Handle
             "715869652AFC3D5E7C0102CB573CE586FD1174ED", // Auto Repair
             "18435B7AC7C0B8291DCA52D78AA36D29360A3A82", // Day Light
             "3FDFE5A78683E1440F174F55E1EB826D39563571", // Destroyable Bridges
-            "696EBBE5099A9C033E67D3E775CAFDEB43D67384", // No Epic
+            "1926B0FA2971CCE3981A7BE7BEDDED8E96CD2C1D", // No Epic
             "A6A0245C282FD80454CD95AF1B4CC3A9E15D39D9", // Low Detail
             "972DC58682F890201409476BE6C950D64806141D", // No Muzzle
             "B2551F45259872B01093A317E304FF2A82BAC30D", // No Rain
@@ -217,26 +217,26 @@ namespace DTAClient.DXGUI.Generic
             ClientCore.ClientConfiguration.Instance.MPMapsIniPath,
             "Resources/GameOptions.ini",
 
-            "INI/Game Options/Auto Handle",
-            "INI/Game Options/Auto Repair",
-            "INI/Game Options/Day Light",
-            "INI/Game Options/Destroyable Bridges",
-            "INI/Game Options/No Epic",
-            "INI/Game Options/Low Detail",
-            "INI/Game Options/No Muzzle",
-            "INI/Game Options/No Rain",
-            "INI/Game Options/No Rush",
-            "INI/Game Options/No Silos",
-            "INI/Game Options/No TEU Lift",
-            "INI/Game Options/No Tiberium Lifeforms",
-            "INI/Game Options/No Turret",
-            "INI/Game Options/OreDouble",
-            "INI/Game Options/OreQuintuple",
-            "INI/Game Options/OreStandard",
-            "INI/Game Options/OreTriple",
-            "INI/Game Options/Reveal Map",
-            "INI/Game Options/Second Tech",
-            "INI/Game Options/Unrebuildable Tech",
+            "INI/Game Options/Auto Handle.ini",
+            "INI/Game Options/Auto Repair.ini",
+            "INI/Game Options/Day Light.ini",
+            "INI/Game Options/Destroyable Bridges.ini",
+            "INI/Game Options/No Epic.ini",
+            "INI/Game Options/Low Detail.ini",
+            "INI/Game Options/No Muzzle.ini",
+            "INI/Game Options/No Rain.ini",
+            "INI/Game Options/No Rush.ini",
+            "INI/Game Options/No Silos.ini",
+            "INI/Game Options/No TEU Lift.ini",
+            "INI/Game Options/No Tiberium Lifeforms.ini",
+            "INI/Game Options/No Turret.ini",
+            "INI/Game Options/OreDouble.ini",
+            "INI/Game Options/OreQuintuple.ini",
+            "INI/Game Options/OreStandard.ini",
+            "INI/Game Options/OreTriple.ini",
+            "INI/Game Options/Reveal Map.ini",
+            "INI/Game Options/Second Tech.ini",
+            "INI/Game Options/Unrebuildable Tech.ini",
 
             "INI/Map Code/Challenge Easy.ini",
             "INI/Map Code/Challenge Hard.ini",

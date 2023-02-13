@@ -232,7 +232,7 @@ namespace DTAClient.Domain
                         }
 
                         //for (int i = 1; i <= 12; i++)
-                        for (int i = 1; i <= 4; i++) // max enabled to gdo5
+                        for (int i = 1; i <= 5; i++) // max enabled to gdo5
                         {
                             string missionIndex = i.ToString();
                             if (line.Contains("GDO" + missionIndex))
@@ -241,7 +241,9 @@ namespace DTAClient.Domain
 
                                 side = "gdo" + missionIndex;
                                 curMission = "GDO" + missionIndex;
-                                profileIni.SetBooleanValue("General", "GDO" + (i + 1).ToString(), true);
+
+                                if (i != 5)
+                                    profileIni.SetBooleanValue("General", "GDO" + (i + 1).ToString(), true);
                             }
                         }
 
@@ -339,6 +341,7 @@ namespace DTAClient.Domain
                         }
                         else // player won
                         {
+                            scoreSong = "gdiwin";
                             UserINISettings.Instance.ReloadSettings();
                             UserINISettings.Instance.TutorialCompleted.Value = true;
                             UserINISettings.Instance.SaveSettings();

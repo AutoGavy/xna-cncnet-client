@@ -323,6 +323,49 @@ namespace DTAClient.DXGUI.Generic
             cheaterWindow.Disable();
         }
 
+        public void UpdateMissionButtons()
+        {
+            profileIni.Reload();
+
+            if (profileIni.GetBooleanValue("General", "GDO3", false))
+            {
+                if (curMissionIndex == 3)
+                {
+                    btnSlideDown.AllowClick = true;
+                }
+            }
+
+            if (profileIni.GetBooleanValue("General", "GDO5", false))
+            {
+                if (curMissionIndex == 5)
+                {
+                    btnSlideDown.AllowClick = true;
+                }
+            }
+
+            // Sort button list
+            if (curMissionIndex > 3)
+            {
+                btnSlideUp.AllowClick = true;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    SetAsButton[i](MissionButtons[curMissionIndex + i - 3]);
+                    CheckMission(MissionButtons[curMissionIndex + i - 3]);
+                    MissionButtons[curMissionIndex - i].Enable();
+                    MissionButtons[curMissionIndex - i].Visible = true;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    SetAsButton[i](MissionButtons[i]);
+                    CheckMission(MissionButtons[i]);
+                }
+            }
+        }
+
         public void UpdateMissionMedals()
         {
             profileIni.Reload();
@@ -635,7 +678,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                     "Start With This Difficulty".L10N("UI:Main:StartWithThisDiff"),
-                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\nSave / Load currently is not available, please read game text and dialogue at any difficulty,\nand be careful, otherwise you may lose in a unexpected plot.\n*Abyss difficulty is a hardcore plot background mode!! This difficulty is not recommended for the first time to play!".L10N("UI:Main:StartWithThisDiffDesc")));
+                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\nSave / Load currently is not available, please read game text and dialogue at any difficulty,\nand be careful, otherwise you may lose in a unexpected plot.\n*Abyss difficulty is a hardcore plot background mode!! This difficulty is not recommended for the first time to play!".L10N("UI:Main:StartWithThisDiffDesc").Replace("@", Environment.NewLine)));
                 TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
                 UserINISettings.Instance.TooHardHint.Value = false;
             }
@@ -661,14 +704,14 @@ namespace DTAClient.DXGUI.Generic
 
         private void PrepareToLaunch()
         {
-            Mission mission = Missions[curMissionIndex + 3];
-
             if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
                 cheaterWindow.Enable();
                 return;
             }
+
+            Mission mission = Missions[curMissionIndex + 3];
 
             // New Campaign loading screen
             string loadingFilename = String.Empty;
@@ -711,7 +754,7 @@ namespace DTAClient.DXGUI.Generic
                     cheaterWindow.SetDefaultText(filePath);
                     return false;
                 }
-                iCount++;
+                ++iCount;
             }
             return true;
         }
@@ -1176,6 +1219,7 @@ namespace DTAClient.DXGUI.Generic
             LogbuchParser.ParseForCampaign(null, null, curDifficultyIndex);
             LogbuchParser.ClearTrash();
             UpdateMissionMedals();
+            UpdateMissionButtons();
             if (UserINISettings.Instance.TC2Completed)
             {
                 btnOldCampaign.AllowClick = true;

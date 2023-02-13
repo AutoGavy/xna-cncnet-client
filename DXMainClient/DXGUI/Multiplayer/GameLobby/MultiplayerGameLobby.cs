@@ -86,8 +86,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected TopBar TopBar;
 
-        private CheaterWindow cheaterWindow;
-
         protected int FrameSendRate { get; set; } = 1;
 
         /// <summary>
@@ -231,20 +229,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
             else
                 Logger.Log("MultiplayerGameLobby: Saved games are not available!");
-
-            cheaterWindow = new CheaterWindow(WindowManager);
-            DarkeningPanel dp = new DarkeningPanel(WindowManager);
-            dp.AddChild(cheaterWindow);
-            AddChild(dp);
-            dp.CenterOnParent();
-            cheaterWindow.CenterOnParent();
-            cheaterWindow.YesClicked += CheaterWindow_YesClicked;
-            cheaterWindow.Disable();
-        }
-
-        private void CheaterWindow_YesClicked(object sender, EventArgs e)
-        {
-            AddNotice("Failed to start game: The game host has modified game files.".L10N("UI:Main:CantStartCUZCheat"));
         }
 
         /// <summary>
@@ -758,6 +742,27 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             BroadcastPlayerOptions();
         }
 
+        private bool AreFilesModified()
+        {
+            int iCount = 0;
+            foreach (string filePath in InfoShared.filesToCheck)
+            {
+                if (!File.Exists(ProgramConstants.GamePath + filePath))
+                {
+                    cheaterWindow.SetCantFindText(filePath);
+                    return false;
+                }
+
+                if (iCount >= InfoShared.filesHashArray.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArray[iCount])
+                {
+                    cheaterWindow.SetDefaultText(filePath);
+                    return false;
+                }
+                ++iCount;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Handles the user's click on the "Launch Game" / "I'm Ready" button.
         /// If the local player is the game host, checks if the game can be launched and then
@@ -766,6 +771,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void BtnLaunchGame_LeftClick(object sender, EventArgs e)
         {
+            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            {
+                cheaterWindow.Enable();
+                AddNotice("You have modified files and cannot start the game.".L10N("UI:Main:DifferentFileDetected"));
+                return;
+            }
+
             if (!IsHost)
             {
                 RequestReadyStatus();

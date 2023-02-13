@@ -181,8 +181,35 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             return null;
         }
 
+        private bool AreFilesModified()
+        {
+            int iCount = 0;
+            foreach (string filePath in InfoShared.filesToCheck)
+            {
+                if (!File.Exists(ProgramConstants.GamePath + filePath))
+                {
+                    cheaterWindow.SetCantFindText(filePath);
+                    return false;
+                }
+
+                if (iCount >= InfoShared.filesHashArray.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArray[iCount])
+                {
+                    cheaterWindow.SetDefaultText(filePath);
+                    return false;
+                }
+                ++iCount;
+            }
+            return true;
+        }
+
         protected override void BtnLaunchGame_LeftClick(object sender, EventArgs e)
         {
+            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            {
+                cheaterWindow.Enable();
+                return;
+            }
+
             string error = CheckGameValidity();
 
             if (error == null)

@@ -76,8 +76,8 @@ namespace ClientCore
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
             Renderer = new StringSetting(iniFile, COMPATIBILITY, "Renderer", string.Empty);
-            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, false);
-            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", false);
+            WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, true);
+            BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", true);
 
             int ScreenX = ClientConfiguration.gs_client_x;
             int ScreenY = ClientConfiguration.gs_client_y;
@@ -133,7 +133,7 @@ namespace ClientCore
             IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", true);
             ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 0.7);
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
-            StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", false);
+            StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);
             SmartMusic = new BoolSetting(iniFile, AUDIO, "SmartMusic", true);
             MusicType = new IntSetting(iniFile, AUDIO, "MusicType", 0);
@@ -175,6 +175,7 @@ namespace ClientCore
 
             PrivacyPolicyAccepted = new BoolSetting(iniFile, OPTIONS, "PrivacyPolicyAccepted", false);
             IsFirstRun = new BoolSetting(iniFile, OPTIONS, "IsFirstRun", true);
+            EnhancedQualityGuideRead = new BoolSetting(iniFile, OPTIONS, "EnhancedQualityGuideRead", false);
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
@@ -331,6 +332,7 @@ namespace ClientCore
 
         public BoolSetting PrivacyPolicyAccepted { get; private set; }
         public BoolSetting IsFirstRun { get; private set; }
+        public BoolSetting EnhancedQualityGuideRead { get; private set; }
         public BoolSetting CustomComponentsDenied { get; private set; }
 
         public IntSetting FakeDifficulty { get; private set; }

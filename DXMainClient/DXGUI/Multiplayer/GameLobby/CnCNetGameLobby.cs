@@ -1437,7 +1437,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (sender != hostName)
                 return;
 
-            AddNotice(string.Format("Player {0} has different files compared to the game host. Either {0} or the game host could be cheating.".L10N("UI:Main:DifferentFileCheating"), cheaterName), Color.Red);
+            AddNotice(string.Format("Player {0} has different files compared to the game host.".L10N("UI:Main:DifferentFileCheating"), cheaterName), Color.Red);
         }
 
         protected override void BroadcastDiceRoll(int dieSides, int[] results)

@@ -175,7 +175,6 @@ namespace DTAConfig.OptionPanels
                 chkWindowedMode.X + 50,
                 chkWindowedMode.Bottom + 24, 0, 0);
             chkBorderlessWindowedMode.Text = "Borderless Windowed Mode".L10N("UI:DTAConfig:BorderlessWindowedMode");
-            chkBorderlessWindowedMode.AllowChecking = false;
 
             chkBackBufferInVRAM = new XNAClientCheckBox(WindowManager);
             chkBackBufferInVRAM.Name = "chkBackBufferInVRAM";
@@ -890,7 +889,7 @@ namespace DTAConfig.OptionPanels
                 IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
 
                 chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
-                    renderer.WindowedModeKey, false);
+                    renderer.WindowedModeKey, true);
 
                 if (!string.IsNullOrEmpty(renderer.BorderlessWindowedModeKey))
                 {
@@ -1216,6 +1215,17 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.BorderlessWindowedMode.Value = chkBorderlessWindowedMode.Checked &&
                 string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey);
+
+            // force fullscreen
+            string nativeRes = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height;
+
+            int nativeResIndex = ddClientResolution.Items.FindIndex(i => (string)i.Tag == nativeRes);
+            if (ddClientResolution.SelectedIndex == nativeResIndex)
+            {
+                chkBorderlessClient.Checked = true;
+            }
+
+            // force fullscreen end
 
             string[] clientResolution = ((string)ddClientResolution.SelectedItem.Tag).Split('x');
 

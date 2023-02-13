@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DTAClient.DXGUI.Multiplayer.CnCNet;
+using DTAClient.DXGUI.Generic;
 using DTAClient.Online;
 using DTAClient.Online.EventArguments;
 using Localization;
@@ -148,6 +149,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private XNAContextMenuItem toggleFavoriteItem;
 
         protected XNASuggestionTextBox tbMapSearch;
+
+        public CheaterWindow cheaterWindow;
 
         protected List<PlayerInfo> Players = new List<PlayerInfo>();
         protected List<PlayerInfo> AIPlayers = new List<PlayerInfo>();
@@ -430,6 +433,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             AddChild(btnLaunchGame);
             AddChild(btnLeaveGame);
             AddChild(btnPickRandomMap);
+
+            cheaterWindow = new CheaterWindow(WindowManager);
+
+            DarkeningPanel dp = new DarkeningPanel(WindowManager);
+            dp.AddChild(cheaterWindow);
+
+            AddChild(dp);
+            dp.CenterOnParent();
+
+            cheaterWindow.CenterOnParent();
+            cheaterWindow.Disable();
         }
 
         private static XNADropDownItem CreateGameFilterItem(string text, GameModeMapFilter filter)

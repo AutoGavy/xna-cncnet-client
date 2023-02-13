@@ -39,7 +39,7 @@ namespace DTAClient.DXGUI.Generic
 
             lblDescription = new XNALabel(WindowManager);
             lblDescription.Name = "lblDescription";
-            lblDescription.ClientRectangle = new Rectangle(12, 40, 0, 0);
+            lblDescription.ClientRectangle = new Rectangle(12, 25, 0, 0);
             lblDescription.Text = ("Modified game files have been detected. They could" + Environment.NewLine +
                 "affect the game experience." +
                 Environment.NewLine + Environment.NewLine +
@@ -58,14 +58,14 @@ namespace DTAClient.DXGUI.Generic
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(Width - 104,
                 Height - 35, 92, 23);
-            btnCancel.Text = "OK".L10N("UI:Main:OK");
+            btnCancel.Text = "Cancel".L10N("UI:Main:ButtonCancel");
             btnCancel.LeftClick += BtnCancel_LeftClick;
 
             btnYes = new XNAClientButton(WindowManager);
             btnYes.Name = "btnYes";
             btnYes.ClientRectangle = new Rectangle(12, btnCancel.Y,
                 btnCancel.Width, btnCancel.Height);
-            btnYes.Text = "No".L10N("UI:Main:No");
+            btnYes.Text = "OK".L10N("UI:Main:ButtonOK");
             btnYes.LeftClick += BtnYes_LeftClick;
 
             AddChild(lblCheater);
@@ -93,7 +93,7 @@ namespace DTAClient.DXGUI.Generic
                 string backupFilePath = ProgramConstants.GetBaseSharedPath() + "BackupFiles/" + strFilePath;
                 if (File.Exists(backupFilePath))
                 {
-                    File.Copy(backupFilePath, ProgramConstants.GamePath + strFilePath);
+                    File.Copy(backupFilePath, ProgramConstants.GamePath + strFilePath, true);
                 }
             }
 
@@ -107,10 +107,7 @@ namespace DTAClient.DXGUI.Generic
             lblCheater.ClientRectangle = new Rectangle(lblCheater.ClientRectangle.X, 12,
                 lblCheater.ClientRectangle.Width, lblCheater.ClientRectangle.Height);
             lblCheater.Text = "File Modified".L10N("UI:Main:FileModified");
-            lblDescription.Text = ("Game file " + filePath + "has been modified," + Environment.NewLine +
-                  "it can affect the game experience." + Environment.NewLine + Environment.NewLine +
-                  "Do you want to restore this file?")
-                  .L10N("UI:Main:FileModifiedText");
+            lblDescription.Text = string.Format("Game file {0}\nhas been modified, it can affect the game experience.\nDo you want to restore this file?".L10N("UI:Main:FileModifiedText").Replace("@", Environment.NewLine), filePath);
             strFilePath = filePath;
         }
 
@@ -120,10 +117,7 @@ namespace DTAClient.DXGUI.Generic
             lblCheater.ClientRectangle = new Rectangle(lblCheater.ClientRectangle.X, 6,
                 lblCheater.ClientRectangle.Width, lblCheater.ClientRectangle.Height);
             lblCheater.Text = "Game File Not Found".L10N("UI:Main:GameFileNotFound");
-            lblDescription.Text =
-                ("Cannot find file\"" + filePath + "\"" +
-                Environment.NewLine + "Failed to start game.").
-                L10N("UI:Main:GameNotFound_Desc");
+            lblDescription.Text = string.Format("Cannot find file \"{0}\"\nFailed to start game.".L10N("UI:Main:GameFileNotFoundDesc").Replace("@", Environment.NewLine), filePath);
             strFilePath = String.Empty;
         }
     }

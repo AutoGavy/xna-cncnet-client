@@ -254,7 +254,7 @@ namespace DTAConfig
             UserINISettings.Instance.SaveSettings();
         }
 
-        public void Open(bool bFirstTime = false)
+        public void Open(bool bGuideRead = true)
         {
             foreach (var panel in optionsPanels)
                 panel.Load();
@@ -265,8 +265,8 @@ namespace DTAConfig
 
             Enable();
 
-            //if (bFirstTime)
-            //   System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
+            if (!bGuideRead)
+                System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
         }
 
         public void ToggleMainMenuOnlyOptions(bool enable)

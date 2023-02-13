@@ -43,8 +43,6 @@ namespace DTAClient.DXGUI.Generic
 
         private CheaterWindow cheaterWindow;
 
-        private Mission missionToLaunch;
-
         public override void Initialize()
         {
             ClientRectangle = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -231,18 +229,16 @@ namespace DTAClient.DXGUI.Generic
 
         private void PrepareToLaunch()
         {
-            int selectedMissionId = lbCampaignList.SelectedIndex;
-
-            Mission mission = Missions[selectedMissionId];
-
-            if (!ClientConfiguration.Instance.ModMode &&
-                (!CUpdater.IsFileNonexistantOrOriginal(mission.Scenario) || AreFilesModified()))
+            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
-                missionToLaunch = mission;
                 cheaterWindow.Enable();
                 return;
             }
+
+            int selectedMissionId = lbCampaignList.SelectedIndex;
+
+            Mission mission = Missions[selectedMissionId];
 
             // use vanilla campaign loading screen
             File.Delete(ProgramConstants.GamePath + "tcextrab15.big");
@@ -252,12 +248,6 @@ namespace DTAClient.DXGUI.Generic
 
         private bool AreFilesModified()
         {
-            foreach (string filePath in InfoShared.filesToCheckCamp)
-            {
-                if (!CUpdater.IsFileNonexistantOrOriginal(filePath))
-                    return true;
-            }
-
             int iCount = 0;
             foreach (string filePath in InfoShared.filesToCheckCamp)
             {
@@ -272,7 +262,7 @@ namespace DTAClient.DXGUI.Generic
                     cheaterWindow.SetDefaultText(filePath);
                     return false;
                 }
-                iCount++;
+                ++iCount;
             }
             return true;
         }
@@ -290,15 +280,6 @@ namespace DTAClient.DXGUI.Generic
                 default:
                     return "GDI";
             }
-        }
-
-        /// <summary>
-        /// Called when the user wants to proceed to the mission despite having
-        /// being called a cheater.
-        /// </summary>
-        private void CheaterWindow_YesClicked(object sender, EventArgs e)
-        {
-            LaunchMission(missionToLaunch);
         }
 
         /// <summary>
