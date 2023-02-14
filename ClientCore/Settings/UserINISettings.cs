@@ -131,7 +131,7 @@ namespace ClientCore
             SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.7);
             VoiceVolume = new DoubleSetting(iniFile, AUDIO, "VoiceVolume", 0.7);
             IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", true);
-            ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 0.7);
+            ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 0.5);
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
             StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
             MessageSound = new BoolSetting(iniFile, AUDIO, "ChatMessageSound", true);

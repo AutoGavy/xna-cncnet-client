@@ -84,9 +84,9 @@ namespace DTAClient.Properties {
         ///PingCustomTunnels=true
         ///
         ///[Audio]
-        ///SoundVolume=0.800000
-        ///VoiceVolume=1.000000
-        ///ScoreVolume=0.700000
+        ///SoundVolume=0.700000
+        ///VoiceVolume=0.700000
+        ///ScoreVolume=0.500000
         ///IsScoreRepeat=no
         ///IsScoreShuffle=yes
         ///SoundLatency=9
