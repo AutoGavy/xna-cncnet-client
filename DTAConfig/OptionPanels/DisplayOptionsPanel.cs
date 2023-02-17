@@ -98,7 +98,7 @@ namespace DTAConfig.OptionPanels
 
             var resolutions = GetResolutions(clientConfig.MinimumIngameWidth,
                 clientConfig.MinimumIngameHeight,
-                1920, 1080);
+                1920, 1200);
                 //clientConfig.MaximumIngameWidth, clientConfig.MaximumIngameHeight);
 
             resolutions.Sort();

@@ -42,7 +42,6 @@ namespace DTAClient.DXGUI.Generic
         private XNAExtraPanel epBackground;
 
         private IniFile dataOptionsIni;
-        private IniFile profileIni;
 
         public override void Initialize()
         {
@@ -164,7 +163,6 @@ namespace DTAClient.DXGUI.Generic
             AddChild(epDataPic);
 
             dataOptionsIni = new IniFile(ProgramConstants.GetBaseResourcePath() + Name + ".ini");
-            profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             LoadDataList(lbGenDataList, "gen");
             LoadDataList(lbGDIDataList, "gdi");
@@ -234,6 +232,7 @@ namespace DTAClient.DXGUI.Generic
 
             foreach (string dataEntry in dataKeys)
             {
+                IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
                 string dataSection = dataOptionsIni.GetStringValue("DataList", dataEntry, "NOT FOUND");
 
                 XNAListBoxItem item = new XNAListBoxItem();
@@ -332,6 +331,8 @@ namespace DTAClient.DXGUI.Generic
                 epDataPic.BackgroundTexture = AssetLoader.LoadTexture("Database/empty.png");
                 return;
             }
+
+            IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             string dataName = (string)dataList.SelectedItem.Tag;
             if (profileIni.SectionExists(dataName) && profileIni.GetBooleanValue(dataName, "New", true))
