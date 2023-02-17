@@ -341,28 +341,6 @@ namespace DTAClient.DXGUI.Generic
                     btnSlideDown.AllowClick = true;
                 }
             }
-
-            // Sort button list
-            if (curMissionIndex > 3)
-            {
-                btnSlideUp.AllowClick = true;
-
-                for (int i = 0; i < 4; i++)
-                {
-                    SetAsButton[i](MissionButtons[curMissionIndex + i - 3]);
-                    CheckMission(MissionButtons[curMissionIndex + i - 3]);
-                    MissionButtons[curMissionIndex - i].Enable();
-                    MissionButtons[curMissionIndex - i].Visible = true;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    SetAsButton[i](MissionButtons[i]);
-                    CheckMission(MissionButtons[i]);
-                }
-            }
         }
 
         public void UpdateMissionMedals()

@@ -169,7 +169,7 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArray =
         {
-            "B9349EF32DDA0C16AF6AC8828305233E9CB0C7C1", // Maps Settings
+            "8A5E8085A1E4EDA89B7378F51E78E4099DD3A7BA", // Maps Settings
             "FD1448B9E44ECF517EFF88AD6295A38C801DBC02", // GameOptions
 
             "6C0F1F00BDC1EE2CDAC67119E21CA816CF30271E", // Auto Handle
