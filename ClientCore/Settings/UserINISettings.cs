@@ -79,20 +79,13 @@ namespace ClientCore
             WindowedMode = new BoolSetting(iniFile, VIDEO, WINDOWED_MODE_KEY, true);
             BorderlessWindowedMode = new BoolSetting(iniFile, VIDEO, "NoWindowFrame", true);
 
-            int ScreenX = ClientConfiguration.gs_client_x;
-            int ScreenY = ClientConfiguration.gs_client_y;
-            if (Screen.PrimaryScreen.Bounds.Width < ScreenX || Screen.PrimaryScreen.Bounds.Height < ScreenY)
-            {
-                ScreenX = Screen.PrimaryScreen.Bounds.Width;
-                ScreenY = Screen.PrimaryScreen.Bounds.Height;
-            }
-            ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", ScreenX);
-            ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", ScreenY);
+            ClientResolutionX = new IntSetting(iniFile, VIDEO, "ClientResolutionX", Screen.PrimaryScreen.Bounds.Width);
+            ClientResolutionY = new IntSetting(iniFile, VIDEO, "ClientResolutionY", Screen.PrimaryScreen.Bounds.Height);
 
             ClientConfiguration.SizeRatio = (ClientResolutionX.Value * ClientResolutionY.Value) / (1920.0 * 1080.0);
 
-            bool bDefault = ClientResolutionX.Value == ClientConfiguration.gs_client_x || ClientResolutionY.Value == ClientConfiguration.gs_client_y;
-            BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", true);
+            bool bDefault = ClientResolutionX.Value >= ClientConfiguration.gs_client_x || ClientResolutionY.Value >= ClientConfiguration.gs_client_y;
+            BorderlessWindowedClient = new BoolSetting(iniFile, VIDEO, "BorderlessWindowedClient", bDefault);
 
             DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
             ClientFPS = new IntSetting(iniFile, VIDEO, "ClientFPS", 60);
