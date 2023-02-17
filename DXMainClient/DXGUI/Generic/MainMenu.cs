@@ -1248,13 +1248,12 @@ namespace DTAClient.DXGUI.Generic
             if (LogbuchParser.SongEnded && UserINISettings.Instance.StopMusicOnMenu)
                 PlayMusic();
 
-            /*if (!ClientConfiguration.Instance.ModMode && UserINISettings.Instance.CheckForUpdates)
+            if (!ClientConfiguration.Instance.ModMode && UserINISettings.Instance.CheckForUpdates)
             {
                 // Re-check for updates
-
                 if ((DateTime.Now - lastUpdateCheckTime) > TimeSpan.FromSeconds(UPDATE_RE_CHECK_THRESHOLD))
                     CheckForUpdates();
-            }*/
+            }
         }
 
         public void SwitchOff()

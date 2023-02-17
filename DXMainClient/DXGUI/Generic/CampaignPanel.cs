@@ -105,7 +105,6 @@ namespace DTAClient.DXGUI.Generic
         private XNAExtraPanel epBackground;
 
         private IniFile campaignOptionsIni;
-        private IniFile profileIni;
 
         private string SIDE_ABBR;
         private int curDifficultyIndex;
@@ -123,7 +122,7 @@ namespace DTAClient.DXGUI.Generic
             MissionList = PRLMissionList.Concat(GDOMissionList).ToArray();
 
             campaignOptionsIni = new IniFile(ProgramConstants.GetBaseResourcePath() + Name + ".ini");
-            profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
+            IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             SetAsButton[0] = new gsDelegate(SetAsButton1);
             SetAsButton[1] = new gsDelegate(SetAsButton2);
@@ -325,7 +324,7 @@ namespace DTAClient.DXGUI.Generic
 
         public void UpdateMissionButtons()
         {
-            profileIni.Reload();
+            IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             if (profileIni.GetBooleanValue("General", "GDO3", false))
             {
@@ -368,7 +367,7 @@ namespace DTAClient.DXGUI.Generic
 
         public void UpdateMissionMedals()
         {
-            profileIni.Reload();
+            IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             string missionName = MissionList[curMissionIndex].ToString().ToUpper();
 
@@ -401,6 +400,8 @@ namespace DTAClient.DXGUI.Generic
 
         private void GetMissionMedals(int index)
         {
+            IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
+
             string missionName = MissionList[index].ToUpper();
 
             // Difficulty Medal
@@ -1263,6 +1264,7 @@ namespace DTAClient.DXGUI.Generic
 
         private bool CheckMission(XNAClientButton button)
         {
+            IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
             if (button.Name == "btnprl1" || profileIni.GetBooleanValue("General", button.Name.Substring(3).ToUpper(), false))
             {
                 button.Enable();

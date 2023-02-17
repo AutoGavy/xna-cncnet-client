@@ -139,7 +139,7 @@ namespace ClientCore
             MusicType = new IntSetting(iniFile, AUDIO, "MusicType", 0);
 
             ScrollRate = new IntSetting(iniFile, OPTIONS, "ScrollRate", 1);
-            TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", false);
+            TargetLines = new BoolSetting(iniFile, OPTIONS, "UnitActionLines", true);
             ScrollCoasting = new IntSetting(iniFile, OPTIONS, "ScrollMethod", 0);
             Tooltips = new BoolSetting(iniFile, OPTIONS, "ToolTips", true);
             ClassicRallyPoint = new BoolSetting(iniFile, OPTIONS, "ClassicRallyPoint", false);
