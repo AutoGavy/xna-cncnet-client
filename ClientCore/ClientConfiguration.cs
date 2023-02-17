@@ -172,7 +172,7 @@ namespace ClientCore
         #region Game options
 
         public string Sides => gameOptions_ini.GetStringValue(GENERAL, nameof(Sides), "GDI,Nod,Allies,Soviet");
-        
+
         public string InternalSideIndices => gameOptions_ini.GetStringValue(GENERAL, nameof(InternalSideIndices), string.Empty);
 
         public string SpectatorInternalSideIndex => gameOptions_ini.GetStringValue(GENERAL, nameof(SpectatorInternalSideIndex), string.Empty);
@@ -184,7 +184,7 @@ namespace ClientCore
         public string DiscordAppId => clientDefinitionsIni.GetStringValue(SETTINGS, "DiscordAppId", string.Empty);
 
         public int SendSleep => clientDefinitionsIni.GetIntValue(SETTINGS, "SendSleep", 2500);
-          
+
         public int LoadingScreenCount => clientDefinitionsIni.GetIntValue(SETTINGS, "LoadingScreenCount", 2);
 
         public int ThemeCount => clientDefinitionsIni.GetSectionKeys("Themes").Count;
@@ -234,7 +234,7 @@ namespace ClientCore
 
         public int MaxNameLength => clientDefinitionsIni.GetIntValue(SETTINGS, "MaxNameLength", 16);
 
-        public int MapCellSizeX => clientDefinitionsIni.GetIntValue(SETTINGS, "MapCellSizeX", 48); 
+        public int MapCellSizeX => clientDefinitionsIni.GetIntValue(SETTINGS, "MapCellSizeX", 48);
 
         public int MapCellSizeY => clientDefinitionsIni.GetIntValue(SETTINGS, "MapCellSizeY", 24);
 
@@ -360,9 +360,9 @@ namespace ClientCore
             return OSVersion.UNKNOWN;
         }
 
-        public int GetResOffsetX(double scale = 0.5) => (int)((gs_client_x - UserINISettings.Instance.ClientResolutionX) * SizeRatio * scale);
+        public int GetResOffsetX(double scale = 0.5) => UserINISettings.Instance.ClientResolutionX > gs_client_x ? 0 : (int)((gs_client_x - UserINISettings.Instance.ClientResolutionX) * SizeRatio * scale);
 
-        public int GetResOffsetY(double scale = 0.5) => (int)((gs_client_y - UserINISettings.Instance.ClientResolutionY) * SizeRatio * scale);
+        public int GetResOffsetY(double scale = 0.5) => UserINISettings.Instance.ClientResolutionY > gs_client_y ? 0 : (int)((gs_client_y - UserINISettings.Instance.ClientResolutionY) * SizeRatio * scale);
     }
 
     /// <summary>

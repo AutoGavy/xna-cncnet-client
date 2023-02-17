@@ -47,7 +47,7 @@ namespace ClientGUI
         {
             if (parent is XNAWindow parentWindow)
                 return parentWindow;
-            
+
             return parent.Parent == null ? parent : GetParentControl(parent.Parent);
         }
 
@@ -79,8 +79,8 @@ namespace ClientGUI
         }
         public void SetOffset(Point offset)
         {
-            offset.X -= (ClientConfiguration.gs_client_x - UserINISettings.Instance.ClientResolutionX) / 2;
-            offset.Y -= (ClientConfiguration.gs_client_y - UserINISettings.Instance.ClientResolutionY) / 2;
+            offset.X -= UserINISettings.Instance.ClientResolutionX > ClientConfiguration.gs_client_x ? 0 : (ClientConfiguration.gs_client_x - UserINISettings.Instance.ClientResolutionX) / 2;
+            offset.Y -= UserINISettings.Instance.ClientResolutionY > ClientConfiguration.gs_client_y ? 0 : (ClientConfiguration.gs_client_y - UserINISettings.Instance.ClientResolutionY) / 2;
 
             offset.X += ClientConfiguration.Instance.GetResOffsetX();
             _offset = offset;
