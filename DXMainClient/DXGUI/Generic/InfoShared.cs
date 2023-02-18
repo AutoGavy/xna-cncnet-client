@@ -219,7 +219,7 @@ namespace DTAClient.DXGUI.Generic
 
             "INI/Game Options/Auto Handle.ini",
             "INI/Game Options/Auto Repair.ini",
-            "INI/Game Options/Day Light.ini",
+            "INI/Game Options/Ion Storm.ini",
             "INI/Game Options/Destroyable Bridges.ini",
             "INI/Game Options/No Epic.ini",
             "INI/Game Options/Low Detail.ini",
