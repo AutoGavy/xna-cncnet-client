@@ -139,6 +139,7 @@ namespace ClientCore
             ClassicDoubleClick = new BoolSetting(iniFile, OPTIONS, "ClassicDoubleClick", false);
             WheelZoom = new BoolSetting(iniFile, OPTIONS, "WheelZoom", true);
             bDisableWin = new BoolSetting(iniFile, OPTIONS, "bDisableWin", false);
+            AdjustMouse = new BoolSetting(iniFile, OPTIONS, "AdjustMouse", false);
             ShowHiddenObjects = new BoolSetting(iniFile, OPTIONS, "ShowHidden", true);
             MoveToUndeploy = new BoolSetting(iniFile, OPTIONS, "MoveToUndeploy", true);
             TextBackgroundColor = new IntSetting(iniFile, OPTIONS, "TextBackgroundColor", 0);
@@ -272,6 +273,7 @@ namespace ClientCore
         public BoolSetting ClassicDoubleClick { get; private set; }
         public BoolSetting WheelZoom { get; private set; }
         public BoolSetting bDisableWin { get; private set; }
+        public BoolSetting AdjustMouse { get; private set; }
 
         /************************/
         /* MULTIPLAYER (CnCNet) */

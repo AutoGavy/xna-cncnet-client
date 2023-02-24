@@ -393,8 +393,10 @@ namespace DTAClient.Domain
                         if (!String.IsNullOrEmpty(curMission))
                         {
                             string diffcultyName = "none";
+
                             if (difficultyIndex < 0 || difficultyIndex > 3)
-                                difficultyIndex = 0;
+                                difficultyIndex = -1;
+
                             switch (difficultyIndex)
                             {
                                 case 0:
@@ -410,7 +412,29 @@ namespace DTAClient.Domain
                                     diffcultyName = "abyss";
                                     break;
                             }
-                            profileIni.SetStringValue(curMission, "DifficultyMedal", diffcultyName);
+
+                            string lastdiffcultyName = profileIni.GetStringValue(curMission, "DifficultyMedal", "none");
+
+                            int lastdifficultyIndex = -1;
+
+                            switch (lastdiffcultyName)
+                            {
+                                case "easy":
+                                    lastdifficultyIndex = 0;
+                                    break;
+                                case "normal":
+                                    lastdifficultyIndex = 1;
+                                    break;
+                                case "hard":
+                                    lastdifficultyIndex = 2;
+                                    break;
+                                case "abyss":
+                                    lastdifficultyIndex = 3;
+                                    break;
+                            }
+
+                            if (difficultyIndex > lastdifficultyIndex)
+                                profileIni.SetStringValue(curMission, "DifficultyMedal", diffcultyName);
                         }
 
                         // unlocking ra2 factions

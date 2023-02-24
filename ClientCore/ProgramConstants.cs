@@ -180,6 +180,7 @@ namespace ClientCore
                 ddrawIni.SetBooleanValue("gamemd", "fullscreen", false);
                 ddrawIni.SetBooleanValue("gamemd", "nonexclusive", true);
                 ddrawIni.SetBooleanValue("gamemd", "singlecpu", false);
+                ddrawIni.SetBooleanValue("gamemd", "adjmouse", UserINISettings.Instance.AdjustMouse.Value);
                 ddrawIni.WriteIniFile();
             }
 
