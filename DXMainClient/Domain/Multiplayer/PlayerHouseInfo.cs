@@ -50,7 +50,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 int sideId;
 
-                do sideId = random.Next(0, sideCount - 4);
+                do sideId = random.Next(0, sideCount);
                 while (disallowedSideArray[sideId]);
 
                 SideIndex = sideId;
