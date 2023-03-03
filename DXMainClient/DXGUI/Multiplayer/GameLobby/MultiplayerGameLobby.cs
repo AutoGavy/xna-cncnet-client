@@ -272,7 +272,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (fsw != null)
                 fsw.EnableRaisingEvents = true;
 
-            if (!Map.IsCoop)
+            //if (!Map.IsCoop)
                 bCanControlSpeed = false;
             base.StartGame(bCanControlSpeed);
         }
