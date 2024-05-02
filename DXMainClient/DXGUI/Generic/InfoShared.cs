@@ -169,8 +169,8 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArray =
         {
-            "DC4DD8BA1E30051EFFF083F02C0EF0628A3814B5", // Maps Settings
-            "FD1448B9E44ECF517EFF88AD6295A38C801DBC02", // GameOptions
+            "e9189b4a4a48ffea8c1713081319d11bfc3cc54d", // Maps Settings
+            "d97a4b3d959c6ce423889164d72784f396fd8e37", // GameOptions
 
             "6C0F1F00BDC1EE2CDAC67119E21CA816CF30271E", // Auto Handle
             "715869652AFC3D5E7C0102CB573CE586FD1174ED", // Auto Repair
@@ -200,7 +200,7 @@ namespace DTAClient.DXGUI.Generic
             "95025F487A6FF22F596DD92B8FEB6F5BE574863E", // Co-Op Hard.ini
             "AFD6C3EB0EA8A572EA5EB42F6B49229A778E6149", // Co-Op Medium.ini
             "E42E4B2478B7CFF648DCCD5BEAC8C8B1C7122E25", // Crazy Crates.ini
-            "5E150BDE837C75EE2D3239EF842A484EC2153EAD", // Difficulty Tier.ini
+            "ec8df6503caba20c53fc4f42da431b4807774fae", // Difficulty Tier.ini
             "D42ECB8AE645547E361AF96DB4B7320F61EE29C3", // Duel.ini
             "38F3655B98432FF1601316C42F44A0E049DF730A", // FastOptions.ini
             "575B300FBE5A5900B9D072AF73B0CE5FC0680E1C", // Fortress.ini

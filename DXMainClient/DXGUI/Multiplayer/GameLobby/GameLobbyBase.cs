@@ -1327,6 +1327,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             CheckFactionsSelectable();
+
+            if (disallowedSideArray.Length > 0)
+            {
+                foreach (XNADropDown dd in ddPlayerSides)
+                {
+                    dd.Items[0].Selectable = false;
+                    for (int i = 0; i < RandomSelectorCount; i++)
+                        dd.Items[i].Selectable = false;
+                }
+            }
         }
 
         public void CheckFactionsSelectable()
@@ -1464,7 +1474,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
 
             /*
-             * gsCustomizeRestriction
+             * 随机平衡分配 gsCustomizeRestriction 
              * 游戏一共有3个阵营，每个阵营有4个子阵营
              * 子阵营类型分别是：进攻 防守 支援 综合
              * 新的阵营选择器的规则是：同一个队伍内不能有相同的子阵营，以及不能有相同的子阵营类型

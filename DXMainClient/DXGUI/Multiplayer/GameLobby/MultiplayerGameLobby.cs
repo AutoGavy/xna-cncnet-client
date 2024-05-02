@@ -753,7 +753,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     return false;
                 }
 
-                if (iCount >= InfoShared.filesHashArray.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArray[iCount])
+                if (iCount >= InfoShared.filesHashArray.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArray[iCount].ToUpper())
                 {
                     cheaterWindow.SetDefaultText(filePath);
                     return false;

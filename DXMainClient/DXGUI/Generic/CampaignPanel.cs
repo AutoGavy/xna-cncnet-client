@@ -728,7 +728,7 @@ namespace DTAClient.DXGUI.Generic
                     return false;
                 }
 
-                if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount])
+                if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount].ToUpper())
                 {
                     cheaterWindow.SetDefaultText(filePath);
                     return false;
