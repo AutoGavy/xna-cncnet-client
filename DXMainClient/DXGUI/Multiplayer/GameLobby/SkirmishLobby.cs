@@ -485,6 +485,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     cb.Checked = skirmishSettingsIni.GetBooleanValue("GameOptions", cb.Name, cb.Checked);
                 }
             }
+
+            bSettingsLoaded = true;
         }
 
         /// <summary>

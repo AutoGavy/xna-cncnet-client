@@ -8,6 +8,7 @@ using ClientCore.INIProcessing;
 using System.Threading;
 using System.Globalization;
 using System.Linq;
+using Localization;
 
 namespace ClientGUI
 {
@@ -65,8 +66,22 @@ namespace ClientGUI
             }
             if (File.Exists(ProgramConstants.GetBaseResourcePath() + strMainExecutableName))
             {
-                File.Copy(ProgramConstants.GetBaseResourcePath() + strMainExecutableName,
-                    ProgramConstants.GamePath + "gamemd.exe", true);
+                string strGamemdPath = ProgramConstants.GamePath + "gamemd.exe";
+                try
+                {
+                    File.Delete(strGamemdPath);
+                    File.Copy(ProgramConstants.GetBaseResourcePath() + strMainExecutableName, strGamemdPath, true);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Error launching game: " + ex.Message + " Need to restart PC");
+
+                    MessageBox.Show("Failed to start game.".L10N("UI:Main:FailStartingGame")
+                        + Environment.NewLine + "Need to Restart your PC".L10N("UI:Main:NeedRestartPC")
+                        + Environment.NewLine + "Error Message: ".L10N("UI:Main:ErrorMessage")
+                        + ex.Message,
+                        "Error launching game".L10N("UI:Main:ErrorLaunchGame"), MessageBoxButtons.OK);
+                }
             }
 
             // disable win

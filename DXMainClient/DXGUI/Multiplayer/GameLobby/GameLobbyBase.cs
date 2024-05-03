@@ -173,6 +173,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected int SideCount { get; private set; }
         protected int RandomSelectorCount { get; private set; } = 1;
 
+        public bool bSettingsLoaded { get; set; } = false;
+
         protected List<int[]> RandomSelectors = new List<int[]>();
 
         private readonly bool isMultiplayer = false;
@@ -208,7 +210,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void chkRandomOnly_CheckedChanged(object sender, EventArgs e)
         {
-            if (!chkRandomOnly.Checked)
+            if (!chkRandomOnly.Checked || !bSettingsLoaded)
                 return;
  
             foreach (var ddSide in ddPlayerSides)
@@ -1328,7 +1330,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             CheckFactionsSelectable();
 
-            if (disallowedSideArray.Length > 0)
+            // disable random and random selectors
+            if (disallowedSideArray.Count(b => b == true) > 0)
             {
                 foreach (XNADropDown dd in ddPlayerSides)
                 {
