@@ -174,12 +174,13 @@ namespace ClientCore
                 }
 
                 ddrawIni.SetIntValue("gamemd", "minfps", -1);
-                //ddrawIni.SetIntValue("gamemd", "maxgameticks", -2);
+                ddrawIni.SetIntValue("gamemd", "maxgameticks", 60);
                 ddrawIni.SetBooleanValue("gamemd", "devmode", false);
                 ddrawIni.SetBooleanValue("gamemd", "resizeable", false);
                 ddrawIni.SetBooleanValue("gamemd", "fullscreen", false);
                 ddrawIni.SetBooleanValue("gamemd", "nonexclusive", true);
                 ddrawIni.SetBooleanValue("gamemd", "singlecpu", false);
+                ddrawIni.SetBooleanValue("gamemd", "d3d9linear", false);
                 ddrawIni.SetBooleanValue("gamemd", "adjmouse", UserINISettings.Instance.AdjustMouse.Value);
                 ddrawIni.WriteIniFile();
             }

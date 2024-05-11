@@ -72,6 +72,8 @@ namespace ClientCore
             }
             IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", IngameScreenX);
             IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", IngameScreenY);
+            FakeIngameScreenWidth = new IntSetting(iniFile, VIDEO, "FakeScreenWidth", IngameScreenX);
+            FakeIngameScreenHeight = new IntSetting(iniFile, VIDEO, "FakeScreenHeight", IngameScreenY);
 
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
@@ -215,6 +217,8 @@ namespace ClientCore
 
         public IntSetting IngameScreenWidth { get; private set; }
         public IntSetting IngameScreenHeight { get; private set; }
+        public IntSetting FakeIngameScreenWidth { get; private set; }
+        public IntSetting FakeIngameScreenHeight { get; private set; }
         public StringSetting ClientTheme { get; private set; }
         public IntSetting DetailLevel { get; private set; }
         public StringSetting Renderer { get; private set; }

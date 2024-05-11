@@ -1629,6 +1629,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             foreach (GameLobbyDropDown dd in DropDowns)
                 dd.ApplySpawnIniCode(spawnIni);
 
+            // Apply connection time out settings
+            settings.SetIntValue("ConnTimeout", 10800);
+            settings.SetIntValue("ReconnectTimeout", 5400);
+
             // Apply forced options from GameOptions.ini
 
             List<string> forcedKeys = GameOptionsIni.GetSectionKeys("ForcedSpawnIniOptions");

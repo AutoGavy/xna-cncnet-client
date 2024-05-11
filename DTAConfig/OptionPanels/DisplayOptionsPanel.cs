@@ -93,13 +93,14 @@ namespace DTAConfig.OptionPanels
             ddIngameResolution.ClientRectangle = new Rectangle(
                 lblIngameResolution.Right + 12,
                 lblIngameResolution.Y - 2, 120, 19);
+            ddIngameResolution.SelectedIndexChanged += ddIngameResolution_SelectedIndexChanged;
 
             var clientConfig = ClientConfiguration.Instance;
 
             var resolutions = GetResolutions(clientConfig.MinimumIngameWidth,
-                clientConfig.MinimumIngameHeight,
-                1920, 1200);
-                //clientConfig.MaximumIngameWidth, clientConfig.MaximumIngameHeight);
+                clientConfig.MinimumIngameHeight, int.MaxValue, int.MaxValue);
+                //clientConfig.MaximumIngameWidth,
+                //clientConfig.MaximumIngameHeight);
 
             resolutions.Sort();
 
@@ -780,16 +781,39 @@ namespace DTAConfig.OptionPanels
             }
         }
 
+        private void ddIngameResolution_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
+            int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
+
+            // Apply >1080p resolution
+            int FakeWidth = ingameRes[0];
+            int FakeHeight = ingameRes[1];
+
+            bool bHighRes = FakeWidth > 1920 || FakeHeight > 1080;
+
+            if (bHighRes)
+            {
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = true;
+
+                chkWindowedMode.AllowChecking = false;
+                chkWindowedMode.Checked = true;
+            }
+            else
+            {
+                chkWindowedMode.AllowChecking = true;
+                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
+                if (!chkWindowedMode.Checked)
+                    chkBorderlessWindowedMode.Checked = false;
+            }
+        }
+
         private void ChkWindowedMode_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkWindowedMode.Checked)
-            {
-                chkBorderlessWindowedMode.AllowChecking = true;
-                return;
-            }
-
-            chkBorderlessWindowedMode.AllowChecking = false;
-            chkBorderlessWindowedMode.Checked = false;
+            chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
+            if (!chkWindowedMode.Checked)
+                chkBorderlessWindowedMode.Checked = false;
         }
 
         private void ddRenderer_Changed(object sender, EventArgs e)
@@ -865,8 +889,8 @@ namespace DTAConfig.OptionPanels
             //ddDetailLevel.SelectedIndex = UserINISettings.Instance.DetailLevel;
             ddDetailLevel.SelectedIndex = 2;
 
-            string currentRes = UserINISettings.Instance.IngameScreenWidth.Value +
-                "x" + UserINISettings.Instance.IngameScreenHeight.Value;
+            string currentRes = UserINISettings.Instance.FakeIngameScreenWidth.Value +
+                "x" + UserINISettings.Instance.FakeIngameScreenHeight.Value;
 
             int index = ddIngameResolution.Items.FindIndex(i => i.Text == currentRes);
 
@@ -991,8 +1015,18 @@ namespace DTAConfig.OptionPanels
 
             int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
-            IniSettings.IngameScreenWidth.Value = ingameRes[0];
-            IniSettings.IngameScreenHeight.Value = ingameRes[1];
+            if (ingameRes[0] > 1920 || ingameRes[1] > 1080)
+            {
+                IniSettings.IngameScreenWidth.Value = 1920;
+                IniSettings.IngameScreenHeight.Value = 1080;
+            }
+            else
+            {
+                IniSettings.IngameScreenWidth.Value = ingameRes[0];
+                IniSettings.IngameScreenHeight.Value = ingameRes[1];
+            }
+            IniSettings.FakeIngameScreenWidth.Value = ingameRes[0];
+            IniSettings.FakeIngameScreenHeight.Value = ingameRes[1];
 
             // Calculate drag selection distance, scale it with resolution width
             int dragDistance = ingameRes[0] / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
@@ -1091,8 +1125,11 @@ namespace DTAConfig.OptionPanels
 
                     rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
                         selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
+
+                    rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
+                        selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
                 }
-                
+
                 rendererSettingsIni.WriteIniFile();
             }
 
@@ -1193,121 +1230,7 @@ namespace DTAConfig.OptionPanels
 
             base.Save();
 
-            //IniSettings.DetailLevel.Value = ddDetailLevel.SelectedIndex;
-            IniSettings.DetailLevel.Value = 2;
-
-            string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
-
-            int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
-
-            IniSettings.IngameScreenWidth.Value = ingameRes[0];
-            IniSettings.IngameScreenHeight.Value = ingameRes[1];
-
-            // Calculate drag selection distance, scale it with resolution width
-            int dragDistance = ingameRes[0] / ORIGINAL_RESOLUTION_WIDTH * DRAG_DISTANCE_DEFAULT;
-            IniSettings.DragDistance.Value = dragDistance;
-
-            DirectDrawWrapper originalRenderer = selectedRenderer;
-            selectedRenderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
-
-            IniSettings.WindowedMode.Value = chkWindowedMode.Checked &&
-                !selectedRenderer.UsesCustomWindowedOption();
-
-            IniSettings.BorderlessWindowedMode.Value = chkBorderlessWindowedMode.Checked &&
-                string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey);
-
-            // force fullscreen
-            string nativeRes = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height;
-
-            int nativeResIndex = ddClientResolution.Items.FindIndex(i => (string)i.Tag == nativeRes);
-            if (ddClientResolution.SelectedIndex == nativeResIndex)
-            {
-                chkBorderlessClient.Checked = true;
-            }
-
-            // force fullscreen end
-
-            string[] clientResolution = ((string)ddClientResolution.SelectedItem.Tag).Split('x');
-
-            int[] clientRes = new int[2] { int.Parse(clientResolution[0]), int.Parse(clientResolution[1]) };
-
-            IniSettings.ClientResolutionX.Value = clientRes[0];
-            IniSettings.ClientResolutionY.Value = clientRes[1];
-
-            IniSettings.BorderlessWindowedClient.Value = chkBorderlessClient.Checked;
-
-            IniSettings.ClientTheme.Value = ddClientTheme.SelectedItem.Text;
-
-            IniSettings.NoReShade.Value = selectedRenderer.NoReShade;
-            IniSettings.HighDetail.Value = ddHighDetail.SelectedIndex;
-            IniSettings.CloudsEffect.Value = ddCloudsEffect.SelectedIndex;
-            IniSettings.EnhancedLaser.Value = ddEnhancedLaser.SelectedIndex;
-            IniSettings.EnhancedLight.Value = ddEnhancedLight.SelectedIndex;
-            IniSettings.Displacement.Value = ddDisplacement.SelectedIndex;
-            IniSettings.AntiAliasing.Value = ddAntiAliasing.SelectedIndex;
-
-            IniSettings.AlphaLight.Value = chkAlphaLight.Checked;
-
-            IniSettings.AirflowEffect.Value = chkAirflowEffect.Checked;
-
-            IniSettings.VideoMode.Value = chkVideoMode.Checked;
-
-#if YR
-            IniSettings.BackBufferInVRAM.Value = false;
-#else
-            IniSettings.BackBufferInVRAM.Value = false;
-#endif
-
-            if (selectedRenderer != originalRenderer ||
-                !File.Exists(ProgramConstants.GamePath + selectedRenderer.ConfigFileName))
-            {
-                foreach (var renderer in renderers)
-                {
-                    if (renderer != selectedRenderer)
-                        renderer.Clean();
-                }
-            }
-
-            selectedRenderer.Apply();
-
-            GameProcessLogic.UseQres = selectedRenderer.UseQres;
-            GameProcessLogic.SingleCoreAffinity = selectedRenderer.SingleCoreAffinity;
-
-            if (selectedRenderer.UsesCustomWindowedOption())
-            {
-                IniFile rendererSettingsIni = new IniFile(
-                    ProgramConstants.GamePath + selectedRenderer.ConfigFileName);
-
-                rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
-                    selectedRenderer.WindowedModeKey, chkWindowedMode.Checked);
-
-                if (!string.IsNullOrEmpty(selectedRenderer.BorderlessWindowedModeKey))
-                {
-                    bool borderlessModeIniValue = chkBorderlessWindowedMode.Checked;
-                    if (selectedRenderer.IsBorderlessWindowedModeKeyReversed)
-                        borderlessModeIniValue = !borderlessModeIniValue;
-
-                    rendererSettingsIni.SetBooleanValue(selectedRenderer.WindowedModeSection,
-                        selectedRenderer.BorderlessWindowedModeKey, borderlessModeIniValue);
-                }
-
-                rendererSettingsIni.WriteIniFile();
-            }
-
-            IniSettings.Renderer.Value = selectedRenderer.InternalName;
-
-#if TS
-            File.Delete(ProgramConstants.GamePath + "Language.dll");
-
-            if (ingameRes[0] >= 1024 && ingameRes[1] >= 720)
-                File.Copy(ProgramConstants.GamePath + "Resources/language_1024x720.dll", ProgramConstants.GamePath + "Language.dll");
-            else if (ingameRes[0] >= 800 && ingameRes[1] >= 600)
-                File.Copy(ProgramConstants.GamePath + "Resources/language_800x600.dll", ProgramConstants.GamePath + "Language.dll");
-            else
-                File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll");
-#endif
-
-            ExtraSave();
+            Save();
 
             // End Save
 
