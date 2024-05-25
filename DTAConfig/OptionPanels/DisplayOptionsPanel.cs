@@ -820,11 +820,30 @@ namespace DTAConfig.OptionPanels
         {
             var renderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
 
-            chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
-            chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
-            chkWindowedMode.AllowChecking = true;
+            string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
+            int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
-            chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
+            // Apply >1080p resolution
+            int FakeWidth = ingameRes[0];
+            int FakeHeight = ingameRes[1];
+
+            bool bHighRes = FakeWidth > 1920 || FakeHeight > 1080;
+
+            if (bHighRes)
+            {
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = true;
+
+                chkWindowedMode.AllowChecking = false;
+                chkWindowedMode.Checked = true;
+            }
+            else
+            {
+                chkWindowedMode.AllowChecking = true;
+                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
+                if (!chkWindowedMode.Checked)
+                    chkBorderlessWindowedMode.Checked = false;
+            }
 
             if (renderer.NoReShade)
             {
@@ -930,6 +949,29 @@ namespace DTAConfig.OptionPanels
             {
                 chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
                 chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+            }
+
+            string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
+            int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
+
+            // Apply >1080p resolution
+            int FakeWidth = ingameRes[0];
+            int FakeHeight = ingameRes[1];
+
+            bool bHighRes = FakeWidth > 1920 || FakeHeight > 1080;
+
+            if (bHighRes) {
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = true;
+
+                chkWindowedMode.AllowChecking = false;
+                chkWindowedMode.Checked = true;
+            }
+            else {
+                chkWindowedMode.AllowChecking = true;
+                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
+                if (!chkWindowedMode.Checked)
+                    chkBorderlessWindowedMode.Checked = false;
             }
 
             string currentClientRes = IniSettings.ClientResolutionX.Value + "x" + IniSettings.ClientResolutionY.Value;
