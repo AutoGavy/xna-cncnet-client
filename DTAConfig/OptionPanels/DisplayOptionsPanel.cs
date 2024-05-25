@@ -794,18 +794,20 @@ namespace DTAConfig.OptionPanels
 
             if (bHighRes)
             {
-                chkBorderlessWindowedMode.AllowChecking = false;
-                chkBorderlessWindowedMode.Checked = true;
-
                 chkWindowedMode.AllowChecking = false;
                 chkWindowedMode.Checked = true;
+
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = true;
             }
             else
             {
+                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
                 chkWindowedMode.AllowChecking = true;
-                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
                 if (!chkWindowedMode.Checked)
                     chkBorderlessWindowedMode.Checked = false;
+                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
             }
         }
 
@@ -820,6 +822,13 @@ namespace DTAConfig.OptionPanels
         {
             var renderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
 
+            string currentRes = UserINISettings.Instance.FakeIngameScreenWidth.Value +
+                "x" + UserINISettings.Instance.FakeIngameScreenHeight.Value;
+
+            int index = ddIngameResolution.Items.FindIndex(i => i.Text == currentRes);
+
+            ddIngameResolution.SelectedIndex = index > -1 ? index : 0;
+
             string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
             int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
@@ -831,18 +840,20 @@ namespace DTAConfig.OptionPanels
 
             if (bHighRes)
             {
-                chkBorderlessWindowedMode.AllowChecking = false;
-                chkBorderlessWindowedMode.Checked = true;
-
                 chkWindowedMode.AllowChecking = false;
                 chkWindowedMode.Checked = true;
+
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = true;
             }
             else
             {
+                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
                 chkWindowedMode.AllowChecking = true;
-                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
                 if (!chkWindowedMode.Checked)
                     chkBorderlessWindowedMode.Checked = false;
+                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
             }
 
             if (renderer.NoReShade)
@@ -960,18 +971,22 @@ namespace DTAConfig.OptionPanels
 
             bool bHighRes = FakeWidth > 1920 || FakeHeight > 1080;
 
-            if (bHighRes) {
-                chkBorderlessWindowedMode.AllowChecking = false;
-                chkBorderlessWindowedMode.Checked = true;
-
+            if (bHighRes)
+            {
                 chkWindowedMode.AllowChecking = false;
                 chkWindowedMode.Checked = true;
+
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = true;
             }
-            else {
+            else
+            {
+                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
                 chkWindowedMode.AllowChecking = true;
-                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
                 if (!chkWindowedMode.Checked)
                     chkBorderlessWindowedMode.Checked = false;
+                chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
             }
 
             string currentClientRes = IniSettings.ClientResolutionX.Value + "x" + IniSettings.ClientResolutionY.Value;
