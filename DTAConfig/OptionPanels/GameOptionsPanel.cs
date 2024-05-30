@@ -31,7 +31,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkClassicDoubleClick;
         private XNAClientCheckBox chkWheelZoom;
         private XNAClientCheckBox chkDisableWin;
-        private XNAClientCheckBox chkAdjustMouse;
+        //private XNAClientCheckBox chkAdjustMouse;
 #if YR
         private XNAClientCheckBox chkShowHiddenObjects;
 #elif TS
@@ -113,9 +113,9 @@ namespace DTAConfig.OptionPanels
             chkDisableWin.Name = "chkDisableWin";
             chkDisableWin.Text = "Disable WIN Key".L10N("UI:DTAConfig:DisableWINKey");
 
-            chkAdjustMouse = new XNAClientCheckBox(WindowManager);
-            chkAdjustMouse.Name = "chkAdjustMouse";
-            chkAdjustMouse.Text = "Adjust Mouse".L10N("UI:DTAConfig:AdjustMouse");
+            //chkAdjustMouse = new XNAClientCheckBox(WindowManager);
+            //chkAdjustMouse.Name = "chkAdjustMouse";
+            //chkAdjustMouse.Text = "Adjust Mouse".L10N("UI:DTAConfig:AdjustMouse");
 
             var lblPlayerName = new XNALabel(WindowManager);
             lblPlayerName.Name = "lblPlayerName";
@@ -207,7 +207,7 @@ namespace DTAConfig.OptionPanels
             AddChild(chkClassicDoubleClick);
             AddChild(chkWheelZoom);
             AddChild(chkDisableWin);
-            AddChild(chkAdjustMouse);
+            //AddChild(chkAdjustMouse);
             AddChild(lblPlayerName);
             AddChild(tbPlayerName);
             AddChild(lblNotice);
@@ -255,7 +255,7 @@ namespace DTAConfig.OptionPanels
             chkClassicDoubleClick.Checked = IniSettings.ClassicDoubleClick;
             chkWheelZoom.Checked = IniSettings.WheelZoom;
             chkDisableWin.Checked = IniSettings.bDisableWin;
-            chkAdjustMouse.Checked = IniSettings.AdjustMouse;
+            //chkAdjustMouse.Checked = IniSettings.AdjustMouse;
 #if YR
             chkShowHiddenObjects.Checked = false;
 #endif
@@ -280,7 +280,7 @@ namespace DTAConfig.OptionPanels
             IniSettings.ClassicDoubleClick.Value = chkClassicDoubleClick.Checked;
             IniSettings.WheelZoom.Value = chkWheelZoom.Checked;
             IniSettings.bDisableWin.Value = chkDisableWin.Checked;
-            IniSettings.AdjustMouse.Value = chkAdjustMouse.Checked;
+            //IniSettings.AdjustMouse.Value = chkAdjustMouse.Checked;
 #if YR
             IniSettings.ShowHiddenObjects.Value = chkShowHiddenObjects.Checked;
 #endif
