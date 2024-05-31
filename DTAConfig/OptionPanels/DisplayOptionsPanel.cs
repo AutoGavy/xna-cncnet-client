@@ -802,8 +802,18 @@ namespace DTAConfig.OptionPanels
             }
             else
             {
-                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
-                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+                var renderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
+                IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
+                chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.WindowedModeKey, false);
+
+                bool setting = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.BorderlessWindowedModeKey, false);
+                chkBorderlessWindowedMode.Checked = renderer.IsBorderlessWindowedModeKeyReversed ? !setting : setting;
+
+                //chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                //chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+
                 chkWindowedMode.AllowChecking = true;
                 if (!chkWindowedMode.Checked)
                     chkBorderlessWindowedMode.Checked = false;
@@ -848,8 +858,17 @@ namespace DTAConfig.OptionPanels
             }
             else
             {
-                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
-                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+                IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
+                chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.WindowedModeKey, false);
+
+                bool setting = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.BorderlessWindowedModeKey, false);
+                chkBorderlessWindowedMode.Checked = renderer.IsBorderlessWindowedModeKeyReversed ? !setting : setting;
+
+                //chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                //chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+
                 chkWindowedMode.AllowChecking = true;
                 if (!chkWindowedMode.Checked)
                     chkBorderlessWindowedMode.Checked = false;
@@ -981,8 +1000,17 @@ namespace DTAConfig.OptionPanels
             }
             else
             {
-                chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
-                chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+                IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
+                chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.WindowedModeKey, false);
+
+                bool setting = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.BorderlessWindowedModeKey, false);
+                chkBorderlessWindowedMode.Checked = renderer.IsBorderlessWindowedModeKeyReversed ? !setting : setting;
+
+                //chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                //chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+
                 chkWindowedMode.AllowChecking = true;
                 if (!chkWindowedMode.Checked)
                     chkBorderlessWindowedMode.Checked = false;
@@ -1072,7 +1100,7 @@ namespace DTAConfig.OptionPanels
 
             int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
-            if (ingameRes[0] > 1920 || ingameRes[1] > 1080)
+            if (!UserINISettings.Instance.DebugReShade && (ingameRes[0] > 1920 || ingameRes[1] > 1080))
             {
                 IniSettings.IngameScreenWidth.Value = 1920;
                 IniSettings.IngameScreenHeight.Value = 1080;
