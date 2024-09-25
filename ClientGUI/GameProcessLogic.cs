@@ -50,6 +50,13 @@ namespace ClientGUI
                 ReShadeIni.WriteIniFile(ProgramConstants.GamePath + "ReShade.ini");
             }
 
+            // choose to place reshade dll
+            string reshadeGamePath = ProgramConstants.GamePath + ProgramConstants.RESHADE_DLL;
+            if (UserINISettings.Instance.NoReShade)
+                File.Delete(reshadeGamePath);
+            else if (!File.Exists(reshadeGamePath)) 
+                File.Copy(ProgramConstants.GetBaseResourcePath() + ProgramConstants.RESHADE_DLL, reshadeGamePath, true);
+
             // choose main game executable file (1 forcespeed, 3 forcespeed + disable music selection)
             string strMainExecutableName;
             if (bCanControlSpeed)

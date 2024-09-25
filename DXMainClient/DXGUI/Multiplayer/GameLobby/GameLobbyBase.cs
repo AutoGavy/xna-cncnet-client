@@ -1972,18 +1972,18 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (flAmbient > 0.85f)
                     bLightClouds = true;
 
-                string strLightClouds = mapIni.GetStringValue("BaseInfo", "RedAmbEffect", "none").ToLower();
-                if (strLightClouds == "true")
+                string strRedAmbEffect = mapIni.GetStringValue("BaseInfo", "RedAmbEffect", "none").ToLower();
+                if (strRedAmbEffect == "true")
                     bLightClouds = true;
-                else if (strLightClouds == "false")
+                else if (strRedAmbEffect == "false")
                     bLightClouds = false;
 
-                if (UserINISettings.Instance.CloudsEffect == 1) //2
+                if (UserINISettings.Instance.CloudsEffect == 0)
                 {
                     //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_CLOUD_O);
                     mapIni.SetStringValue("Basic", "AltNextScenario", "O_");
                 }
-                else if (strLightClouds == "none")
+                else if (strRedAmbEffect == "none")
                 {
                     //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_CLOUD_N);
                     mapIni.SetStringValue("Basic", "AltNextScenario", "N_");
@@ -2040,7 +2040,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         mapIni.SetStringValue("Basic", "NextScenario", "S_Shader");
 
                         // Tint
-                        if (strLightClouds == "none")
+                        if (strRedAmbEffect == "none")
                             strExtraLines += ClientConfiguration.TC_TINT_SNOWNIGHT;
                         else if (bLightClouds)
                             strExtraLines += ClientConfiguration.SHADER_TINT_SNOWNIGHT_VANILLA;
@@ -2090,7 +2090,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         mapIni.SetStringValue("Basic", "NextScenario", "A_Shader");
 
                         // Tint
-                        if (strLightClouds == "none")
+                        if (strRedAmbEffect == "none")
                             strExtraLines += ClientConfiguration.TC_TINT_SNOWDAY;
                         else if (bLightClouds)
                             strExtraLines += ClientConfiguration.SHADER_TINT_SNOWDAY_VANILLA;
@@ -2167,7 +2167,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         mapIni.SetStringValue("Basic", "NextScenario", "M_Shader");
 
                         // Tint
-                        if (strLightClouds == "none")
+                        if (strRedAmbEffect == "none")
                             strExtraLines += ClientConfiguration.TC_TINT_NIGHT2;
                         else if (bLightClouds)
                             strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
@@ -2216,7 +2216,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                             mapIni.SetStringValue("Basic", "NextScenario", "N_Shader");
 
                             // Tint
-                            if (strLightClouds == "none")
+                            if (strRedAmbEffect == "none")
                                 strExtraLines += ClientConfiguration.TC_TINT_NIGHT;
                             else if (bLightClouds)
                                 strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
@@ -2249,7 +2249,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                             mapIni.SetStringValue("Basic", "NextScenario", "D_Shader");
 
                             // Tint
-                            if (strLightClouds == "none")
+                            if (strRedAmbEffect == "none")
                                 strExtraLines += ClientConfiguration.TC_TINT_DAY;
                             else if (bLightClouds)
                                 strExtraLines += ClientConfiguration.SHADER_TINT_DAY;

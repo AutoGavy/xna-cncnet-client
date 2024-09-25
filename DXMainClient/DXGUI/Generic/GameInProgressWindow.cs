@@ -126,6 +126,21 @@ namespace DTAClient.DXGUI
         {
             AddCallback(new Action(HandleGameProcessExited), null);
 
+            if (UserINISettings.Instance.FakeIngameScreenWidth > 1920 || UserINISettings.Instance.FakeIngameScreenHeight > 1440)
+            {
+                try
+                {
+                    Logger.Log("Killing upscale process...");
+                    foreach (System.Diagnostics.Process process in
+                        System.Diagnostics.Process.GetProcessesByName(ProgramConstants.UPSCALE_PROCESS))
+                        process.Kill();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Error killing upscale process: " + ex.Message);
+                }
+            }
+
             if (UserINISettings.Instance.bDisableWin)
             {
                 try

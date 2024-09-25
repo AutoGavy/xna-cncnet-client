@@ -112,6 +112,8 @@ namespace ClientCore
 
             NoReShade = new BoolSetting(iniFile, VIDEO, "NoReShade", false);
             HighDetail = new IntSetting(iniFile, VIDEO, "HighDetail", GoodGPU);
+            DLSS = new IntSetting(iniFile, VIDEO, "DLSS", 4);
+            GFXPreset = new IntSetting(iniFile, VIDEO, "DisplayFPS", GoodGPU);
             AntiAliasing = new IntSetting(iniFile, VIDEO, "AntiAliasing", GoodGPU == 3 ? 1 : 0);
             EnhancedLaser = new IntSetting(iniFile, VIDEO, "EnhancedLaser", 1);
             EnhancedLight = new IntSetting(iniFile, VIDEO, "EnhancedLight", 1);
@@ -236,6 +238,8 @@ namespace ClientCore
 
         public BoolSetting NoReShade { get; private set; }
         public IntSetting HighDetail { get; private set; }
+        public IntSetting DLSS { get; private set; }
+        public IntSetting GFXPreset { get; private set; }
         public IntSetting CloudsEffect { get; private set; }
         public IntSetting AntiAliasing { get; private set; }
         public IntSetting EnhancedLaser { get; private set; }

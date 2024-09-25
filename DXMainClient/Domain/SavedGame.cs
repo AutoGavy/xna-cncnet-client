@@ -180,9 +180,9 @@ namespace DTAClient.Domain
                     br.Close();
 
                     Logger.Log("SavedGame: Game cloud shader is " + strShaderName);
-                    if (strShaderName == "N_")
+                    if (strShaderName == "D_")
                         return "special";
-                    else if (strShaderName == "D_")
+                    else if (strShaderName == "N_")
                         return "vanilla";
                     else
                         return "none";

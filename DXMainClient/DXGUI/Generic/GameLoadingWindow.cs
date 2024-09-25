@@ -157,8 +157,8 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            XNAMessageBox.Show(WindowManager, "Save / Load Unavailable".L10N("UI:Main:SLUnavailable"), "This feature is working in progress.".L10N("UI:Main:LoadGameUncompleted"));
-            return;
+            //XNAMessageBox.Show(WindowManager, "Save / Load Unavailable".L10N("UI:Main:SLUnavailable"), "This feature is working in progress.".L10N("UI:Main:LoadGameUncompleted"));
+            //return;
 
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             Logger.Log("Loading saved game " + sg.FileName);

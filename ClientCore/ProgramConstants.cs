@@ -43,6 +43,13 @@ namespace ClientCore
         public const string MAIN_EXE_3 = "mainexecutable3.exe";
         public const string DISABLE_WIN = "tcdisablewin.exe";
         public const string DISABLE_WIN_PROCESS = "tcdisablewin";
+        public const string UPSCALE_EXE = "tchelper.exe";
+        public const string UPSCALE_PROCESS = "tchelper";
+        public const string UPSCALE_PRESET_DIR = "Magpie/preset/";
+        public const string UPSCALE_CONFIG_DIR = "Magpie/config/";
+        public const string UPSCALE_CONFIG_NAME = "config.json";
+        public const string RESHADE_DLL = "d3d9.ext";
+        public const string RESHADE_DLL_DISABLED = "d3d9_disabled.ext";
 
         public const int GAME_ID_MAX_LENGTH = 4;
 
@@ -152,40 +159,6 @@ namespace ClientCore
 
         public static void SetupPreset(bool bIsOnlineGame = false) // Set up shader presets
         {
-            // Set up ddraw.ini
-            if (!UserINISettings.Instance.DebugReShade)
-            {
-                IniFile ddrawIni = new IniFile(ProgramConstants.GamePath + "ddraw.ini");
-                if (bIsOnlineGame)
-                {
-                    ddrawIni.SetIntValue("gamemd", "maxfps", 30);
-                }
-                else
-                {
-                    int val = ddrawIni.GetIntValue("gamemd", "maxfps", 0);
-                    if (val >= 60)
-                    {
-                        ddrawIni.SetIntValue("gamemd", "maxfps", 60);
-                    }
-                    else
-                    {
-                        ddrawIni.SetIntValue("gamemd", "maxfps", 30);
-                    }
-                }
-
-                ddrawIni.SetIntValue("gamemd", "minfps", -1);
-                ddrawIni.SetIntValue("gamemd", "maxgameticks", 0);
-                ddrawIni.SetBooleanValue("gamemd", "devmode", false);
-                ddrawIni.SetBooleanValue("gamemd", "resizeable", false);
-                ddrawIni.SetBooleanValue("gamemd", "fullscreen", false);
-                ddrawIni.SetBooleanValue("gamemd", "nonexclusive", true);
-                ddrawIni.SetBooleanValue("gamemd", "singlecpu", false);
-                ddrawIni.SetBooleanValue("gamemd", "d3d9linear", false);
-                //ddrawIni.SetBooleanValue("gamemd", "adjmouse", UserINISettings.Instance.AdjustMouse.Value);
-                ddrawIni.SetBooleanValue("gamemd", "adjmouse", false);
-                ddrawIni.WriteIniFile();
-            }
-
             switch (UserINISettings.Instance.CloudsEffect)
             {
                 case 1:

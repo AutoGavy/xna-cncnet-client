@@ -29,7 +29,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkTooltips;
         private XNAClientCheckBox chkClassicRallyPoint;
         private XNAClientCheckBox chkClassicDoubleClick;
-        private XNAClientCheckBox chkWheelZoom;
+        //private XNAClientCheckBox chkWheelZoom;
         private XNAClientCheckBox chkDisableWin;
         //private XNAClientCheckBox chkAdjustMouse;
 #if YR
@@ -105,9 +105,9 @@ namespace DTAConfig.OptionPanels
             chkClassicDoubleClick.Name = "chkClassicDoubleClick";
             chkClassicDoubleClick.Text = "Classic Double-Click".L10N("UI:DTAConfig:ClassicDoubleClick");
 
-            chkWheelZoom = new XNAClientCheckBox(WindowManager);
-            chkWheelZoom.Name = "chkWheelZoom";
-            chkWheelZoom.Text = "Wheel Zoom Scale".L10N("UI:DTAConfig:WheelZoomScale");
+            //chkWheelZoom = new XNAClientCheckBox(WindowManager);
+            //chkWheelZoom.Name = "chkWheelZoom";
+            //chkWheelZoom.Text = "Wheel Zoom Scale".L10N("UI:DTAConfig:WheelZoomScale");
 
             chkDisableWin = new XNAClientCheckBox(WindowManager);
             chkDisableWin.Name = "chkDisableWin";
@@ -205,7 +205,7 @@ namespace DTAConfig.OptionPanels
             AddChild(chkTooltips);
             AddChild(chkClassicRallyPoint);
             AddChild(chkClassicDoubleClick);
-            AddChild(chkWheelZoom);
+            //AddChild(chkWheelZoom);
             AddChild(chkDisableWin);
             //AddChild(chkAdjustMouse);
             AddChild(lblPlayerName);
@@ -253,7 +253,7 @@ namespace DTAConfig.OptionPanels
             chkTooltips.Checked = IniSettings.Tooltips;
             chkClassicRallyPoint.Checked = IniSettings.ClassicRallyPoint;
             chkClassicDoubleClick.Checked = IniSettings.ClassicDoubleClick;
-            chkWheelZoom.Checked = IniSettings.WheelZoom;
+            //chkWheelZoom.Checked = IniSettings.WheelZoom;
             chkDisableWin.Checked = IniSettings.bDisableWin;
             //chkAdjustMouse.Checked = IniSettings.AdjustMouse;
 #if YR
@@ -278,7 +278,7 @@ namespace DTAConfig.OptionPanels
             IniSettings.Tooltips.Value = chkTooltips.Checked;
             IniSettings.ClassicRallyPoint.Value = chkClassicRallyPoint.Checked;
             IniSettings.ClassicDoubleClick.Value = chkClassicDoubleClick.Checked;
-            IniSettings.WheelZoom.Value = chkWheelZoom.Checked;
+            //IniSettings.WheelZoom.Value = chkWheelZoom.Checked;
             IniSettings.bDisableWin.Value = chkDisableWin.Checked;
             //IniSettings.AdjustMouse.Value = chkAdjustMouse.Checked;
 #if YR
