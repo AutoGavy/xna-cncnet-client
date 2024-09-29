@@ -10,6 +10,42 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Localization;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+
+public class WindowHandling
+{
+    [DllImport("User32.dll")]
+    public static extern int SetForegroundWindow(IntPtr point);
+
+    [DllImport("user32.dll")]
+    static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    private enum ShowWindowEnum
+    {
+        Hide = 0,
+        ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+        Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
+        Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
+        Restore = 9, ShowDefault = 10, ForceMinimized = 11
+    };
+
+    public static void FocusOnClientWindow()
+    {
+        // get the process
+        Process bProcess = Process.GetCurrentProcess();
+
+        // check if the window is hidden / minimized
+        if (bProcess.MainWindowHandle == IntPtr.Zero)
+        {
+            // the window is hidden so try to restore it before setting focus.
+            ShowWindow(bProcess.Handle, (int)ShowWindowEnum.Restore);
+        }
+
+        // set user the focus to the window
+        SetForegroundWindow(bProcess.MainWindowHandle);
+    }
+}
 
 namespace DTAClient.DXGUI
 {
@@ -126,28 +162,13 @@ namespace DTAClient.DXGUI
         {
             AddCallback(new Action(HandleGameProcessExited), null);
 
-            if (UserINISettings.Instance.FakeIngameScreenWidth > 1920 || UserINISettings.Instance.FakeIngameScreenHeight > 1440)
-            {
-                try
-                {
-                    Logger.Log("Killing upscale process...");
-                    foreach (System.Diagnostics.Process process in
-                        System.Diagnostics.Process.GetProcessesByName(ProgramConstants.UPSCALE_PROCESS))
-                        process.Kill();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Error killing upscale process: " + ex.Message);
-                }
-            }
-
             if (UserINISettings.Instance.bDisableWin)
             {
                 try
                 {
                     Logger.Log("Killing disable win process...");
-                    foreach (System.Diagnostics.Process process in
-                        System.Diagnostics.Process.GetProcessesByName(ProgramConstants.DISABLE_WIN_PROCESS))
+                    foreach (Process process in
+                        Process.GetProcessesByName(ProgramConstants.DISABLE_WIN_PROCESS))
                         process.Kill();
                 }
                 catch (Exception ex)
@@ -199,6 +220,32 @@ namespace DTAClient.DXGUI
                         "and make sure GScript.ext, d3d9.ext, dx3d9_29.ext, Crisis.ext are your game folder.").L10N("UI:Main:ReShadeFailed_Desc2"));
                 }
             }
+
+            try
+            {
+                Logger.Log("Setting focus on client window...");
+                WindowHandling.FocusOnClientWindow();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error setting focus on client window: " + ex.Message);
+            }
+
+
+            if (UserINISettings.Instance.FakeIngameScreenWidth > 1920 || UserINISettings.Instance.FakeIngameScreenHeight > 1440)
+            {
+                try
+                {
+                    Logger.Log("Killing upscale process...");
+                    foreach (Process process in
+                        Process.GetProcessesByName(ProgramConstants.UPSCALE_PROCESS))
+                        process.Kill();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Error Killing upscale process: " + ex.Message);
+                }
+            }
         }
 
         private void ReShadeMSGBox_YesClicked_Success(XNAMessageBox messageBox)
@@ -206,9 +253,9 @@ namespace DTAClient.DXGUI
             try
             {
                // if (ClientConfiguration.Instance.ClientLanguage == 0)
-               //    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
+               //    Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_ENG.doc");
                // else
-                    System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
+                    Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
             }
             catch (Exception)
             {
@@ -217,18 +264,18 @@ namespace DTAClient.DXGUI
                 try
                 {
                    // if (ClientConfiguration.Instance.ClientLanguage == 0)
-                   //     System.Diagnostics.Process.Start("http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
+                   //     Process.Start("http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
                    //else
-                         System.Diagnostics.Process.Start("http://shimo.im/docs/cHPR9d6RYpcpV9r3");
+                         Process.Start("http://shimo.im/docs/cHPR9d6RYpcpV9r3");
                 }
                 catch (Exception)
                 {
                     try
                     {
                         //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                        //    System.Diagnostics.Process.Start("iexplore.exe", "http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
+                        //    Process.Start("iexplore.exe", "http://docs.google.com/document/d/1z3VoC13PfeiWI_s57uk9OdaG1-zxlFI06njBztS-NoA/edit?usp=sharing");
                         //else
-                            System.Diagnostics.Process.Start("iexplore.exe", "http://shimo.im/docs/cHPR9d6RYpcpV9r3");
+                            Process.Start("iexplore.exe", "http://shimo.im/docs/cHPR9d6RYpcpV9r3");
 
                     }
                     catch (Exception)
@@ -244,18 +291,18 @@ namespace DTAClient.DXGUI
             try
             {
                 //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                //    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=8109");
+                //    Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=8109");
                 //else
-                    System.Diagnostics.Process.Start("https://www.microsoft.com/zh-cn/download/details.aspx?id=8109");
+                    Process.Start("https://www.microsoft.com/zh-cn/download/details.aspx?id=8109");
             }
             catch (Exception)
             {
                 try
                 {
                     //if (ClientConfiguration.Instance.ClientLanguage == 0)
-                    //    System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
+                    //    Process.Start("iexplore.exe", "http://www.microsoft.com/en-us/download/details.aspx?id=7087");
                     //else
-                        System.Diagnostics.Process.Start("iexplore.exe", "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");
+                        Process.Start("iexplore.exe", "http://www.microsoft.com/zh-cn/download/details.aspx?id=7087");
                 }
                 catch (Exception ex)
                 {
