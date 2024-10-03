@@ -222,7 +222,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         if (CampaignIni.GetBooleanValue("BaseInfo", "IsSnowNight", false))
                         {
-                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWNIGHT);
+                            // shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWNIGHT);
                             strExtraLines += ClientConfiguration.SHADER_SNOWNIGHT_SETUP;
                             if (UserINISettings.Instance.HighDetail == 3)
                             {
@@ -245,15 +245,6 @@ namespace DTAClient.DXGUI.Generic
                             if (UserINISettings.Instance.CloudsEffect > 0)
                             {
                                 strTechniques += ",LightMapMag";
-                            }
-
-                            if (UserINISettings.Instance.HighDetail >= 2)
-                            {
-                                strTechniques += ",AmbientLight";
-                            }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
                             }
 
                             // Tint
@@ -297,6 +288,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",Levels";
                             }
+
 
                             // Tint
                             if (bLightClouds)
@@ -366,6 +358,15 @@ namespace DTAClient.DXGUI.Generic
                             strTechniques += ",FilmicPass";
                         }
 
+                        if (UserINISettings.Instance.HighDetail >= 2)
+                        {
+                            strTechniques += ",AmbientLight";
+                        }
+                        if (UserINISettings.Instance.HighDetail >= 1)
+                        {
+                            strTechniques += ",Levels";
+                        }
+
                         // Tint
                         if (bLightClouds)
                             strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
@@ -402,10 +403,23 @@ namespace DTAClient.DXGUI.Generic
                             strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
                     }
 
-                    strTechniques += ",Tint";
+                    strTechniques += ",Tint,UI_After";
                     if (UserINISettings.Instance.WheelZoom)
                     {
                         strTechniques += ",Magnifier";
+                    }
+                    /*switch (UserINISettings.Instance.AntiAliasing)
+                    {
+                        case 1:
+                            strTechniques += ",SMAA";
+                            break;
+                        case 2:
+                            strTechniques += ",FXAA";
+                            break;
+                    }*/
+                    if (UserINISettings.Instance.AntiAliasing == 1)
+                    {
+                        strTechniques += ",FXAA";
                     }
 
                     shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
@@ -452,11 +466,6 @@ namespace DTAClient.DXGUI.Generic
                     switch (sg.strShader())
                     {
                         case "A_Shader": // Snow Day
-                            if (bLightClouds)
-                                strExtraLines += ClientConfiguration.SHADER_TINT_SNOWDAY_VANILLA;
-                            else
-                                strExtraLines += ClientConfiguration.SHADER_TINT_SNOW_LIGHT;
-
                             //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWDAY);
                             strExtraLines += ClientConfiguration.SHADER_SNOWDAY_SETUP;
                             if (UserINISettings.Instance.HighDetail == 3)
@@ -490,56 +499,16 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",Levels";
                             }
+
+                            // Tint
+                            if (bLightClouds)
+                                strExtraLines += ClientConfiguration.SHADER_TINT_SNOWDAY_VANILLA;
+                            else
+                                strExtraLines += ClientConfiguration.SHADER_TINT_SNOW_LIGHT;
                             break;
 
                         case "S_Shader": // Snow Night
-                            if (bLightClouds)
-                                strExtraLines += ClientConfiguration.SHADER_TINT_SNOWNIGHT_VANILLA;
-                            else
-                                strExtraLines += ClientConfiguration.SHADER_TINT_SNOW_LIGHT;
-
-                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWNIGHT);
-                            strExtraLines += ClientConfiguration.SHADER_SNOWNIGHT_SETUP;
-                            if (UserINISettings.Instance.HighDetail == 3)
-                            {
-                                strTechniques += ",PPFXBloom";
-                            }
-                            if (UserINISettings.Instance.HighDetail > 0)
-                            {
-                                strTechniques += ",FilmicPass";
-                            }
-
-                            if (UserINISettings.Instance.CloudsEffect > 0)
-                            {
-                                strTechniques += bLightClouds ?
-                                    ",RedAmbMapMag" : ",CloudMapMag";
-                            }
-                            if (UserINISettings.Instance.Displacement > 0)
-                            {
-                                strTechniques += ",DisplacementMap";
-                            }
-                            if (UserINISettings.Instance.CloudsEffect > 0)
-                            {
-                                strTechniques += ",LightMapMag";
-                            }
-
-                            if (UserINISettings.Instance.HighDetail >= 2)
-                            {
-                                strTechniques += ",AmbientLight";
-                            }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
-                            break;
-
-                        case "D_Shader": // Day
-                            if (bLightClouds)
-                                strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
-                            else
-                                strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
-
-                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DAY);
+                                         //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_NIGHT2);
                             strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
                             if (UserINISettings.Instance.CloudsEffect > 0)
                             {
@@ -559,51 +528,24 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",FilmicPass";
                             }
-                            break;
 
-                        case "N_Shader": // Night
+                            if (UserINISettings.Instance.HighDetail >= 2)
+                            {
+                                strTechniques += ",AmbientLight";
+                            }
+                            if (UserINISettings.Instance.HighDetail >= 1)
+                            {
+                                strTechniques += ",Levels";
+                            }
+
+                            // Tint
                             if (bLightClouds)
                                 strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
                             else
                                 strExtraLines += ClientConfiguration.SHADER_TINT_NONE;
-
-                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_NIGHT);
-                            strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
-                            if (UserINISettings.Instance.CloudsEffect > 0)
-                            {
-                                strTechniques += bLightClouds ?
-                                    ",RedAmbMapMag" : ",CloudMapMag";
-                            }
-                            if (UserINISettings.Instance.Displacement > 0)
-                            {
-                                strTechniques += ",DisplacementMap";
-                            }
-                            if (UserINISettings.Instance.CloudsEffect > 0)
-                            {
-                                strTechniques += ",LightMapMag";
-                            }
-
-                            if (UserINISettings.Instance.HighDetail > 0)
-                            {
-                                strTechniques += ",FilmicPass";
-                            }
-
-                            if (UserINISettings.Instance.HighDetail >= 2)
-                            {
-                                strTechniques += ",AmbientLight";
-                            }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
                             break;
 
                         case "M_Shader": // Night2
-                            if (bLightClouds)
-                                strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
-                            else
-                                strExtraLines += ClientConfiguration.SHADER_TINT_NONE;
-
                             //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_NIGHT2);
                             strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
                             if (UserINISettings.Instance.CloudsEffect > 0)
@@ -633,6 +575,79 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",Levels";
                             }
+
+                            // Tint
+                            if (bLightClouds)
+                                strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
+                            else
+                                strExtraLines += ClientConfiguration.SHADER_TINT_NONE;
+                            break;
+
+                        case "N_Shader": // Night
+                                         //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_NIGHT);
+                            strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += bLightClouds ?
+                                    ",RedAmbMapMag" : ",CloudMapMag";
+                            }
+                            if (UserINISettings.Instance.Displacement > 0)
+                            {
+                                strTechniques += ",DisplacementMap";
+                            }
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += ",LightMapMag";
+                            }
+
+                            if (UserINISettings.Instance.HighDetail > 0)
+                            {
+                                strTechniques += ",FilmicPass";
+                            }
+
+                            if (UserINISettings.Instance.HighDetail >= 2)
+                            {
+                                strTechniques += ",AmbientLight";
+                            }
+                            if (UserINISettings.Instance.HighDetail >= 1)
+                            {
+                                strTechniques += ",Levels";
+                            }
+
+                            // Tint
+                            if (bLightClouds)
+                                strExtraLines += ClientConfiguration.SHADER_TINT_NIGHT_VANILLA;
+                            else
+                                strExtraLines += ClientConfiguration.SHADER_TINT_NONE;
+                            break;
+
+                        case "D_Shader": // Day
+                            //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DAY);
+                            strExtraLines += ClientConfiguration.SHADER_GEN_SETUP;
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += bLightClouds ?
+                                    ",RedAmbMapMag" : ",CloudMapMag";
+                            }
+                            if (UserINISettings.Instance.Displacement > 0)
+                            {
+                                strTechniques += ",DisplacementMap";
+                            }
+                            if (UserINISettings.Instance.CloudsEffect > 0)
+                            {
+                                strTechniques += ",LightMapMag";
+                            }
+
+                            if (UserINISettings.Instance.HighDetail > 0)
+                            {
+                                strTechniques += ",FilmicPass";
+                            }
+
+                            // Tint
+                            if (bLightClouds)
+                                strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
+                            else
+                                strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
                             break;
                     }
                 }

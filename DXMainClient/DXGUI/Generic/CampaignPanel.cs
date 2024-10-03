@@ -842,7 +842,7 @@ namespace DTAClient.DXGUI.Generic
 
                 if (CampaignIni.GetBooleanValue("BaseInfo", "IsSnow", false)) // Snow
                 {
-                    if (CampaignIni.GetBooleanValue("BaseInfo", "IsSnowNight", false))
+                    if (CampaignIni.GetBooleanValue("BaseInfo", "IsSnowNight", false)) // Snow Night
                     {
                         // shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWNIGHT);
                         strExtraLines += ClientConfiguration.SHADER_SNOWNIGHT_SETUP;
@@ -875,7 +875,7 @@ namespace DTAClient.DXGUI.Generic
                         else
                             strExtraLines += ClientConfiguration.SHADER_TINT_SNOW_LIGHT;
                     }
-                    else
+                    else // Snow Day
                     {
                         //shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_SNOWDAY);
                         strExtraLines += ClientConfiguration.SHADER_SNOWDAY_SETUP;
