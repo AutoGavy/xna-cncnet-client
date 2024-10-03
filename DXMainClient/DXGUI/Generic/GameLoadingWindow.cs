@@ -21,6 +21,7 @@ namespace DTAClient.DXGUI.Generic
         private const string SAVED_GAMES_DIRECTORY = "Saved Games";
         private const string SPMUSIC_SETTINGS = "Client/MusicSettings.ini";
         private const string SPSOUND_INI = "spsound.ini";
+        private const string CREDITS_TXT = "creditstc.txt";
         private string loadedSide = null;
         private string loadedMisson = null;
         private bool IsCampaign = false;
@@ -217,6 +218,11 @@ namespace DTAClient.DXGUI.Generic
 
                     // Clouds
                     bool bLightClouds = CampaignIni.GetBooleanValue("BaseInfo", "RedAmbEffect", false);
+                    string strLightClouds = CampaignIni.GetStringValue("BaseInfo", "RedAmbEffect", "none").ToLower();
+                    if (strLightClouds == "true")
+                        bLightClouds = true;
+                    else if (strLightClouds == "false")
+                        bLightClouds = false;
 
                     if (CampaignIni.GetBooleanValue("BaseInfo", "IsSnow", false)) // Snow
                     {
@@ -401,54 +407,6 @@ namespace DTAClient.DXGUI.Generic
                             strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
                         else
                             strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
-                    }
-
-                    strTechniques += ",Tint,UI_After";
-                    if (UserINISettings.Instance.WheelZoom)
-                    {
-                        strTechniques += ",Magnifier";
-                    }
-                    /*switch (UserINISettings.Instance.AntiAliasing)
-                    {
-                        case 1:
-                            strTechniques += ",SMAA";
-                            break;
-                        case 2:
-                            strTechniques += ",FXAA";
-                            break;
-                    }*/
-                    if (UserINISettings.Instance.AntiAliasing == 1)
-                    {
-                        strTechniques += ",FXAA";
-                    }
-
-                    shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
-                    shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_2 + strTechniques);
-
-                    if (!String.IsNullOrEmpty(strExtraLines))
-                    {
-                        shaderIniWriter.WriteLine(strExtraLines);
-                    }
-
-                    // other settings in BaseInfo
-                    if (CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
-                    {
-                        IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
-
-                        List<string> sections = themeIni.GetSections();
-                        foreach (string sectionName in sections)
-                        {
-                            if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
-                            {
-                                themeIni.SetStringValue(sectionName, "Normal", "no");
-                            }
-
-                            if (!String.IsNullOrEmpty(themeIni.GetStringValue(sectionName, "Side", null)))
-                            {
-                                themeIni.SetStringValue(sectionName, "Side", "none");
-                            }
-                        }
-                        themeIni.WriteIniFile();
                     }
                 }
                 else
@@ -652,6 +610,7 @@ namespace DTAClient.DXGUI.Generic
                     }
                 }
 
+
                 strTechniques += ",Tint,UI_After";
                 if (UserINISettings.Instance.WheelZoom)
                 {
@@ -765,6 +724,28 @@ namespace DTAClient.DXGUI.Generic
                 musicSettingsIni.WriteIniFile();
             }
             musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
+
+            if (CampaignIni != null && CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
+            {
+                IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
+
+                List<string> sections = themeIni.GetSections();
+                foreach (string sectionName in sections)
+                {
+                    if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
+                    {
+                        themeIni.SetStringValue(sectionName, "Normal", "no");
+                    }
+
+                    if (!String.IsNullOrEmpty(themeIni.GetStringValue(sectionName, "Side", null)))
+                    {
+                        themeIni.SetStringValue(sectionName, "Side", "none");
+                    }
+                }
+                themeIni.WriteIniFile();
+            }
+
+            File.Delete(ProgramConstants.GamePath + CREDITS_TXT);
 
             Enabled = false;
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
