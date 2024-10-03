@@ -189,9 +189,15 @@ namespace DTAClient.DXGUI.Generic
             discordHandler?.UpdatePresence(sg.GUIName, true);
 
             // ReShade Settings
-            IniFile CampaignIni = null;
+            IsCampaign = sg.ParseMissionName();
+            IniFile CampaignIni = IsCampaign ?
+                new IniFile(ProgramConstants.GamePath + "GameShaders/CampaignINI/" +
+                    sg.MissionName + ".ini") :
+                    null;
+
             ProgramConstants.SetupPreset();
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
+
             if (!UserINISettings.Instance.NoReShade)
             {
                 string strTechniques = "UI_Before,Colourfulness";
@@ -210,12 +216,8 @@ namespace DTAClient.DXGUI.Generic
                     strTechniques += ",MagicBloom";
                 }
 
-                if (sg.ParseMissionName()) // it is a campaign
+                if (IsCampaign) // it is a campaign
                 {
-                    IsCampaign = true;
-                    CampaignIni = new IniFile(ProgramConstants.GamePath + "GameShaders/CampaignINI/" +
-                    sg.MissionName + ".ini");
-
                     // Clouds
                     bool bLightClouds = CampaignIni.GetBooleanValue("BaseInfo", "RedAmbEffect", false);
                     string strLightClouds = CampaignIni.GetStringValue("BaseInfo", "RedAmbEffect", "none").ToLower();
@@ -411,8 +413,6 @@ namespace DTAClient.DXGUI.Generic
                 }
                 else
                 {
-                    IsCampaign = false;
-
                     bool bLightClouds = false;
                     string strCloudsType = sg.LightClouds();
 

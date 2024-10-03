@@ -123,13 +123,15 @@ namespace DTAClient.Domain
                 {
                     if (line.Contains(findSample))
                     {
-                        MissionName = line.Substring(line.IndexOf(findSample) - findSample.Length - 4, 5).ToLower();
+                        MissionName = line.Substring(line.IndexOf(findSample) - findSample.Length - 1, 5).ToLower();
                         SideName = MissionName.Substring(0, 3);
 
                         reader.Close();
 
                         switch (SideName)
                         {
+                            case "tra":
+                            case "prl":
                             case "gdo":
                             case "gdi":
                                 SideName = "GDI";

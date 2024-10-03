@@ -35,7 +35,10 @@ namespace ClientCore.Statistics.GameParsers
 
             try
             {
-                StreamReader reader = new StreamReader(File.OpenRead(gamepath + fileName));
+                string newPath = ProgramConstants.GamePath + fileName;
+                File.Copy(gamepath + fileName, newPath, true);
+
+                StreamReader reader = new StreamReader(File.OpenRead(newPath));
 
                 string line;
 
@@ -121,6 +124,7 @@ namespace ClientCore.Statistics.GameParsers
                 }
 
                 reader.Close();
+                File.Delete(newPath);
 
                 // Check empty players for take-over by AIs
                 if (takeoverAIs.Count == 1)
