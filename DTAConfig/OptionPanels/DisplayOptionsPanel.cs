@@ -866,16 +866,8 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.AllowChecking = false;
                 chkBorderlessWindowedMode.Checked = true;
 
-                if (renderer.NoReShade)
-                {
-                    ddDLSS.AllowDropDown = false;
-                    ddDLSS.SelectedIndex = 0;
-                }
-                else
-                {
-                    ddDLSS.AllowDropDown = true;
-                    ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
-                }
+                ddDLSS.AllowDropDown = true;
+                ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
                 ddAntiAliasing.AllowDropDown = false;
                 ddAntiAliasing.SelectedIndex = 0;
@@ -904,6 +896,16 @@ namespace DTAConfig.OptionPanels
 
         private void ddGFXPreset_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ddDLSS.Tag = false;
+            ddHighDetail.Tag = false;
+            ddCloudsEffect.Tag = false;
+            ddEnhancedLight.Tag = false;
+            ddEnhancedLaser.Tag = false;
+            ddDisplacement.Tag = false;
+
+            if (!ddDLSS.AllowDropDown)
+                ddAntiAliasing.Tag = false;
+
             switch (ddGFXPreset.SelectedIndex)
             {
                 case 0: // Low
@@ -954,6 +956,16 @@ namespace DTAConfig.OptionPanels
                         ddAntiAliasing.SelectedIndex = 1;
                     break;
             }
+
+            ddDLSS.Tag = true;
+            ddHighDetail.Tag = true;
+            ddCloudsEffect.Tag = true;
+            ddEnhancedLight.Tag = true;
+            ddEnhancedLaser.Tag = true;
+            ddDisplacement.Tag = true;
+
+            if (!ddDLSS.AllowDropDown)
+                ddAntiAliasing.Tag = true;
         }
 
         private void ddHighDetail_SelectedIndexChanged(object sender, EventArgs e)
@@ -1040,16 +1052,8 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.AllowChecking = false;
                 chkBorderlessWindowedMode.Checked = true;
 
-                if (renderer.NoReShade)
-                {
-                    ddDLSS.AllowDropDown = false;
-                    ddDLSS.SelectedIndex = 0;
-                }
-                else
-                {
-                    ddDLSS.AllowDropDown = true;
-                    ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
-                }
+                ddDLSS.AllowDropDown = true;
+                ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
                 ddAntiAliasing.AllowDropDown = false;
                 ddAntiAliasing.SelectedIndex = 0;
@@ -1113,7 +1117,8 @@ namespace DTAConfig.OptionPanels
                 ddEnhancedLaser.AllowDropDown = true;
                 ddEnhancedLight.AllowDropDown = true;
                 ddDisplacement.AllowDropDown = true;
-                ddAntiAliasing.AllowDropDown = true;
+
+                ddAntiAliasing.AllowDropDown = !bHighRes;
             }
         }
 
@@ -1206,16 +1211,8 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.AllowChecking = false;
                 chkBorderlessWindowedMode.Checked = true;
 
-                if (renderer.NoReShade)
-                {
-                    ddDLSS.AllowDropDown = false;
-                    ddDLSS.SelectedIndex = 0;
-                }
-                else
-                {
-                    ddDLSS.AllowDropDown = true;
-                    ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
-                }
+                ddDLSS.AllowDropDown = true;
+                ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
                 ddAntiAliasing.AllowDropDown = false;
                 ddAntiAliasing.SelectedIndex = 0;
@@ -1257,6 +1254,14 @@ namespace DTAConfig.OptionPanels
                 ddi => ddi.Text == UserINISettings.Instance.ClientTheme);
             ddClientTheme.SelectedIndex = selectedThemeIndex > -1 ? selectedThemeIndex : 0;
 
+            ddDLSS.Tag = false;
+            ddAntiAliasing.Tag = false;
+            ddHighDetail.Tag = false;
+            ddCloudsEffect.Tag = false;
+            ddEnhancedLight.Tag = false;
+            ddEnhancedLaser.Tag = false;
+            ddDisplacement.Tag = false;
+
             ddGFXPreset.SelectedIndex = UserINISettings.Instance.GFXPreset;
             ddHighDetail.SelectedIndex = UserINISettings.Instance.HighDetail;
             ddCloudsEffect.SelectedIndex = UserINISettings.Instance.CloudsEffect;
@@ -1265,6 +1270,14 @@ namespace DTAConfig.OptionPanels
             ddDisplacement.SelectedIndex = UserINISettings.Instance.Displacement;
             ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS;
             ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing;
+
+            ddDLSS.Tag = true;
+            ddAntiAliasing.Tag = true;
+            ddHighDetail.Tag = true;
+            ddCloudsEffect.Tag = true;
+            ddEnhancedLight.Tag = true;
+            ddEnhancedLaser.Tag = true;
+            ddDisplacement.Tag = true;
 
             chkBackBufferInVRAM.Checked = false;
 
@@ -1328,11 +1341,13 @@ namespace DTAConfig.OptionPanels
             string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
 
             int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
+            bool bHighRes = false;
 
             if (!UserINISettings.Instance.DebugReShade && (ingameRes[0] > 1920 || ingameRes[1] > 1440))
             {
                 IniSettings.IngameScreenWidth.Value = 1920;
                 IniSettings.IngameScreenHeight.Value = (int)(Convert.ToDouble(ingameRes[1]) / Convert.ToDouble(ingameRes[0]) * Convert.ToDouble(1920));
+                bHighRes = true;
             }
             else
             {
@@ -1481,15 +1496,15 @@ namespace DTAConfig.OptionPanels
             else
                 File.Copy(ProgramConstants.GamePath + "Resources/language_640x480.dll", ProgramConstants.GamePath + "Language.dll");
 #endif
-            ExtraSave();
+            ExtraSave(bHighRes);
 
             return restartRequired;
         }
 
-        private void ExtraSave()
+        private void ExtraSave(bool bHighRes)
         {
             // upscale config
-            if (ddDLSS.AllowDropDown)
+            if (bHighRes)
             {
                 string strPresetPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_PRESET_DIR;
                 string strConfigPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_CONFIG_DIR + ProgramConstants.UPSCALE_CONFIG_NAME;
