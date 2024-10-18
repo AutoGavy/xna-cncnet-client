@@ -342,7 +342,7 @@ namespace DTAConfig.OptionPanels
             lblDLSS.Name = "lblDLSS";
             lblDLSS.ClientRectangle = new Rectangle(lblIngameResolution.ClientRectangle.X,
                 ddIngameResolution.ClientRectangle.Bottom + 16, 0, 0);
-            lblDLSS.Text = "DLSS:".L10N("UI:DTAConfig:DLSS");
+            lblDLSS.Text = "SSAA:".L10N("UI:DTAConfig:SSAA");
             ddDLSS = new XNAClientDropDown(WindowManager);
             ddDLSS.Name = "ddDLSS";
             ddDLSS.ClientRectangle = new Rectangle(
