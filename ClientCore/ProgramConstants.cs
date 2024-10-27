@@ -45,8 +45,8 @@ namespace ClientCore
         public const string DISABLE_WIN_PROCESS = "tcdisablewin";
         public const string UPSCALE_EXE = "tchelper.exe";
         public const string UPSCALE_PROCESS = "tchelper";
-        public const string UPSCALE_PRESET_DIR = "Magpie/preset/";
-        public const string UPSCALE_CONFIG_DIR = "Magpie/config/";
+        public const string UPSCALE_PRESET_DIR = "tchelper/preset/";
+        public const string UPSCALE_CONFIG_DIR = "tchelper/config/";
         public const string UPSCALE_CONFIG_NAME = "config.json";
         public const string RESHADE_DLL = "d3d9.ext";
         public const string RESHADE_DLL_DISABLED = "d3d9_disabled.ext";

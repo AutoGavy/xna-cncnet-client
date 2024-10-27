@@ -1468,15 +1468,15 @@ namespace DTAConfig.OptionPanels
                 // Set up ddraw.ini
                 if (!UserINISettings.Instance.DebugReShade)
                 {
-                    rendererSettingsIni.SetIntValue("gamemd", "maxfps", 30);
-                    rendererSettingsIni.SetIntValue("gamemd", "minfps", -2);
-                    rendererSettingsIni.SetIntValue("gamemd", "maxgameticks", -1);
+                    rendererSettingsIni.SetIntValue("gamemd", "maxfps", 41);
+                    rendererSettingsIni.SetIntValue("gamemd", "minfps", 0);
+                    rendererSettingsIni.SetIntValue("gamemd", "maxgameticks", -2);
                     rendererSettingsIni.SetBooleanValue("gamemd", "devmode", false);
                     rendererSettingsIni.SetBooleanValue("gamemd", "resizeable", false);
                     rendererSettingsIni.SetBooleanValue("gamemd", "fullscreen", false);
                     rendererSettingsIni.SetBooleanValue("gamemd", "nonexclusive", true);
                     rendererSettingsIni.SetBooleanValue("gamemd", "singlecpu", false);
-                    rendererSettingsIni.SetBooleanValue("gamemd", "d3d9linear", true);
+                    rendererSettingsIni.SetBooleanValue("gamemd", "d3d9linear", false);
                     //ddrawIni.SetBooleanValue("gamemd", "adjmouse", UserINISettings.Instance.AdjustMouse.Value);
                     rendererSettingsIni.SetBooleanValue("gamemd", "adjmouse", false);
                 }
