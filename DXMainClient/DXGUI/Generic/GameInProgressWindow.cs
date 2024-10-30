@@ -13,7 +13,7 @@ using Localization;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-public class WindowHandling
+public class ImportFunctions
 {
     [DllImport("User32.dll")]
     public static extern int SetForegroundWindow(IntPtr point);
@@ -224,27 +224,11 @@ namespace DTAClient.DXGUI
             try
             {
                 Logger.Log("Setting focus on client window...");
-                WindowHandling.FocusOnClientWindow();
+                ImportFunctions.FocusOnClientWindow();
             }
             catch (Exception ex)
             {
                 Logger.Log("Error setting focus on client window: " + ex.Message);
-            }
-
-
-            if (UserINISettings.Instance.FakeIngameScreenWidth > 1920 || UserINISettings.Instance.FakeIngameScreenHeight > 1440)
-            {
-                try
-                {
-                    Logger.Log("Killing upscale process...");
-                    foreach (Process process in
-                        Process.GetProcessesByName(ProgramConstants.UPSCALE_PROCESS))
-                        process.Kill();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Error Killing upscale process: " + ex.Message);
-                }
             }
         }
 

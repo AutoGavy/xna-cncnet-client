@@ -204,7 +204,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         protected override void BtnLaunchGame_LeftClick(object sender, EventArgs e)
         {
-            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 cheaterWindow.Enable();
                 return;

@@ -683,7 +683,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void PrepareToLaunch()
         {
-            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
                 cheaterWindow.Enable();

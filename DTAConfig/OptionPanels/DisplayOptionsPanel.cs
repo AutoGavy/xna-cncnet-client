@@ -1504,7 +1504,7 @@ namespace DTAConfig.OptionPanels
         private void ExtraSave(bool bHighRes)
         {
             // upscale config
-            if (bHighRes)
+            if (bHighRes && !ClientConfiguration.TEST_BUILD)
             {
                 string strPresetPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_PRESET_DIR;
                 string strConfigPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_CONFIG_DIR + ProgramConstants.UPSCALE_CONFIG_NAME;

@@ -771,7 +771,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void BtnLaunchGame_LeftClick(object sender, EventArgs e)
         {
-            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 cheaterWindow.Enable();
                 AddNotice("You have modified files and cannot start the game.".L10N("UI:Main:DifferentFileDetected"));

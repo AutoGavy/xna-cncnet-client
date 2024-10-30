@@ -229,7 +229,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void PrepareToLaunch()
         {
-            if (!ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
                 cheaterWindow.Enable();
@@ -725,7 +725,7 @@ namespace DTAClient.DXGUI.Generic
                 mapIni.WriteIniFile(ProgramConstants.GamePath + mission.Scenario.ToLower());
             }
 
-            if (mission.Scenario.ToLower() == "gdi08.map" || mission.Scenario.ToLower() == "nod08.map" || mission.Scenario.ToLower() == "scr04.map" || mission.Scenario.ToLower() == "end08.map")
+            if (mission.Scenario.ToLower() == "gdi08.map" || mission.Scenario.ToLower() == "nod08.map" || mission.Scenario.ToLower() == "scr04.map" || mission.Scenario.ToLower() == "end02.map")
                 File.Copy(ProgramConstants.GetBaseResourcePath() + CREDITS_TXT, ProgramConstants.GamePath + CREDITS_TXT, true);
             else
                 File.Delete(ProgramConstants.GamePath + CREDITS_TXT);

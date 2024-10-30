@@ -43,8 +43,6 @@ namespace ClientCore
         public const string MAIN_EXE_3 = "mainexecutable3.exe";
         public const string DISABLE_WIN = "tcdisablewin.exe";
         public const string DISABLE_WIN_PROCESS = "tcdisablewin";
-        public const string UPSCALE_EXE = "tchelper.exe";
-        public const string UPSCALE_PROCESS = "tchelper";
         public const string UPSCALE_PRESET_DIR = "tchelper/preset/";
         public const string UPSCALE_CONFIG_DIR = "tchelper/config/";
         public const string UPSCALE_CONFIG_NAME = "config.json";
