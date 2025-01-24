@@ -254,6 +254,8 @@ namespace DTAConfig
             UserINISettings.Instance.SaveSettings();
         }
 
+        private void GuideMSGBox_YesClicked(XNAMessageBox messageBox) => System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
+
         public void Open(bool bGuideRead = true)
         {
             foreach (var panel in optionsPanels)
@@ -266,7 +268,14 @@ namespace DTAConfig
             Enable();
 
             if (!bGuideRead)
-                System.Diagnostics.Process.Start(ProgramConstants.GetBaseSharedPath() + "ENHANCED_QUALITY_HELP_CHS.doc");
+            {
+                var GuideMSGBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                    "Read ReShade Settings Guide".L10N("UI:Main:ReadReShadeGuide"),
+                    string.Format("If you are Win7 and Win10 Low Version and having a laptop or have multiple graphics processors," + Environment.NewLine +
+                    "you may need to manually change some settings" + Environment.NewLine +
+                    "to prevent FPS drops. Do you want to read the guide now?").L10N("UI:Main:ReadReShadeGuide_Desc"));
+                GuideMSGBox.YesClickedAction = GuideMSGBox_YesClicked;
+            }
         }
 
         public void ToggleMainMenuOnlyOptions(bool enable)

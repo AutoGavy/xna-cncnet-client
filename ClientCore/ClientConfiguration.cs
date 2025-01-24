@@ -36,7 +36,7 @@ namespace ClientCore
 
         public const string SHADER_SNOWDAY_SETUP = "\n[Cloud_Map.fx]\ncloud_adjust_range=0.800000\n[Light_Map.fx]\nlight_adjust_range=0.500000\n[Colourfulness.fx]\ncolourfulness=-0.250000";
 
-        public const string SHADER_SNOWNIGHT_SETUP = "\n[Cloud_Map.fx]\ncloud_adjust_range=1.000000\n[Light_Map.fx]\nlight_adjust_range=0.700000\n[Colourfulness.fx]\ncolourfulness=-0.250000";
+        public const string SHADER_SNOWNIGHT_SETUP = "\n[Cloud_Map.fx]\ncloud_adjust_range=0.900000\n[Light_Map.fx]\nlight_adjust_range=0.700000\n[Colourfulness.fx]\ncolourfulness=-0.250000";
 
         public const string SHADER_TECHNIQUE_1 = "Techniques=";
 

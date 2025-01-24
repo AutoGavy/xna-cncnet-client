@@ -23,6 +23,56 @@ namespace DTAClient
     /// </summary>
     public class Startup
     {
+        private static readonly string kUserGpuPreferencesW = @"Software\Microsoft\DirectX\UserGpuPreferences";
+        private static readonly string kGpuPreferencesHighPerformanceW = "GpuPreference=2;";
+
+        private static void SetRegistryValue()
+        {
+            Logger.Log("About to setting registry value.");
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(kUserGpuPreferencesW))
+                {
+                    if (key != null)
+                    {
+                        string path = (ProgramConstants.GamePath + "gamemd.exe").Replace('/', '\\');
+                        key.SetValue(path, kGpuPreferencesHighPerformanceW);
+                    } 
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error while setting registry value: " + ex.Message);
+            }
+        }
+
+        private static void DeleteRegistryValue()
+        {
+            Logger.Log("About to delete registry value.");
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(kUserGpuPreferencesW, true))
+                {
+                    if (key != null)
+                    {
+                        try
+                        {
+                            string path = (ProgramConstants.GamePath + "gamemd.exe").Replace('/', '\\');
+                            key.DeleteValue(path);
+                        }
+                        catch (ArgumentException)
+                        {
+                            Logger.Log("Key not existed!");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error while deleting registry value: " + ex.Message);
+            }
+        }
+
         /// <summary>
         /// The main method for startup and initialization.
         /// </summary>
@@ -49,6 +99,13 @@ namespace DTAClient
             Logger.Log("Operating system: " + Environment.OSVersion.VersionString);
             Logger.Log("Selected OS profile: " + MainClientConstants.OSId.ToString());
             Logger.Log("Current culture: " + CultureInfo.CurrentCulture?.ToString());
+
+            SetRegistryValue();
+
+            AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
+            {
+                DeleteRegistryValue();
+            };
 
             // The query in CheckSystemSpecifications takes lots of time,
             // so we'll do it in a separate thread to make startup faster

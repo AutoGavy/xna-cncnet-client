@@ -1092,7 +1092,7 @@ namespace DTAClient.DXGUI.Generic
         private void HandleGameProcessExited()
         {
             innerPanel.GameLoadingWindow.ListSaves();
-            innerPanel.Hide();
+            //innerPanel.Hide();
 
             // If music is disabled on menus, check if the main menu is the top-most
             // window of the top bar and only play music if it is

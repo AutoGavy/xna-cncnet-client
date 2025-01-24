@@ -200,14 +200,14 @@ namespace DTAClient.DXGUI.Generic
 
             if (!UserINISettings.Instance.NoReShade)
             {
-                string strTechniques = "UI_Before,Colourfulness";
+                string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
-                if (UserINISettings.Instance.EnhancedLaser > 0)
+                if (UserINISettings.Instance.TracerDetail > 0)
                 {
                     strTechniques += ",BlitLaser";
                 }
-                if (UserINISettings.Instance.EnhancedLight > 0)
+                if (UserINISettings.Instance.VFXDetail > 0)
                 {
                     strTechniques += ",AnimMask";
                 }
@@ -292,11 +292,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
-
+                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -332,10 +328,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -370,10 +363,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -453,10 +443,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
+                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -491,10 +478,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
+                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -529,10 +513,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
+                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -567,10 +548,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
+                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -611,24 +589,11 @@ namespace DTAClient.DXGUI.Generic
                 }
 
 
-                strTechniques += ",Tint,UI_After";
-                if (UserINISettings.Instance.WheelZoom)
-                {
-                    strTechniques += ",Magnifier";
-                }
-                /*switch (UserINISettings.Instance.AntiAliasing)
-                {
-                    case 1:
-                        strTechniques += ",SMAA";
-                        break;
-                    case 2:
-                        strTechniques += ",FXAA";
-                        break;
-                }*/
+                strTechniques += ",Tint";
+                //strTechniques += ",Magnifier";
+
                 if (UserINISettings.Instance.AntiAliasing == 1)
-                {
                     strTechniques += ",FXAA";
-                }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_2 + strTechniques);
@@ -649,7 +614,7 @@ namespace DTAClient.DXGUI.Generic
             // Game Music Settings
             IniFile musicListIni = new IniFile(ProgramConstants.GamePath + "INI/MusicListTC.ini");
             IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
-            if (UserINISettings.Instance.SmartMusic || UserINISettings.Instance.MusicType < 2)
+            /*if (UserINISettings.Instance.SmartMusic || UserINISettings.Instance.MusicType < 2)
             {
                 IniFile musicSettingsIni = new IniFile(ProgramConstants.GamePath + SPMUSIC_SETTINGS);
                 StartMusicIndex = musicSettingsIni.GetIntValue("Settings", "NextStartMusicIndex", 1);
@@ -722,7 +687,7 @@ namespace DTAClient.DXGUI.Generic
                     musicSettingsIni.SetIntValue("Settings", "NextConflictMusicIndex", ConflictMusicIndex + 1);
 
                 musicSettingsIni.WriteIniFile();
-            }
+            }*/
             musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
 
             if (CampaignIni != null && CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))

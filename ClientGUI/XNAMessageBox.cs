@@ -86,6 +86,10 @@ namespace ClientGUI
             {
                 AddYesNoButtons();
             }
+            else if (messageBoxButtons == XNAMessageBoxButtons.Act)
+            {
+                AddActButtons();
+            }
             else // messageBoxButtons == DXMessageBoxButtons.OKCancel
             {
                 AddOKCancelButtons();
@@ -94,6 +98,41 @@ namespace ClientGUI
             base.Initialize();
 
             WindowManager.CenterControlOnScreen(this);
+        }
+
+        private void AddActButtons()
+        {
+            XNAButton btnYes = new XNAButton(WindowManager);
+            btnYes.FontIndex = 1;
+            btnYes.ClientRectangle = new Rectangle(0, 0, 75, 23);
+            btnYes.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
+            btnYes.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
+            btnYes.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnYes.Name = "btnYes";
+            btnYes.Text = "Act II".L10N("UI:Main:ActII");
+            btnYes.LeftClick += BtnYes_LeftClick;
+            btnYes.HotKey = Keys.Y;
+
+            AddChild(btnYes);
+
+            btnYes.ClientRectangle = new Rectangle((Width - ((btnYes.Width + 5) * 2)) / 2,
+                Height - 28, btnYes.Width, btnYes.Height);
+
+            XNAButton btnNo = new XNAButton(WindowManager);
+            btnNo.FontIndex = 1;
+            btnNo.ClientRectangle = new Rectangle(0, 0, 75, 23);
+            btnNo.IdleTexture = AssetLoader.LoadTexture("75pxbtn.png");
+            btnNo.HoverTexture = AssetLoader.LoadTexture("75pxbtn_c.png");
+            btnNo.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnNo.Name = "btnNo";
+            btnNo.Text = "Act I".L10N("UI:Main:ActI");
+            btnNo.LeftClick += BtnNo_LeftClick;
+            btnNo.HotKey = Keys.N;
+
+            AddChild(btnNo);
+
+            btnNo.ClientRectangle = new Rectangle(btnYes.X + btnYes.Width + 10,
+                Height - 28, btnNo.Width, btnNo.Height);
         }
 
         private void AddOKButton()
@@ -279,6 +318,23 @@ namespace ClientGUI
             return msgBox;
         }
 
+        public static XNAMessageBox ShowActDialog(WindowManager windowManager, string caption, string description)
+        {
+            var panel = new DarkeningPanel(windowManager);
+            windowManager.AddAndInitializeControl(panel);
+
+            var msgBox = new XNAMessageBox(windowManager,
+                Renderer.GetSafeString(caption, 1),
+                Renderer.GetSafeString(description, 0),
+                XNAMessageBoxButtons.Act);
+
+            panel.AddChild(msgBox);
+            msgBox.YesClickedAction = MsgBox_YesClicked;
+            msgBox.NoClickedAction = MsgBox_NoClicked;
+
+            return msgBox;
+        }
+
         private static void MsgBox_NoClicked(XNAMessageBox messageBox)
         {
             var parent = (DarkeningPanel)messageBox.Parent;
@@ -308,6 +364,7 @@ namespace ClientGUI
     {
         OK,
         YesNo,
-        OKCancel
+        OKCancel,
+        Act
     }
 }

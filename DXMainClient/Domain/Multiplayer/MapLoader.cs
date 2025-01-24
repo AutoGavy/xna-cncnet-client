@@ -68,6 +68,7 @@ namespace DTAClient.Domain.Multiplayer
             LoadGameModeAliases(mpMapsIni);
             LoadMultiMaps(mpMapsIni);
             LoadCustomMaps();
+            TRMap.LoadMaps();
 
             GameModes.RemoveAll(g => g.Maps.Count < 1);
             GameModeMaps = new GameModeMapCollection(GameModes);

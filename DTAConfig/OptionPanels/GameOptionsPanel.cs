@@ -29,9 +29,8 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkTooltips;
         private XNAClientCheckBox chkClassicRallyPoint;
         private XNAClientCheckBox chkClassicDoubleClick;
-        //private XNAClientCheckBox chkWheelZoom;
+        private XNAClientCheckBox chkClassicMouseSetup;
         private XNAClientCheckBox chkDisableWin;
-        //private XNAClientCheckBox chkAdjustMouse;
 #if YR
         private XNAClientCheckBox chkShowHiddenObjects;
 #elif TS
@@ -105,17 +104,13 @@ namespace DTAConfig.OptionPanels
             chkClassicDoubleClick.Name = "chkClassicDoubleClick";
             chkClassicDoubleClick.Text = "Classic Double-Click".L10N("UI:DTAConfig:ClassicDoubleClick");
 
-            //chkWheelZoom = new XNAClientCheckBox(WindowManager);
-            //chkWheelZoom.Name = "chkWheelZoom";
-            //chkWheelZoom.Text = "Wheel Zoom Scale".L10N("UI:DTAConfig:WheelZoomScale");
+            chkClassicMouseSetup = new XNAClientCheckBox(WindowManager);
+            chkClassicMouseSetup.Name = "chkClassicMouseSetup";
+            chkClassicMouseSetup.Text = "Classic C&C Mouse Setup (Left-Click Orders)".L10N("UI:DTAConfig:ClassicMouseSetup");
 
             chkDisableWin = new XNAClientCheckBox(WindowManager);
             chkDisableWin.Name = "chkDisableWin";
             chkDisableWin.Text = "Disable WIN Key".L10N("UI:DTAConfig:DisableWINKey");
-
-            //chkAdjustMouse = new XNAClientCheckBox(WindowManager);
-            //chkAdjustMouse.Name = "chkAdjustMouse";
-            //chkAdjustMouse.Text = "Adjust Mouse".L10N("UI:DTAConfig:AdjustMouse");
 
             var lblPlayerName = new XNALabel(WindowManager);
             lblPlayerName.Name = "lblPlayerName";
@@ -205,9 +200,8 @@ namespace DTAConfig.OptionPanels
             AddChild(chkTooltips);
             AddChild(chkClassicRallyPoint);
             AddChild(chkClassicDoubleClick);
-            //AddChild(chkWheelZoom);
+            AddChild(chkClassicMouseSetup);
             AddChild(chkDisableWin);
-            //AddChild(chkAdjustMouse);
             AddChild(lblPlayerName);
             AddChild(tbPlayerName);
             AddChild(lblNotice);
@@ -253,9 +247,8 @@ namespace DTAConfig.OptionPanels
             chkTooltips.Checked = IniSettings.Tooltips;
             chkClassicRallyPoint.Checked = IniSettings.ClassicRallyPoint;
             chkClassicDoubleClick.Checked = IniSettings.ClassicDoubleClick;
-            //chkWheelZoom.Checked = IniSettings.WheelZoom;
+            chkClassicMouseSetup.Checked = IniSettings.ClassicMouseSetup;
             chkDisableWin.Checked = IniSettings.bDisableWin;
-            //chkAdjustMouse.Checked = IniSettings.AdjustMouse;
 #if YR
             chkShowHiddenObjects.Checked = false;
 #endif
@@ -278,9 +271,8 @@ namespace DTAConfig.OptionPanels
             IniSettings.Tooltips.Value = chkTooltips.Checked;
             IniSettings.ClassicRallyPoint.Value = chkClassicRallyPoint.Checked;
             IniSettings.ClassicDoubleClick.Value = chkClassicDoubleClick.Checked;
-            //IniSettings.WheelZoom.Value = chkWheelZoom.Checked;
+            IniSettings.ClassicMouseSetup.Value = chkClassicMouseSetup.Checked;
             IniSettings.bDisableWin.Value = chkDisableWin.Checked;
-            //IniSettings.AdjustMouse.Value = chkAdjustMouse.Checked;
 #if YR
             IniSettings.ShowHiddenObjects.Value = chkShowHiddenObjects.Checked;
 #endif

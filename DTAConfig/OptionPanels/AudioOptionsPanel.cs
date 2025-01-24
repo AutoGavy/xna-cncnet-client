@@ -302,14 +302,17 @@ namespace DTAConfig.OptionPanels
             trbSoundVolume.Value = (int)(IniSettings.SoundVolume * 10);
             trbVoiceVolume.Value = (int)(IniSettings.VoiceVolume * 10);
 
-            chkScoreShuffle.Checked = IniSettings.IsScoreShuffle;
-
             trbClientVolume.Value = (int)(IniSettings.ClientVolume * 10);
 
             chkMainMenuMusic.Checked = IniSettings.PlayMainMenuMusic;
             chkStopMusicOnMenu.Checked = IniSettings.StopMusicOnMenu;
-            chkSmartMusic.Checked = IniSettings.SmartMusic;
-            ddMusicType.SelectedIndex = IniSettings.MusicType;
+
+            //chkScoreShuffle.Checked = IniSettings.IsScoreShuffle;
+            //chkSmartMusic.Checked = IniSettings.SmartMusic;
+            //ddMusicType.SelectedIndex = IniSettings.MusicType;
+            chkScoreShuffle.Checked = false;
+            chkSmartMusic.Checked = true;
+            ddMusicType.SelectedIndex = 0;
         }
 
         public override bool Save()
@@ -320,9 +323,14 @@ namespace DTAConfig.OptionPanels
             IniSettings.SoundVolume.Value = trbSoundVolume.Value / 10.0;
             IniSettings.VoiceVolume.Value = trbVoiceVolume.Value / 10.0;
 
-            IniSettings.IsScoreShuffle.Value = chkScoreShuffle.Checked;
-            IniSettings.SmartMusic.Value = chkSmartMusic.Checked;
-            IniSettings.MusicType.Value = ddMusicType.SelectedIndex;
+            //IniSettings.IsScoreShuffle.Value = chkScoreShuffle.Checked;
+            //IniSettings.SmartMusic.Value = chkSmartMusic.Checked;
+            //IniSettings.MusicType.Value = ddMusicType.SelectedIndex;
+            IniSettings.IsScoreShuffle.Value = false;
+            IniSettings.IsScoreRepeat.Value = false;
+            IniSettings.InGameMusic.Value = true;
+            IniSettings.SmartMusic.Value = true;
+            IniSettings.MusicType.Value = 0;
 
             IniSettings.ClientVolume.Value = trbClientVolume.Value / 10.0;
 

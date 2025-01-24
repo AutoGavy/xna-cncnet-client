@@ -9,6 +9,7 @@ using System.Threading;
 using System.Globalization;
 using System.Linq;
 using Localization;
+using Microsoft.Win32;
 
 namespace ClientGUI
 {

@@ -112,11 +112,11 @@ namespace ClientCore
 
             NoReShade = new BoolSetting(iniFile, VIDEO, "NoReShade", false);
             HighDetail = new IntSetting(iniFile, VIDEO, "HighDetail", GoodGPU);
-            DLSS = new IntSetting(iniFile, VIDEO, "DLSS", 4);
+            DLSS = new IntSetting(iniFile, VIDEO, "DLSS", 3);
             GFXPreset = new IntSetting(iniFile, VIDEO, "DisplayFPS", GoodGPU);
             AntiAliasing = new IntSetting(iniFile, VIDEO, "AntiAliasing", GoodGPU == 3 ? 1 : 0);
-            EnhancedLaser = new IntSetting(iniFile, VIDEO, "EnhancedLaser", 1);
-            EnhancedLight = new IntSetting(iniFile, VIDEO, "EnhancedLight", 1);
+            TracerDetail = new IntSetting(iniFile, VIDEO, "TracerDetail", 2);
+            VFXDetail = new IntSetting(iniFile, VIDEO, "VFXDetail", 2);
             Displacement = new IntSetting(iniFile, VIDEO, "DisplaceEffect", GoodGPU == 3 ? 1 : 0);
             CloudsEffect = new IntSetting(iniFile, VIDEO, "CloudsEffect", GoodGPU == 3 ? 1 : 0);
 
@@ -127,7 +127,9 @@ namespace ClientCore
             ScoreVolume = new DoubleSetting(iniFile, AUDIO, "ScoreVolume", 0.7);
             SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.7);
             VoiceVolume = new DoubleSetting(iniFile, AUDIO, "VoiceVolume", 0.7);
-            IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", true);
+            IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", false);
+            IsScoreRepeat = new BoolSetting(iniFile, AUDIO, "IsScoreRepeat", false);
+            InGameMusic = new BoolSetting(iniFile, AUDIO, "InGameMusic", true);
             ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 0.5);
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);
             StopMusicOnMenu = new BoolSetting(iniFile, AUDIO, "StopMusicOnMenu", true);
@@ -141,9 +143,8 @@ namespace ClientCore
             Tooltips = new BoolSetting(iniFile, OPTIONS, "ToolTips", true);
             ClassicRallyPoint = new BoolSetting(iniFile, OPTIONS, "ClassicRallyPoint", false);
             ClassicDoubleClick = new BoolSetting(iniFile, OPTIONS, "ClassicDoubleClick", false);
-            WheelZoom = new BoolSetting(iniFile, OPTIONS, "WheelZoom", true);
+            ClassicMouseSetup = new BoolSetting(iniFile, OPTIONS, "ClassicMouseSetup", true);
             bDisableWin = new BoolSetting(iniFile, OPTIONS, "bDisableWin", false);
-            AdjustMouse = new BoolSetting(iniFile, OPTIONS, "AdjustMouse", false);
             ShowHiddenObjects = new BoolSetting(iniFile, OPTIONS, "ShowHidden", true);
             MoveToUndeploy = new BoolSetting(iniFile, OPTIONS, "MoveToUndeploy", true);
             TextBackgroundColor = new IntSetting(iniFile, OPTIONS, "TextBackgroundColor", 0);
@@ -242,8 +243,8 @@ namespace ClientCore
         public IntSetting GFXPreset { get; private set; }
         public IntSetting CloudsEffect { get; private set; }
         public IntSetting AntiAliasing { get; private set; }
-        public IntSetting EnhancedLaser { get; private set; }
-        public IntSetting EnhancedLight { get; private set; }
+        public IntSetting TracerDetail { get; private set; }
+        public IntSetting VFXDetail { get; private set; }
         public IntSetting Displacement { get; private set; }
 
         public IntSetting ClientFPS { get; private set; }
@@ -256,6 +257,8 @@ namespace ClientCore
         public DoubleSetting SoundVolume { get; private set; }
         public DoubleSetting VoiceVolume { get; private set; }
         public BoolSetting IsScoreShuffle { get; private set; }
+        public BoolSetting IsScoreRepeat { get; private set; }
+        public BoolSetting InGameMusic { get; private set; }
         public DoubleSetting ClientVolume { get; private set; }
         public BoolSetting PlayMainMenuMusic { get; private set; }
         public BoolSetting StopMusicOnMenu { get; private set; }
@@ -279,9 +282,8 @@ namespace ClientCore
         public StringSetting Win8CompatMode { get; private set; }
         public BoolSetting ClassicRallyPoint { get; private set; }
         public BoolSetting ClassicDoubleClick { get; private set; }
-        public BoolSetting WheelZoom { get; private set; }
+        public BoolSetting ClassicMouseSetup { get; private set; }
         public BoolSetting bDisableWin { get; private set; }
-        public BoolSetting AdjustMouse { get; private set; }
 
         /************************/
         /* MULTIPLAYER (CnCNet) */

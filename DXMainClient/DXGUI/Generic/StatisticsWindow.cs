@@ -577,7 +577,7 @@ namespace DTAClient.DXGUI.Generic
         {
             if (!String.IsNullOrEmpty(gameMode))
             {
-                if (gameMode == "Difficulty Tier")
+                if (gameMode == "Difficulty Tier" || gameMode == "难度叠加")
                 {
                     switch (aiLevel)
                     {

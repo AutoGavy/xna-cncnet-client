@@ -13,7 +13,51 @@ using Utilities = Rampastring.Tools.Utilities;
 
 namespace DTAClient.Domain.Multiplayer
 {
-    public struct ExtraMapPreviewTexture
+    internal static class TRMap
+    {
+        private static readonly string MapsIniPath = "INI/TR Mode/MapModels.ini";
+        private static readonly string MapsSection = "MapModels";
+
+        public static List<string> Maps = new List<string>();
+
+        public static void LoadMaps()
+        {
+            IniFile TRMapsIni = new IniFile(ProgramConstants.GamePath + MapsIniPath);
+
+            List<string> keys = TRMapsIni.GetSectionKeys(MapsSection);
+
+            if (keys == null)
+            {
+                Logger.Log("Loading tr map list failed!!!");
+                return;
+            }
+
+            foreach (string key in keys)
+            {
+                string mapFilePath = TRMapsIni.GetStringValue(MapsSection, key, string.Empty);
+
+                if (!File.Exists(ProgramConstants.GamePath + mapFilePath + ".map"))
+                {
+                    Logger.Log("Map " + mapFilePath + " doesn't exist!");
+                    continue;
+                }
+
+                Maps.Add(mapFilePath);
+            }
+        }
+
+        public static string GetTRMapFilePath(int nRandomSeed)
+        {
+            Random random = new Random(nRandomSeed);
+
+            string filePath = Maps[random.Next(0, Maps.Count)];
+
+            filePath = ProgramConstants.GamePath + filePath + ".map";
+            return filePath;
+        }
+    }
+
+        public struct ExtraMapPreviewTexture
     {
         public string TextureName;
         public Point Point;
@@ -73,6 +117,9 @@ namespace DTAClient.Domain.Multiplayer
         /// </summary>
         [JsonProperty]
         public bool IsCoop { get; private set; }
+
+        [JsonProperty]
+        public bool TRMode { get; private set; }
 
         /// <summary>
         /// If set, this map won't be automatically transferred over CnCNet when
@@ -261,6 +308,7 @@ namespace DTAClient.Domain.Multiplayer
                 Briefing = section.GetStringValue("Briefing", string.Empty).Replace("@", Environment.NewLine);
                 CalculateSHA();
                 IsCoop = section.GetBooleanValue("IsCoopMission", false);
+                TRMode = section.GetBooleanValue("IsTRMode", false);
                 Credits = section.GetIntValue("Credits", -1);
                 UnitCount = section.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = section.GetIntValue("NeutralColor", -1);
@@ -496,6 +544,7 @@ namespace DTAClient.Domain.Multiplayer
                 Briefing = basicSection.GetStringValue("Briefing", string.Empty).Replace("@", Environment.NewLine);
                 CalculateSHA();
                 IsCoop = basicSection.GetBooleanValue("IsCoopMission", false);
+                TRMode = basicSection.GetBooleanValue("IsTRMode", false);
                 Credits = basicSection.GetIntValue("Credits", -1);
                 UnitCount = basicSection.GetIntValue("UnitCount", -1);
                 NeutralHouseColor = basicSection.GetIntValue("NeutralColor", -1);
@@ -618,9 +667,9 @@ namespace DTAClient.Domain.Multiplayer
             return AssetLoader.CreateTexture(Color.Black, 10, 10);
         }
 
-        public IniFile GetMapIni()
+        public IniFile GetMapIni(IniFile TRMapIni = null)
         {
-            var mapIni = new IniFile(CompleteFilePath);
+            var mapIni = TRMode && TRMapIni != null ? TRMapIni : new IniFile(CompleteFilePath);
 
             if (!string.IsNullOrEmpty(ExtraININame))
             {

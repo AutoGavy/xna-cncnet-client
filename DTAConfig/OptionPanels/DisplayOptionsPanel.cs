@@ -45,8 +45,8 @@ namespace DTAConfig.OptionPanels
         private XNAClientDropDown ddGFXPreset;
         private XNAClientDropDown ddCloudsEffect;
         private XNAClientDropDown ddAntiAliasing;
-        private XNAClientDropDown ddEnhancedLaser;
-        private XNAClientDropDown ddEnhancedLight;
+        private XNAClientDropDown ddTracerDetail;
+        private XNAClientDropDown ddVFXDetail;
         private XNAClientDropDown ddDisplacement;
 
         private XNAClientCheckBox chkAlphaLight;
@@ -351,7 +351,6 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddDLSS.SelectedIndexChanged += ddDLSS_SelectedIndexChanged;
-            ddDLSS.AddItem("Performance Ultra".L10N("UI:DTAConfig:PerformanceUltra"));
             ddDLSS.AddItem("Performance".L10N("UI:DTAConfig:Performance"));
             ddDLSS.AddItem("Balanced".L10N("UI:DTAConfig:Balanced"));
             ddDLSS.AddItem("Quality".L10N("UI:DTAConfig:Quality"));
@@ -395,39 +394,41 @@ namespace DTAConfig.OptionPanels
                 ddCloudsEffect.AddItem("Enable".L10N("UI:DTAConfig:Enable"));
             ddCloudsEffect.AllowDropDown = true;
 
-            var lblEnhancedLaser = new XNALabel(WindowManager);
-            lblEnhancedLaser.Name = "lblEnhancedLaser";
-            lblEnhancedLaser.ClientRectangle = new Rectangle(lblIngameResolution.ClientRectangle.X,
+            var lblTracerDetail = new XNALabel(WindowManager);
+            lblTracerDetail.Name = "lblTracerDetail";
+            lblTracerDetail.ClientRectangle = new Rectangle(lblIngameResolution.ClientRectangle.X,
                 ddIngameResolution.ClientRectangle.Bottom + 16, 0, 0);
-            lblEnhancedLaser.Text = "Tracer Detail:".L10N("UI:DTAConfig:TracerDetail");
-            ddEnhancedLaser = new XNAClientDropDown(WindowManager);
-            ddEnhancedLaser.Name = "ddEnhancedLaser";
-            ddEnhancedLaser.ClientRectangle = new Rectangle(
+            lblTracerDetail.Text = "Tracer Detail:".L10N("UI:DTAConfig:TracerDetail");
+            ddTracerDetail = new XNAClientDropDown(WindowManager);
+            ddTracerDetail.Name = "ddTracerDetail";
+            ddTracerDetail.ClientRectangle = new Rectangle(
                 ddIngameResolution.ClientRectangle.X,
                 lblCloudsEffect.ClientRectangle.Y - 2,
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
-            ddEnhancedLaser.SelectedIndexChanged += ddEnhancedLaser_SelectedIndexChanged;
-                ddEnhancedLaser.AddItem("Low".L10N("UI:DTAConfig:Low"));
-                ddEnhancedLaser.AddItem("High".L10N("UI:DTAConfig:High"));
-            ddEnhancedLaser.AllowDropDown = true;
+            ddTracerDetail.SelectedIndexChanged += ddTracerDetail_SelectedIndexChanged;
+                ddTracerDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
+                ddTracerDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
+                ddTracerDetail.AddItem("High".L10N("UI:DTAConfig:High"));
+            ddTracerDetail.AllowDropDown = true;
 
-            var lblEnhancedLight = new XNALabel(WindowManager);
-            lblEnhancedLight.Name = "lblEnhancedLight";
-            lblEnhancedLight.ClientRectangle = new Rectangle(lblIngameResolution.ClientRectangle.X,
+            var lblVFXDetail = new XNALabel(WindowManager);
+            lblVFXDetail.Name = "lblVFXDetail";
+            lblVFXDetail.ClientRectangle = new Rectangle(lblIngameResolution.ClientRectangle.X,
                 ddIngameResolution.ClientRectangle.Bottom + 16, 0, 0);
-            lblEnhancedLight.Text = "VFX Detail:".L10N("UI:DTAConfig:VFXDetail");
-            ddEnhancedLight = new XNAClientDropDown(WindowManager);
-            ddEnhancedLight.Name = "ddEnhancedLight";
-            ddEnhancedLight.ClientRectangle = new Rectangle(
+            lblVFXDetail.Text = "VFX Detail:".L10N("UI:DTAConfig:VFXDetail");
+            ddVFXDetail = new XNAClientDropDown(WindowManager);
+            ddVFXDetail.Name = "ddVFXDetail";
+            ddVFXDetail.ClientRectangle = new Rectangle(
                 ddIngameResolution.ClientRectangle.X,
                 lblCloudsEffect.ClientRectangle.Y - 2,
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
-            ddEnhancedLight.SelectedIndexChanged += ddEnhancedLight_SelectedIndexChanged;
-                ddEnhancedLight.AddItem("Low".L10N("UI:DTAConfig:Low"));
-                ddEnhancedLight.AddItem("High".L10N("UI:DTAConfig:High"));
-            ddEnhancedLight.AllowDropDown = true;
+            ddVFXDetail.SelectedIndexChanged += ddVFXDetail_SelectedIndexChanged;
+                ddVFXDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
+                ddVFXDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
+                ddVFXDetail.AddItem("High".L10N("UI:DTAConfig:High"));
+            ddVFXDetail.AllowDropDown = true;
 
             var lblDisplacement = new XNALabel(WindowManager);
             lblDisplacement.Name = "lblDisplacement";
@@ -505,8 +506,8 @@ namespace DTAConfig.OptionPanels
             ddAntiAliasing.Tag = true;
             ddHighDetail.Tag = true;
             ddCloudsEffect.Tag = true;
-            ddEnhancedLight.Tag = true;
-            ddEnhancedLaser.Tag = true;
+            ddVFXDetail.Tag = true;
+            ddTracerDetail.Tag = true;
             ddDisplacement.Tag = true;
 
             AddChild(chkWindowedMode);
@@ -532,10 +533,10 @@ namespace DTAConfig.OptionPanels
             AddChild(ddGFXPreset);
             AddChild(lblCloudsEffect);
             AddChild(ddCloudsEffect);
-            AddChild(lblEnhancedLaser);
-            AddChild(ddEnhancedLaser);
-            AddChild(lblEnhancedLight);
-            AddChild(ddEnhancedLight);
+            AddChild(lblTracerDetail);
+            AddChild(ddTracerDetail);
+            AddChild(lblVFXDetail);
+            AddChild(ddVFXDetail);
             AddChild(lblDisplacement);
             AddChild(ddDisplacement);
             AddChild(lblAntiAliasing);
@@ -579,6 +580,9 @@ namespace DTAConfig.OptionPanels
 
         private void SureToTextBox_YesClicked(XNAMessageBox messageBox)
         {
+            // use vanilla campaign loading screen
+            File.Delete(ProgramConstants.GamePath + "tcextrab15.big");
+
             LaunchTestMap();
         }
 
@@ -869,8 +873,11 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = true;
                 ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
-                ddAntiAliasing.AllowDropDown = false;
-                ddAntiAliasing.SelectedIndex = 0;
+                if (!UserINISettings.Instance.DebugReShade)
+                {
+                    ddAntiAliasing.AllowDropDown = false;
+                    ddAntiAliasing.SelectedIndex = 0;
+                }
             }
             else
             {
@@ -887,7 +894,7 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
 
                 ddDLSS.AllowDropDown = false;
-                ddDLSS.SelectedIndex = 4;
+                //ddDLSS.SelectedIndex = 3;
 
                 ddAntiAliasing.AllowDropDown = true;
                 ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
@@ -899,8 +906,8 @@ namespace DTAConfig.OptionPanels
             ddDLSS.Tag = false;
             ddHighDetail.Tag = false;
             ddCloudsEffect.Tag = false;
-            ddEnhancedLight.Tag = false;
-            ddEnhancedLaser.Tag = false;
+            ddVFXDetail.Tag = false;
+            ddTracerDetail.Tag = false;
             ddDisplacement.Tag = false;
 
             if (!ddDLSS.AllowDropDown)
@@ -909,11 +916,11 @@ namespace DTAConfig.OptionPanels
             switch (ddGFXPreset.SelectedIndex)
             {
                 case 0: // Low
-                    ddDLSS.SelectedIndex = 4;
+                    ddDLSS.SelectedIndex = 0;
                     ddHighDetail.SelectedIndex = 0;
                     ddCloudsEffect.SelectedIndex = 1;
-                    ddEnhancedLight.SelectedIndex = 0;
-                    ddEnhancedLaser.SelectedIndex = 1;
+                    ddVFXDetail.SelectedIndex = 0;
+                    ddTracerDetail.SelectedIndex = 1;
                     ddDisplacement.SelectedIndex = 0;
 
                     if (!ddDLSS.AllowDropDown)
@@ -921,11 +928,11 @@ namespace DTAConfig.OptionPanels
                     break;
 
                 case 1: // Medium
-                    ddDLSS.SelectedIndex = 4;
+                    ddDLSS.SelectedIndex = 0;
                     ddHighDetail.SelectedIndex = 1;
                     ddCloudsEffect.SelectedIndex = 1;
-                    ddEnhancedLight.SelectedIndex = 0;
-                    ddEnhancedLaser.SelectedIndex = 1;
+                    ddVFXDetail.SelectedIndex = 1;
+                    ddTracerDetail.SelectedIndex = 1;
                     ddDisplacement.SelectedIndex = 0;
 
                     if (!ddDLSS.AllowDropDown)
@@ -933,11 +940,11 @@ namespace DTAConfig.OptionPanels
                     break;
 
                 case 2: // High
-                    ddDLSS.SelectedIndex = 4;
+                    ddDLSS.SelectedIndex = 1;
                     ddHighDetail.SelectedIndex = 2;
                     ddCloudsEffect.SelectedIndex = 1;
-                    ddEnhancedLight.SelectedIndex = 1;
-                    ddEnhancedLaser.SelectedIndex = 1;
+                    ddVFXDetail.SelectedIndex = 2;
+                    ddTracerDetail.SelectedIndex = 2;
                     ddDisplacement.SelectedIndex = 0;
 
                     if (!ddDLSS.AllowDropDown)
@@ -945,11 +952,11 @@ namespace DTAConfig.OptionPanels
                     break;
 
                 case 3: // Ultra
-                    ddDLSS.SelectedIndex = 4;
+                    ddDLSS.SelectedIndex = 2;
                     ddHighDetail.SelectedIndex = 3;
                     ddCloudsEffect.SelectedIndex = 1;
-                    ddEnhancedLight.SelectedIndex = 1;
-                    ddEnhancedLaser.SelectedIndex = 1;
+                    ddVFXDetail.SelectedIndex = 2;
+                    ddTracerDetail.SelectedIndex = 2;
                     ddDisplacement.SelectedIndex = 1;
 
                     if (!ddDLSS.AllowDropDown)
@@ -960,8 +967,8 @@ namespace DTAConfig.OptionPanels
             ddDLSS.Tag = true;
             ddHighDetail.Tag = true;
             ddCloudsEffect.Tag = true;
-            ddEnhancedLight.Tag = true;
-            ddEnhancedLaser.Tag = true;
+            ddVFXDetail.Tag = true;
+            ddTracerDetail.Tag = true;
             ddDisplacement.Tag = true;
 
             if (!ddDLSS.AllowDropDown)
@@ -982,18 +989,18 @@ namespace DTAConfig.OptionPanels
             ddCloudsEffect.Tag = true;
         }
 
-        private void ddEnhancedLight_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddVFXDetail_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((bool)ddEnhancedLight.Tag)
+            if ((bool)ddVFXDetail.Tag)
                 ddGFXPreset.SelectedIndex = 4;
-            ddEnhancedLight.Tag = true;
+            ddVFXDetail.Tag = true;
         }
 
-        private void ddEnhancedLaser_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddTracerDetail_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((bool)ddEnhancedLaser.Tag)
+            if ((bool)ddTracerDetail.Tag)
                 ddGFXPreset.SelectedIndex = 4;
-            ddEnhancedLaser.Tag = true;
+            ddTracerDetail.Tag = true;
         }
 
         private void ddDisplacement_SelectedIndexChanged(object sender, EventArgs e)
@@ -1055,8 +1062,11 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = true;
                 ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
-                ddAntiAliasing.AllowDropDown = false;
-                ddAntiAliasing.SelectedIndex = 0;
+                if (!UserINISettings.Instance.DebugReShade)
+                {
+                    ddAntiAliasing.AllowDropDown = false;
+                    ddAntiAliasing.SelectedIndex = 0;
+                }
             }
             else
             {
@@ -1077,7 +1087,7 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
 
                 ddDLSS.AllowDropDown = false;
-                ddDLSS.SelectedIndex = 4;
+                //ddDLSS.SelectedIndex = 3;
 
                 ddAntiAliasing.AllowDropDown = true;
                 ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
@@ -1088,16 +1098,16 @@ namespace DTAConfig.OptionPanels
                 ddGFXPreset.SelectedIndex = 4;
                 ddHighDetail.SelectedIndex = 0;
                 ddCloudsEffect.SelectedIndex = 0;
-                ddEnhancedLaser.SelectedIndex = 0;
-                ddEnhancedLight.SelectedIndex = 0;
+                ddTracerDetail.SelectedIndex = 0;
+                ddVFXDetail.SelectedIndex = 0;
                 ddDisplacement.SelectedIndex = 0;
                 ddAntiAliasing.SelectedIndex = 0;
 
                 ddGFXPreset.AllowDropDown = false;
                 ddHighDetail.AllowDropDown = false;
                 ddCloudsEffect.AllowDropDown = false;
-                ddEnhancedLaser.AllowDropDown = false;
-                ddEnhancedLight.AllowDropDown = false;
+                ddTracerDetail.AllowDropDown = false;
+                ddVFXDetail.AllowDropDown = false;
                 ddDisplacement.AllowDropDown = false;
                 ddAntiAliasing.AllowDropDown = false;
             }
@@ -1106,16 +1116,16 @@ namespace DTAConfig.OptionPanels
                 ddGFXPreset.SelectedIndex = UserINISettings.Instance.GFXPreset;
                 ddHighDetail.SelectedIndex = UserINISettings.Instance.HighDetail;
                 ddCloudsEffect.SelectedIndex = UserINISettings.Instance.CloudsEffect;
-                ddEnhancedLaser.SelectedIndex = UserINISettings.Instance.EnhancedLaser;
-                ddEnhancedLight.SelectedIndex = UserINISettings.Instance.EnhancedLight;
+                ddTracerDetail.SelectedIndex = UserINISettings.Instance.TracerDetail;
+                ddVFXDetail.SelectedIndex = UserINISettings.Instance.VFXDetail;
                 ddDisplacement.SelectedIndex = UserINISettings.Instance.Displacement;
                 ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing;
 
                 ddGFXPreset.AllowDropDown = true;
                 ddHighDetail.AllowDropDown = true;
                 ddCloudsEffect.AllowDropDown = true;
-                ddEnhancedLaser.AllowDropDown = true;
-                ddEnhancedLight.AllowDropDown = true;
+                ddTracerDetail.AllowDropDown = true;
+                ddVFXDetail.AllowDropDown = true;
                 ddDisplacement.AllowDropDown = true;
 
                 ddAntiAliasing.AllowDropDown = !bHighRes;
@@ -1236,7 +1246,7 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
 
                 ddDLSS.AllowDropDown = false;
-                ddDLSS.SelectedIndex = 4;
+                //ddDLSS.SelectedIndex = 3;
 
                 ddAntiAliasing.AllowDropDown = true;
                 ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
@@ -1258,15 +1268,15 @@ namespace DTAConfig.OptionPanels
             ddAntiAliasing.Tag = false;
             ddHighDetail.Tag = false;
             ddCloudsEffect.Tag = false;
-            ddEnhancedLight.Tag = false;
-            ddEnhancedLaser.Tag = false;
+            ddVFXDetail.Tag = false;
+            ddTracerDetail.Tag = false;
             ddDisplacement.Tag = false;
 
             ddGFXPreset.SelectedIndex = UserINISettings.Instance.GFXPreset;
             ddHighDetail.SelectedIndex = UserINISettings.Instance.HighDetail;
             ddCloudsEffect.SelectedIndex = UserINISettings.Instance.CloudsEffect;
-            ddEnhancedLaser.SelectedIndex = UserINISettings.Instance.EnhancedLaser;
-            ddEnhancedLight.SelectedIndex = UserINISettings.Instance.EnhancedLight;
+            ddTracerDetail.SelectedIndex = UserINISettings.Instance.TracerDetail;
+            ddVFXDetail.SelectedIndex = UserINISettings.Instance.VFXDetail;
             ddDisplacement.SelectedIndex = UserINISettings.Instance.Displacement;
             ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS;
             ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing;
@@ -1275,8 +1285,8 @@ namespace DTAConfig.OptionPanels
             ddAntiAliasing.Tag = true;
             ddHighDetail.Tag = true;
             ddCloudsEffect.Tag = true;
-            ddEnhancedLight.Tag = true;
-            ddEnhancedLaser.Tag = true;
+            ddVFXDetail.Tag = true;
+            ddTracerDetail.Tag = true;
             ddDisplacement.Tag = true;
 
             chkBackBufferInVRAM.Checked = false;
@@ -1411,15 +1421,16 @@ namespace DTAConfig.OptionPanels
             IniSettings.GFXPreset.Value = ddGFXPreset.SelectedIndex;
             IniSettings.HighDetail.Value = ddHighDetail.SelectedIndex;
             IniSettings.CloudsEffect.Value = ddCloudsEffect.SelectedIndex;
-            IniSettings.EnhancedLaser.Value = ddEnhancedLaser.SelectedIndex;
-            IniSettings.EnhancedLight.Value = ddEnhancedLight.SelectedIndex;
+            IniSettings.TracerDetail.Value = ddTracerDetail.SelectedIndex;
+            IniSettings.VFXDetail.Value = ddVFXDetail.SelectedIndex;
             IniSettings.Displacement.Value = ddDisplacement.SelectedIndex;
             IniSettings.DLSS.Value = ddDLSS.SelectedIndex;
             IniSettings.AntiAliasing.Value = ddAntiAliasing.SelectedIndex;
 
-            IniSettings.AlphaLight.Value = chkAlphaLight.Checked;
-
-            IniSettings.AirflowEffect.Value = chkAirflowEffect.Checked;
+            //IniSettings.AlphaLight.Value = chkAlphaLight.Checked;
+            //IniSettings.AirflowEffect.Value = chkAirflowEffect.Checked;
+            IniSettings.AlphaLight.Value = true;
+            IniSettings.AirflowEffect.Value = true;
 
             IniSettings.VideoMode.Value = chkVideoMode.Checked;
 
@@ -1469,8 +1480,8 @@ namespace DTAConfig.OptionPanels
                 if (!UserINISettings.Instance.DebugReShade)
                 {
                     rendererSettingsIni.SetIntValue("gamemd", "maxfps", 41);
-                    rendererSettingsIni.SetIntValue("gamemd", "minfps", 0);
-                    rendererSettingsIni.SetIntValue("gamemd", "maxgameticks", -2);
+                    rendererSettingsIni.SetIntValue("gamemd", "minfps", -1);
+                    rendererSettingsIni.SetIntValue("gamemd", "maxgameticks", 0);
                     rendererSettingsIni.SetBooleanValue("gamemd", "devmode", false);
                     rendererSettingsIni.SetBooleanValue("gamemd", "resizeable", false);
                     rendererSettingsIni.SetBooleanValue("gamemd", "fullscreen", false);
@@ -1504,28 +1515,40 @@ namespace DTAConfig.OptionPanels
         private void ExtraSave(bool bHighRes)
         {
             // upscale config
-            if (bHighRes && !ClientConfiguration.TEST_BUILD)
+            if (bHighRes /*&& !ClientConfiguration.TEST_BUILD*/)
             {
                 string strPresetPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_PRESET_DIR;
                 string strConfigPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_CONFIG_DIR + ProgramConstants.UPSCALE_CONFIG_NAME;
+                bool bUseForce = false;
 
-                switch (ddDLSS.SelectedIndex)
+                if (UserINISettings.Instance.FakeIngameScreenHeight > 1440)
+                    strPresetPath += "2160p/";
+                else if (UserINISettings.Instance.FakeIngameScreenHeight > 1200)
+                    strPresetPath += "1440p/";
+                else
+                    bUseForce = true;
+
+                if (!bUseForce)
                 {
-                    case 0: // Performance Ultra
-                        strPresetPath += "performanceultra.json";
-                        break;
-                    case 1: // Performance
-                        strPresetPath += "performance.json";
-                        break;
-                    case 2: // Balanced
-                        strPresetPath += "balanced.json";
-                        break;
-                    case 3: // Quality
-                        strPresetPath += "quality.json";
-                        break;
-                    default: // case 4: Native
-                        strPresetPath += "native.json";
-                        break;
+                    switch (ddDLSS.SelectedIndex)
+                    {
+                        case 0: // Performance
+                            strPresetPath += "performance.json";
+                            break;
+                        case 1: // Balanced
+                            strPresetPath += "balanced.json";
+                            break;
+                        case 2: // Quality
+                            strPresetPath += "quality.json";
+                            break;
+                        default: // case 3: Native
+                            strPresetPath += "native.json";
+                            break;
+                    }
+                }
+                else
+                {
+                    strPresetPath += "default/default.json";
                 }
 
                 File.Copy(strPresetPath, strConfigPath, true);
@@ -1563,19 +1586,26 @@ namespace DTAConfig.OptionPanels
                 File.Delete(strBigPath);
             }
 
-            // Airflow Effect
             strBigPath = ProgramConstants.GamePath + "tcextrab13.big";
-            string strMusicPath = ProgramConstants.GamePath + "music.big";
+            string strBigPath2 = ProgramConstants.GamePath + "tcextrab16.big";
+            string strMusicPath = ProgramConstants.GamePath + "music1.big";
+            string strMusicPath2 = ProgramConstants.GamePath + "music2.big";
+
             if (chkVideoMode.Checked)
-            {
-                // move out big
+            { // move out big
                 if (File.Exists(strBigPath))
                     File.Move(strBigPath, strMusicPath);
+
+                if (File.Exists(strBigPath2))
+                    File.Move(strBigPath2, strMusicPath2);
             }
-            else if (!File.Exists(strBigPath) && File.Exists(strMusicPath))
-            {
-                // move in big
-                File.Move(strMusicPath, strBigPath);
+            else
+            { // move in big
+                if (!File.Exists(strBigPath) && File.Exists(strMusicPath))
+                    File.Move(strMusicPath, strBigPath);
+
+                if (!File.Exists(strBigPath2) && File.Exists(strMusicPath2))
+                    File.Move(strMusicPath2, strBigPath2);
             }
         }
 
@@ -1597,6 +1627,15 @@ namespace DTAConfig.OptionPanels
                     continue;
 
                 screenResolutions.Add(resolution);
+            }
+
+            if (UserINISettings.Instance.DebugReShade)
+            {
+                var debugRes = new ScreenResolution(2240, 1400);
+                screenResolutions.Add(debugRes);
+
+                debugRes = new ScreenResolution(2400, 1350);
+                screenResolutions.Add(debugRes);
             }
 
             return screenResolutions;
@@ -1644,10 +1683,10 @@ namespace DTAConfig.OptionPanels
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
             if (!UserINISettings.Instance.NoReShade)
             {
-                string strTechniques = "UI_Before,Colourfulness";
+                string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
-                if (UserINISettings.Instance.EnhancedLaser > 0)
+                if (UserINISettings.Instance.TracerDetail > 0)
                 {
                     strTechniques += ",BlitLaser";
                 }
@@ -1692,7 +1731,7 @@ namespace DTAConfig.OptionPanels
                         {
                             strTechniques += ",LightMapMag";
                         }
-                        if (UserINISettings.Instance.EnhancedLight > 0)
+                        if (UserINISettings.Instance.VFXDetail > 0)
                         {
                             strTechniques += ",AnimMask";
                         }
@@ -1729,7 +1768,7 @@ namespace DTAConfig.OptionPanels
                         {
                             strTechniques += ",LightMapMag";
                         }
-                        if (UserINISettings.Instance.EnhancedLight > 0)
+                        if (UserINISettings.Instance.VFXDetail > 0)
                         {
                             strTechniques += ",AnimMask";
                         }
@@ -1738,11 +1777,7 @@ namespace DTAConfig.OptionPanels
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
-
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -1768,7 +1803,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",LightMapMag";
                     }
-                    if (UserINISettings.Instance.EnhancedLight > 0)
+                    if (UserINISettings.Instance.VFXDetail > 0)
                     {
                         strTechniques += ",AnimMask";
                     }
@@ -1782,10 +1817,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1)
-                    {
-                        strTechniques += ",Levels";
-                    }
+                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1810,7 +1842,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",LightMapMag";
                     }
-                    if (UserINISettings.Instance.EnhancedLight > 0)
+                    if (UserINISettings.Instance.VFXDetail > 0)
                     {
                         strTechniques += ",AnimMask";
                     }
@@ -1824,10 +1856,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1)
-                    {
-                        strTechniques += ",Levels";
-                    }
+                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1852,7 +1881,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",LightMapMag";
                     }
-                    if (UserINISettings.Instance.EnhancedLight > 0)
+                    if (UserINISettings.Instance.VFXDetail > 0)
                     {
                         strTechniques += ",AnimMask";
                     }
@@ -1870,25 +1899,11 @@ namespace DTAConfig.OptionPanels
                 }
 
                 strTechniques += ",Tint";
-                if (UserINISettings.Instance.WheelZoom)
-                {
-                    strTechniques += ",Magnifier";
-                }
-                /*switch (UserINISettings.Instance.AntiAliasing)
-                {
-                    case 1:
-                        strTechniques += ",SMAA";
-                        break;
-                    case 2:
-                        strTechniques += ",FXAA";
-                        break;
-                }*/
-                if (UserINISettings.Instance.AntiAliasing == 1)
-                {
-                    strTechniques += ",FXAA";
-                }
+                //strTechniques += ",Magnifier";
 
-                strTechniques += ",UI_After";
+                if (UserINISettings.Instance.AntiAliasing == 1)
+                    strTechniques += ",FXAA";
+
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_2 + strTechniques);
 
@@ -1906,7 +1921,7 @@ namespace DTAConfig.OptionPanels
             shaderIniWriter.Close();
 
             // Game Music Settings
-            IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
+            /*IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
             List<string> sections = musicConfigIni.GetSections();
             foreach (string sectionName in sections)
             {
@@ -1920,7 +1935,7 @@ namespace DTAConfig.OptionPanels
                     musicConfigIni.SetStringValue(sectionName, "Side", "none");
                 }
             }
-            musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
+            musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);*/
 
             File.Delete(ProgramConstants.GamePath + CREDITS_TXT);
 

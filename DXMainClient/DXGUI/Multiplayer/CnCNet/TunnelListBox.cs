@@ -85,7 +85,8 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
                 List<string> info = new List<string>();
 
                 info.Add(tunnel.Name);
-                info.Add(Conversions.BooleanToString(tunnel.Official, BooleanStringStyle.YESNO));
+                //info.Add(Conversions.BooleanToString(tunnel.Official, BooleanStringStyle.YESNO));
+                info.Add("No");
                 if (tunnel.PingInMs < 0)
                     info.Add("Unknown".L10N("UI:Main:UnknownPing"));
                 else

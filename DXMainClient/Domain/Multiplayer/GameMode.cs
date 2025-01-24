@@ -73,12 +73,14 @@ namespace DTAClient.Domain.Multiplayer
         private List<KeyValuePair<string, string>> ForcedSpawnIniOptions = new List<KeyValuePair<string, string>>();
 
         public int CoopDifficultyLevel { get; set; }
+        public int TRDifficultyLevel { get; set; }
 
         public void Initialize()
         {
             IniFile forcedOptionsIni = new IniFile(ProgramConstants.GamePath + ClientConfiguration.Instance.MPMapsIniPath);
 
             CoopDifficultyLevel = forcedOptionsIni.GetIntValue(Name, "CoopDifficultyLevel", 0);
+            TRDifficultyLevel = forcedOptionsIni.GetIntValue(Name, "TRDifficultyLevel", -1);
             UIName = forcedOptionsIni.GetStringValue(Name, "UIName", Name);
             MultiplayerOnly = forcedOptionsIni.GetBooleanValue(Name, "MultiplayerOnly", false);
             HumanPlayersOnly = forcedOptionsIni.GetBooleanValue(Name, "HumanPlayersOnly", false);

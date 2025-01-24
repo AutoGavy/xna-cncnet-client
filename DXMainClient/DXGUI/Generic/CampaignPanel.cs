@@ -256,14 +256,11 @@ namespace DTAClient.DXGUI.Generic
             btnOldCampaign.HoverTexture = AssetLoader.LoadTexture(RESOURCE_PATH + "oldcampaignbtn_c.png");
             btnOldCampaign.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
             btnOldCampaign.Visible = true;
-            if (UserINISettings.Instance.TC2Completed)
-            {
+            /*if (UserINISettings.Instance.TC2Completed)
                 btnOldCampaign.AllowClick = true;
-            }
             else
-            {
-                btnOldCampaign.AllowClick = false;
-            }
+                btnOldCampaign.AllowClick = false;*/
+            btnOldCampaign.AllowClick = true;
             btnOldCampaign.LeftClick += BtnOldCampaign_LeftClick;
 
             AddChild(btnLaunch);
@@ -816,14 +813,14 @@ namespace DTAClient.DXGUI.Generic
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
             if (!UserINISettings.Instance.NoReShade)
             {
-                string strTechniques = "UI_Before,Colourfulness";
+                string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
-                if (UserINISettings.Instance.EnhancedLaser > 0)
+                if (UserINISettings.Instance.TracerDetail > 0)
                 {
                     strTechniques += ",BlitLaser";
                 }
-                if (UserINISettings.Instance.EnhancedLight > 0)
+                if (UserINISettings.Instance.VFXDetail > 0)
                 {
                     strTechniques += ",AnimMask";
                 }
@@ -906,11 +903,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
-
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -946,10 +939,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1)
-                    {
-                        strTechniques += ",Levels";
-                    }
+                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -984,10 +974,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1)
-                    {
-                        strTechniques += ",Levels";
-                    }
+                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1025,32 +1012,17 @@ namespace DTAClient.DXGUI.Generic
                         strExtraLines += ClientConfiguration.SHADER_TINT_DAY;
                 }
 
-                strTechniques += ",Tint,UI_After";
-                if (UserINISettings.Instance.WheelZoom)
-                {
-                    strTechniques += ",Magnifier";
-                }
-                /*switch (UserINISettings.Instance.AntiAliasing)
-                {
-                    case 1:
-                        strTechniques += ",SMAA";
-                        break;
-                    case 2:
-                        strTechniques += ",FXAA";
-                        break;
-                }*/
+                strTechniques += ",Tint";
+                //strTechniques += ",Magnifier";
+
                 if (UserINISettings.Instance.AntiAliasing == 1)
-                {
                     strTechniques += ",FXAA";
-                }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_2 + strTechniques);
 
                 if (!String.IsNullOrEmpty(strExtraLines))
-                {
                     shaderIniWriter.WriteLine(strExtraLines);
-                }
             }
             else
             {
@@ -1063,7 +1035,7 @@ namespace DTAClient.DXGUI.Generic
             // Game Music Settings
             IniFile musicListIni = new IniFile(ProgramConstants.GamePath + "INI/MusicListTC.ini");
             IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
-            if (UserINISettings.Instance.SmartMusic && UserINISettings.Instance.MusicType < 2)
+            /*if (UserINISettings.Instance.SmartMusic && UserINISettings.Instance.MusicType < 2)
             {
                 IniFile musicSettingsIni = new IniFile(ProgramConstants.GamePath + SPMUSIC_SETTINGS);
                 StartMusicIndex = musicSettingsIni.GetIntValue("Settings", "NextStartMusicIndex", 1);
@@ -1136,7 +1108,7 @@ namespace DTAClient.DXGUI.Generic
                     musicSettingsIni.SetIntValue("Settings", "NextConflictMusicIndex", ConflictMusicIndex + 1);
 
                 musicSettingsIni.WriteIniFile();
-            }
+            }*/
             musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
 
             if (CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
@@ -1188,8 +1160,22 @@ namespace DTAClient.DXGUI.Generic
         {
             WindowManager.AddCallback(new Action(GameProcessExited), null);
 
-            foreach (string strMapName in InfoShared.campaignList)
-                File.Delete(ProgramConstants.GamePath + strMapName);
+            try
+            {
+                foreach (string strMapName in InfoShared.campaignList)
+                {
+                    string sourceFile = ProgramConstants.GamePath + strMapName;
+                    string cacheFile = ProgramConstants.ClientUserFilesPath + "camp_cache_" + strMapName;
+                    File.Delete(cacheFile);
+
+                    if (File.Exists(sourceFile))
+                        File.Move(sourceFile, cacheFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Something went wrong! Exception message: " + ex.Message);
+            }
         }
 
         protected virtual void GameProcessExited()
@@ -1199,10 +1185,10 @@ namespace DTAClient.DXGUI.Generic
             LogbuchParser.ClearTrash();
             UpdateMissionMedals();
             UpdateMissionButtons();
-            if (UserINISettings.Instance.TC2Completed)
+            /*if (UserINISettings.Instance.TC2Completed)
             {
                 btnOldCampaign.AllowClick = true;
-            }
+            }*/
             discordHandler?.UpdatePresence();
         }
 

@@ -24,6 +24,8 @@ namespace DTAClient.DXGUI.Generic
 
         private DiscordHandler discordHandler;
 
+        private XNAMessageBox ChapterSelectMsgbox;
+
         private XNAClientButton btnTutorial;
         private XNAClientButton btnGDI;
         private XNAClientButton btnBack;
@@ -87,7 +89,7 @@ namespace DTAClient.DXGUI.Generic
             parent.ShowSubControl(parent.CampaignSelector);
         }
 
-        private void BtnGDI_LeftClick(object sender, EventArgs e)
+        private void ChapterSelectMsgbox_YesClicked(XNAMessageBox obj)
         {
             if (UserINISettings.Instance.TutorialCompleted)
             {
@@ -104,6 +106,30 @@ namespace DTAClient.DXGUI.Generic
                 XNAMessageBox.Show(WindowManager, "Tutorial Not Completed".L10N("UI:Main:TutorialNotCompleted"),
                     string.Format("You need to completed at least one mission of tutorial\nto start main campaign.".L10N("UI:Main:TutorialNotCompletedDesc")));
             }
+        }
+
+        private void ChapterSelectMsgbox_NoClicked(XNAMessageBox obj)
+        {
+            if (UserINISettings.Instance.TC2Completed)
+            {
+                MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+                parent.CampaignSelector.ReloadBattleIni(false);
+                parent.ShowSubControl(parent.CampaignSelector);
+            }
+            else
+            {
+                XNAMessageBox.Show(WindowManager, "Act II Not Completed".L10N("UI:Main:ActIINotCompleted"),
+                    string.Format("You need to completed Act II\nto start Act I campaign.".L10N("UI:Main:ActIINotCompletedDesc")));
+            }
+        }
+
+        private void BtnGDI_LeftClick(object sender, EventArgs e)
+        {
+            ChapterSelectMsgbox = XNAMessageBox.ShowActDialog(WindowManager,
+                "Select Chapter".L10N("UI:Main:SelectChapter"),
+                string.Format("Please select the chapter you want to play.".L10N("UI:Main:PlzSelectChapter")));
+            ChapterSelectMsgbox.YesClickedAction = ChapterSelectMsgbox_YesClicked;
+            ChapterSelectMsgbox.NoClickedAction = ChapterSelectMsgbox_NoClicked;
         }
 
         private void BtnBack_LeftClick(object sender, EventArgs e)

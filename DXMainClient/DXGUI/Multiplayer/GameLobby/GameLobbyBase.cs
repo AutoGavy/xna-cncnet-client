@@ -666,7 +666,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
 
                 XNAListBoxItem rankItem = new XNAListBoxItem();
-                if (gameModeMap.Map.IsCoop)
+                if (gameModeMap.Map.TRMode)
+                    rankItem.Texture = RankTextures[0];
+                else if (gameModeMap.Map.IsCoop)
                 {
                     if (StatisticsManager.Instance.HasBeatCoOpMap(gameModeMap.Map.Name, gameModeMap.GameMode.UIName))
                         rankItem.Texture = RankTextures[Math.Abs(2 - gameModeMap.GameMode.CoopDifficultyLevel) + 1];
@@ -1578,10 +1580,179 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             return houseInfos;
         }
 
+        private static string HouseAllyIndexToString(int index)
+        {
+            string[] houseAllyIndexStrings = new string[]
+            {
+                "One",
+                "Two",
+                "Three",
+                "Four",
+                "Five",
+                "Six",
+                "Seven"
+            };
+
+            return houseAllyIndexStrings[index];
+        }
+
+        private static Point WaypointToCoords(int waypoint)
+        {
+            return new Point(waypoint % 1000, waypoint / 1000);
+        }
+
+        private static int CoordsToWaypoint(Point coords)
+        {
+            return coords.X + coords.Y * 1000;
+        }
+
+        private static double GetDistance(Point p1, Point p2)
+        {
+            int dx = p1.X - p2.X;
+            int dy = p1.Y - p2.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        protected virtual void WriteTRModeAdditions(IniFile spawnIni, IniFile TRMapIni, int totalPlayerCount)
+        {
+            if (!Map.TRMode || TRMapIni == null)
+                return;
+
+            int[] countryIndex = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11 };
+            int[] countryIndexRa2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11 };
+
+            Random random = new Random(RandomSeed);
+            //bool ra2Enemy = false;
+
+            Dictionary<int, Point> startWaypoints = new Dictionary<int, Point>();
+
+            for (int i = 0; i < 8; ++i)
+            {
+                int loc = TRMapIni.GetIntValue("Waypoints", i.ToString(), -1);
+                if (loc != -1)
+                    startWaypoints.Add(i, WaypointToCoords(loc));
+            }
+
+            List<int> freeColors = new List<int>();
+
+            for (int i = 0; i < MPColors.Count; ++i)
+                freeColors.Add(i);
+
+            foreach (PlayerInfo player in Players)
+                freeColors.Remove(player.ColorId - 1); // The first color is Random
+
+            int minEnemyCount = 1;
+            int MaxAllowedEnemyCount = 1;
+            switch (GameMode.TRDifficultyLevel)
+            {
+                case 0:
+                    MaxAllowedEnemyCount = 2;
+                    break;
+                case 1:
+                    MaxAllowedEnemyCount = 3;
+                    break;
+                case 2:
+                    minEnemyCount = 2;
+                    MaxAllowedEnemyCount = 3;
+                    break;
+                case 3:
+                    minEnemyCount = 3;
+                    MaxAllowedEnemyCount = 3;
+                    break;
+            }
+
+            List<int> freeSlots = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+
+            int MaxPlayer = startWaypoints.Count;
+            int maxEnemyCount = Math.Min(MaxPlayer - 1, MaxAllowedEnemyCount);
+
+            int enemyHousesCount = minEnemyCount < maxEnemyCount ?
+                random.Next(minEnemyCount, maxEnemyCount + 1) : maxEnemyCount;
+
+            int aiLoc = startWaypoints.Keys.ElementAt(random.Next(startWaypoints.Count));
+
+            var sortedWaypoints = startWaypoints
+                .Where(kvp => kvp.Key != aiLoc)
+                .OrderBy(kvp => GetDistance(startWaypoints[aiLoc], kvp.Value))
+                .ToList();
+
+            for (int i = 0; i < enemyHousesCount; ++i)
+            {
+                if (MaxPlayer != 2)
+                {
+                    if (i > 0) aiLoc = sortedWaypoints[i - 1].Key;
+                }
+                else
+                    aiLoc = random.Next(2);
+
+                int randomizedColorIndex = random.Next(0, freeColors.Count);
+                int actualColorId = freeColors[randomizedColorIndex];
+
+                int aiColor = MPColors[actualColorId].GameColorIndex;
+                freeColors.RemoveAt(randomizedColorIndex);
+
+                int multiId = totalPlayerCount + i + 1;
+
+                spawnIni.SetIntValue("HouseHandicaps", "Multi" + multiId, GameMode.CoopDifficultyLevel);
+                spawnIni.SetIntValue("HouseCountries", "Multi" + multiId, countryIndex[random.Next(0, countryIndex.Length)]);
+                spawnIni.SetIntValue("HouseColors", "Multi" + multiId, aiColor);
+                spawnIni.SetIntValue("SpawnLocations", "Multi" + multiId, aiLoc);
+                freeSlots.Remove(aiLoc);
+
+                if (MaxPlayer == 2)
+                    break;
+            }
+
+            int playerLoc = MaxPlayer == 2
+                ? aiLoc == 1 ? 0 : 1
+                : sortedWaypoints[sortedWaypoints.Count - 1].Key;
+
+            spawnIni.SetIntValue("SpawnLocations", "Multi" + 1, playerLoc);
+            freeSlots.Remove(playerLoc);
+
+            if (totalPlayerCount > 1 && freeSlots.Count > 0)
+            {
+                playerLoc = freeSlots[0];
+                spawnIni.SetIntValue("SpawnLocations", "Multi" + 2, playerLoc);
+                freeSlots.Remove(playerLoc);
+            }
+
+            /*for (int i = 0; i < totalPlayerCount; ++i)
+            {
+                int multiId = i + 1;
+
+                if (MaxPlayer != 2)
+                    spawnIni.SetIntValue("SpawnLocations", "Multi" + multiId, playerLoc);
+                else
+                    spawnIni.SetIntValue("SpawnLocations", "Multi" + multiId, aiLoc == 1 ? 0 : 1);
+            }*/
+
+            if (MaxPlayer != 2)
+                for (int i = 0; i < enemyHousesCount; ++i)
+                {
+                    int MultiId = totalPlayerCount + i + 1;
+                    int allyIndex = 0;
+
+                    for (int enemyIndex = 0; enemyIndex < enemyHousesCount; ++enemyIndex)
+                    {
+                        int allyMultiIndex = totalPlayerCount + enemyIndex;
+
+                        if (enemyIndex == i)
+                            continue;
+
+                        spawnIni.SetIntValue("Multi" + MultiId + "_Alliances",
+                            "HouseAlly" + HouseAllyIndexToString(allyIndex), allyMultiIndex);
+                        ++allyIndex;
+                    }
+                }
+
+            spawnIni.SetIntValue("Settings", "AIPlayers", enemyHousesCount);
+        }
+
         /// <summary>
         /// Writes spawn.ini. Returns the player house info returned from the randomizer.
         /// </summary>
-        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = false)
+        private PlayerHouseInfo[] WriteSpawnIni(bool bForceSpeed = false, bool gsCustomizeRestriction = false, IniFile TRMapIni = null)
         {
             Logger.Log("Writing spawn.ini");
 
@@ -1737,6 +1908,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
+            // TRMode Options
+            WriteTRModeAdditions(spawnIni, TRMapIni, Players.Count + AIPlayers.Count);
+
             // force game speed
             int iSpeed = 0;
             foreach (GameLobbyDropDown dropDown in DropDowns)
@@ -1881,7 +2055,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <summary>
         /// Writes spawnmap.ini.
         /// </summary>
-        private void WriteMap(PlayerHouseInfo[] houseInfos, bool bForceSpeed = false)
+        private void WriteMap(PlayerHouseInfo[] houseInfos, bool bForceSpeed = false, IniFile TRMapIni = null)
         {
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNMAP_INI);
             File.Delete(ProgramConstants.GamePath + SPSOUND_INI);
@@ -1890,12 +2064,63 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             Logger.Log("Loading map INI from " + Map.CompleteFilePath);
 
-            IniFile mapIni = Map.GetMapIni();
+            IniFile mapIni = Map.GetMapIni(TRMapIni);
+
+            if (TRMapIni != null)
+            {
+                string strWaypoints = "Waypoints";
+                IniSection waypointSection = mapIni.GetSection(strWaypoints);
+
+                List<Point> startWaypoints = new List<Point>();
+                for (int i = 0; i < 8; ++i)
+                {
+                    int waypoint = mapIni.GetIntValue(strWaypoints, i.ToString(), -1);
+                    if (waypoint != -1)
+                        startWaypoints.Add(WaypointToCoords(waypoint));
+                }
+
+                if (startWaypoints.Count > 0)
+                {
+                    int nCount = 0;
+
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        string strKey = i.ToString();
+
+                        if (!waypointSection.KeyExists(strKey))
+                        {
+                            Point selectedWaypoint = startWaypoints[Math.Min(nCount, startWaypoints.Count - 1)];
+
+                            do
+                            {
+                                if (selectedWaypoint.X > 254)
+                                    --selectedWaypoint.X;
+                                else
+                                    ++selectedWaypoint.X;
+                            }
+                            while (startWaypoints.Contains(selectedWaypoint));
+
+                            int nWaypoint = CoordsToWaypoint(selectedWaypoint);
+                            mapIni.SetStringValue(strWaypoints, strKey, nWaypoint.ToString());
+
+                            startWaypoints.Add(selectedWaypoint);
+                            ++nCount;
+                        }
+                    }
+                }
+            }
 
             IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
 
             MapCodeHelper.ApplyMapCode(mapIni, GameMode.GetMapRulesIniFile());
             MapCodeHelper.ApplyMapCode(mapIni, globalCodeIni);
+
+            if (Map.TRMode)
+            {
+                Random myRandom = new Random(RandomSeed);
+                IniFile fragmentIni = new IniFile(ProgramConstants.GamePath + "INI/TR Mode/TRFragment_" + myRandom.Next(1, 21).ToString("D2") + ".ini");
+                MapCodeHelper.ApplyMapCode(mapIni, fragmentIni);
+            }
 
             // apply multiplayer options
             if (bForceSpeed)
@@ -1949,14 +2174,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
             if (!UserINISettings.Instance.NoReShade)
             {
-                string strTechniques = "UI_Before,Colourfulness";
+                string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
-                if (UserINISettings.Instance.EnhancedLaser > 0)
+                if (UserINISettings.Instance.TracerDetail > 0)
                 {
                     strTechniques += ",BlitLaser";
                 }
-                if (UserINISettings.Instance.EnhancedLight > 0)
+                if (UserINISettings.Instance.VFXDetail > 0)
                 {
                     strTechniques += ",AnimMask";
                 }
@@ -2032,10 +2257,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         mapIni.SetStringValue("Basic", "NextScenario", "S_Shader");
 
@@ -2073,7 +2295,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",LightMapMag";
                         }
-                        if (UserINISettings.Instance.EnhancedLight > 0)
+                        if (UserINISettings.Instance.VFXDetail > 0)
                         {
                             strTechniques += ",AnimMask";
                         }
@@ -2082,10 +2304,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         mapIni.SetStringValue("Basic", "NextScenario", "A_Shader");
 
@@ -2145,7 +2364,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",LightMapMag";
                         }
-                        if (UserINISettings.Instance.EnhancedLight > 0)
+                        if (UserINISettings.Instance.VFXDetail > 0)
                         {
                             strTechniques += ",AnimMask";
                         }
@@ -2159,10 +2378,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1)
-                        {
-                            strTechniques += ",Levels";
-                        }
+                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         mapIni.SetStringValue("Basic", "NextScenario", "M_Shader");
 
@@ -2208,10 +2424,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1)
-                            {
-                                strTechniques += ",Levels";
-                            }
+                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             mapIni.SetStringValue("Basic", "NextScenario", "N_Shader");
 
@@ -2259,24 +2472,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     }
                 }
 
-                strTechniques += ",Tint,UI_After";
-                if (UserINISettings.Instance.WheelZoom)
-                {
-                    strTechniques += ",Magnifier";
-                }
-                /*switch (UserINISettings.Instance.AntiAliasing)
-                {
-                    case 1:
-                        strTechniques += ",SMAA";
-                        break;
-                    case 2:
-                        strTechniques += ",FXAA";
-                        break;
-                }*/
+                strTechniques += ",Tint";
+                //strTechniques += ",Magnifier";
+
                 if (UserINISettings.Instance.AntiAliasing == 1)
-                {
                     strTechniques += ",FXAA";
-                }
 
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_1 + strTechniques);
                 shaderIniWriter.WriteLine(ClientConfiguration.SHADER_TECHNIQUE_2 + strTechniques);
@@ -2300,7 +2500,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             // Game Music Settings
             IniFile musicListIni = new IniFile(ProgramConstants.GamePath + "INI/MusicListTC.ini");
             IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
-            if (UserINISettings.Instance.SmartMusic && UserINISettings.Instance.MusicType < 2)
+            /*if (UserINISettings.Instance.SmartMusic && UserINISettings.Instance.MusicType < 2)
             {
                 StartMusicIndex = musicSettingsIni.GetIntValue("Settings", "NextStartMusicIndex", 1);
                 ConflictMusicIndex = musicSettingsIni.GetIntValue("Settings", "NextConflictMusicIndex", 1);
@@ -2369,7 +2569,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     musicSettingsIni.SetIntValue("Settings", "NextConflictMusicIndex", 1);
                 else
                     musicSettingsIni.SetIntValue("Settings", "NextConflictMusicIndex", ConflictMusicIndex + 1);
-            }
+            }*/
             musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
 
             mapIni.WriteIniFile(ProgramConstants.GamePath + ProgramConstants.SPAWNMAP_INI);
@@ -2521,9 +2721,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             bool gsCustomizeRestriction = chkRandomOnly != null && chkRandomOnly.Checked;
 
-            PlayerHouseInfo[] houseInfos = WriteSpawnIni(!bCanControlSpeed, gsCustomizeRestriction);
+            IniFile TRMapIni = null;
+            if (Map.TRMode)
+                TRMapIni = new IniFile(TRMap.GetTRMapFilePath(RandomSeed));
+
+            PlayerHouseInfo[] houseInfos = WriteSpawnIni(!bCanControlSpeed, gsCustomizeRestriction, TRMapIni);
             InitializeMatchStatistics(houseInfos);
-            WriteMap(houseInfos, !bCanControlSpeed);
+            WriteMap(houseInfos, !bCanControlSpeed, TRMapIni);
 
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
@@ -2992,8 +3196,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
 
             // Check if AI players allowed
-            bool AIAllowed = !(Map.MultiplayerOnly || GameMode.MultiplayerOnly) ||
-                             !(Map.HumanPlayersOnly || GameMode.HumanPlayersOnly);
+            bool AIAllowed = !Map.HumanPlayersOnly && !GameMode.HumanPlayersOnly;
+
             foreach (var ddName in ddPlayerNames)
             {
                 if (ddName.Items.Count > 3)
