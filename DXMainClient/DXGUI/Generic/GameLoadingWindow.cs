@@ -174,7 +174,10 @@ namespace DTAClient.DXGUI.Generic
             sw.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
             sw.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName("g"));
             sw.WriteLine("Firestorm=No");
-            sw.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            if (ClientConfiguration.DEBUG_BUILD)
+                sw.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            else
+                sw.WriteLine("GameSpeed=2");
             sw.WriteLine();
             sw.Close();
 
@@ -733,6 +736,7 @@ namespace DTAClient.DXGUI.Generic
         protected virtual void GameProcessExited()
         {
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
+
             if (!String.IsNullOrEmpty(loadedSide))
             {
                 if (IsCampaign && !String.IsNullOrEmpty(loadedMisson))
@@ -742,6 +746,7 @@ namespace DTAClient.DXGUI.Generic
 
                 LogbuchParser.ClearTrash();
             }
+
             discordHandler?.UpdatePresence();
         }
 

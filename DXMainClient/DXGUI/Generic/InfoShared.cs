@@ -27,7 +27,6 @@ namespace DTAClient.DXGUI.Generic
             "96F69F6CBAE1146B5105F70E46F12E6DF506A9EB", // Difficulty Hard.ini
             "7313144376C4385B8F1ED09E4BC850752AFB4735", // Difficulty Hell.ini
             "00637DA534D5ABF27C56D72E9D0DA818AFE2C941", // Difficulty Normal.ini
-            "DB0CE24FD8FE75E5E7C03649D04D17E14483A24D", // GlobalCode.ini
 
             "8F04CA0591D7EFA927CAB025BB78DE247526EBEF", // Train 00
             "75AC924E69177C2C3A340B2234BDE1AC1A60D4AF", // Train 01
@@ -67,7 +66,6 @@ namespace DTAClient.DXGUI.Generic
             "INI/Map Code/Difficulty Hard.ini",
             "INI/Map Code/Difficulty Hell.ini",
             "INI/Map Code/Difficulty Normal.ini",
-            "INI/Map Code/GlobalCode.ini",
 
             "MapsTC/Missions/tra00.map",
             "MapsTC/Missions/tra01.map",
@@ -169,7 +167,6 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArray =
         {
-            "9617a0f0f9cdc8f2bca8ecd567883c7e298ce759", // Maps Settings
             "86b4f1a4498a811973ba71a84ee0d6cba6372c1e", // GameOptions
 
             "6C0F1F00BDC1EE2CDAC67119E21CA816CF30271E", // Auto Handle
@@ -204,7 +201,6 @@ namespace DTAClient.DXGUI.Generic
             "D42ECB8AE645547E361AF96DB4B7320F61EE29C3", // Duel.ini
             "38F3655B98432FF1601316C42F44A0E049DF730A", // FastOptions.ini
             "575B300FBE5A5900B9D072AF73B0CE5FC0680E1C", // Fortress.ini
-            "DB0CE24FD8FE75E5E7C03649D04D17E14483A24D", // GlobalCode.ini
             "06EE9314FBD8614B17419C3DD901519700582667", // MultiplayerOptions.ini
             "20F25C4466A140D7B40277DEB9FB5E1CE04B249F", // Newbie Practice.ini
             "23DDBB82E150F9168AC1078EC25338CCAC4E8229", // NoAirflow.ini
@@ -214,7 +210,6 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesToCheck =
         {
-            ClientCore.ClientConfiguration.Instance.MPMapsIniPath,
             "Resources/GameOptions.ini",
 
             "INI/Game Options/Auto Handle.ini",
@@ -249,7 +244,6 @@ namespace DTAClient.DXGUI.Generic
             "INI/Map Code/Duel.ini",
             "INI/Map Code/FastOptions.ini",
             "INI/Map Code/Fortress.ini",
-            "INI/Map Code/GlobalCode.ini",
             "INI/Map Code/MultiplayerOptions.ini",
             "INI/Map Code/Newbie Practice.ini",
             "INI/Map Code/NoAirflow.ini",

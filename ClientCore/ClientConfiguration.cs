@@ -6,7 +6,8 @@ namespace ClientCore
 {
     public class ClientConfiguration
     {
-        public static readonly bool TEST_BUILD = false;
+        public static readonly bool DEBUG_BUILD = false;
+        public static readonly bool TEST_BUILD = true;
 
         private const string GENERAL = "General";
         private const string AUDIO = "Audio";
@@ -220,7 +221,7 @@ namespace ClientCore
 
         public string UnixMapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "UnixMapEditorExePath", Instance.MapEditorExePath);
 
-        public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "TCDevMode", false);
+        public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "TCDevMode", false); // DEBUG_BUILD
 
         public string LongGameName => clientDefinitionsIni.GetStringValue(SETTINGS, "LongGameName", "Tiberian Sun");
 

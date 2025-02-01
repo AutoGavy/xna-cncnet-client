@@ -194,7 +194,7 @@ namespace ClientCore.CnCNet5
                     GameBroadcastChannel = "#cncnet-tc-games",
                     InternalName = "tc",
                     RegistryInstallPath = "HKCU\\Software\\TiberiumCrisis",
-                    UIName = "Tiberium Crisis",
+                    UIName = "Tiberium Crisis 2",
                     Texture = AssetLoader.TextureFromImage(Resources.tcicon)
                 }
             };

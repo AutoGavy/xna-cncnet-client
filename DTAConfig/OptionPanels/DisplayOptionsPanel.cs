@@ -1231,7 +1231,7 @@ namespace DTAConfig.OptionPanels
             {
                 IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
                 chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
-                    renderer.WindowedModeKey, false);
+                    renderer.WindowedModeKey, true);
 
                 bool setting = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
                     renderer.BorderlessWindowedModeKey, false);
@@ -1515,7 +1515,7 @@ namespace DTAConfig.OptionPanels
         private void ExtraSave(bool bHighRes)
         {
             // upscale config
-            if (bHighRes /*&& !ClientConfiguration.TEST_BUILD*/)
+            if (bHighRes)
             {
                 string strPresetPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_PRESET_DIR;
                 string strConfigPath = ProgramConstants.GetBaseSharedPath() + ProgramConstants.UPSCALE_CONFIG_DIR + ProgramConstants.UPSCALE_CONFIG_NAME;
@@ -1664,7 +1664,10 @@ namespace DTAConfig.OptionPanels
 
             UserINISettings.Instance.SaveSettings();
 
-            swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            if (ClientConfiguration.DEBUG_BUILD)
+                swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            else
+                swriter.WriteLine("GameSpeed=2");
             swriter.WriteLine("Firestorm=False");
             swriter.WriteLine("CustomLoadScreen=Resources/l600s02.pcx");
             swriter.WriteLine("IsSinglePlayer=Yes");
@@ -1951,14 +1954,15 @@ namespace DTAConfig.OptionPanels
         protected virtual void GameProcessExited()
         {
             GameProcessLogic.GameProcessExited -= GameProcessExited_Callback;
+
             if (Directory.Exists(ProgramConstants.GamePath + "debug"))
             {
                 List<string> files = Directory.GetFiles(ProgramConstants.GamePath + "debug", "debug.*.log", SearchOption.TopDirectoryOnly).ToList();
                 files.Sort();
                 foreach (string logFile in files)
                     File.Delete(logFile);
-                File.Delete(ProgramConstants.GamePath + ClientConfiguration.Instance.StatisticsLogFileName);
             }
+
             string filePath = ProgramConstants.GamePath + "Saved Games/TESTQ.SAV";
             if (Directory.Exists(filePath))
                 File.Delete(filePath);

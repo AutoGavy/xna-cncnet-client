@@ -229,6 +229,21 @@ namespace DTAClient.DXGUI.Generic
 
         private void PrepareToLaunch()
         {
+            List<string> absentFiles = ClientConfiguration.Instance.RequiredFiles.ToList()
+                .FindAll(f => !string.IsNullOrWhiteSpace(f) && !File.Exists(ProgramConstants.GamePath + f));
+
+            if (absentFiles.Count > 0)
+            {
+                XNAMessageBox.Show(WindowManager, "Missing Files".L10N("UI:Main:MissingFilesTitle"),
+                    "The following required files are missing:".L10N("UI:Main:MissingFilesText1NonAres") +
+                    Environment.NewLine + Environment.NewLine +
+                    String.Join(Environment.NewLine, absentFiles) +
+                    Environment.NewLine + Environment.NewLine +
+                    ("You won't be able to play without those files." + Environment.NewLine +
+                    "Please check your anti-virus or add white list to it.").L10N("UI:Main:MissingFilesText2"));
+                return;
+            }
+
             if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
@@ -303,7 +318,10 @@ namespace DTAClient.DXGUI.Generic
             if (UserINISettings.Instance.GameSpeed != 2)
                 UserINISettings.Instance.GameSpeed.Value = 2;
 
-            swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            if (ClientConfiguration.DEBUG_BUILD)
+                swriter.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
+            else
+                swriter.WriteLine("GameSpeed=2");
             swriter.WriteLine("Firestorm=" + mission.RequiredAddon);
             swriter.WriteLine("CustomLoadScreen=" + LoadingScreenController.GetLoadScreenName(mission.Side.ToString()));
             swriter.WriteLine("IsSinglePlayer=Yes");
@@ -668,7 +686,7 @@ namespace DTAClient.DXGUI.Generic
                 if (!File.Exists(moviePath) || Utilities.CalculateSHA1ForFile(moviePath).ToUpper() != "F432ACC0E48675CF2545EB8DC777E5EE7138247C")
                     mapIni.SetStringValue("Basic", "Win", "dummymovie_win");
 
-                IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
+                //IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
 
                 // other settings in BaseInfo
                 if (CampaignIni.GetBooleanValue("BaseInfo", "DifficultyAdjust", true))
@@ -694,10 +712,10 @@ namespace DTAClient.DXGUI.Generic
                     }
                     themeIni.WriteIniFile();
                 }
-                else if (CampaignIni.GetBooleanValue("BaseInfo", "SmartMusic", true))
+                /*else if (CampaignIni.GetBooleanValue("BaseInfo", "SmartMusic", true))
                 {
                     IniFile.ConsolidateIniFiles(mapIni, globalCodeIni);
-                }
+                }*/
 
                 mapIni.WriteIniFile(ProgramConstants.GamePath + mission.Scenario.ToLower());
             }

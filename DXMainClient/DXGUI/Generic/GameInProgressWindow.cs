@@ -177,7 +177,7 @@ namespace DTAClient.DXGUI
                 }
             }
 
-            if (UserINISettings.Instance.HighDetail >= 0 && !UserINISettings.Instance.CanReShade)
+            if (!UserINISettings.Instance.CanReShade && UserINISettings.Instance.Renderer != "CNC_DDRAW_NONE")
             {
                 string reshadeIni = ProgramConstants.GamePath + "ReShade.ini";
                 if (File.Exists(reshadeIni))
@@ -192,14 +192,14 @@ namespace DTAClient.DXGUI
                         reshadeIniInstance.SectionExists("OPENGL") ||
                         reshadeIniInstance.SectionExists("DEPTH"))
                     {
-                        ReShadeMSGBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                        /*ReShadeMSGBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                             "Enhanced Quality Successful".L10N("UI:Main:ReShadeSucceed"),
                             string.Format("If got lags, make sure you changed" + Environment.NewLine +
                             "preferred graphics processor to GPU." + Environment.NewLine +
-                            "Do you want to change it now?").L10N("UI:Main:ReShadeSucceed_Desc"));
+                            "Do you want to change it now?").L10N("UI:Main:ReShadeSucceed_Desc"));*/
                         UserINISettings.Instance.CanReShade.Value = true;
                         UserINISettings.Instance.SaveSettings();
-                        ReShadeMSGBox.YesClickedAction = ReShadeMSGBox_YesClicked_Success;
+                        //ReShadeMSGBox.YesClickedAction = ReShadeMSGBox_YesClicked_Success;
                     }
                     else
                     {
@@ -216,8 +216,7 @@ namespace DTAClient.DXGUI
                 else
                 {
                     XNAMessageBox.Show(WindowManager, "Failed to enable Enhanced Quality".L10N("UI:Main:ReShadeFailed"),
-                        string.Format("Please try to close your anti-virus softwares," + Environment.NewLine +
-                        "and make sure GScript.ext, d3d9.ext, dx3d9_29.ext, Crisis.ext are your game folder.").L10N("UI:Main:ReShadeFailed_Desc2"));
+                        string.Format("Please try to add write list to your anti-virus softwares.").L10N("UI:Main:ReShadeFailed_Desc2"));
                 }
             }
 

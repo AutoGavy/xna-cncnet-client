@@ -51,6 +51,10 @@ namespace ClientGUI
                 ReShadeIni.WriteIniFile(ProgramConstants.GamePath + "ReShade.ini");
             }
 
+            // deleta statisics log
+            File.Delete(ProgramConstants.GamePath + ClientConfiguration.Instance.StatisticsLogFileName);
+            File.Delete(ProgramConstants.GamePath + "A_" + ClientConfiguration.Instance.StatisticsLogFileName);
+
             // choose to place reshade dll
             string reshadeGamePath = ProgramConstants.GamePath + ProgramConstants.RESHADE_DLL;
             if (UserINISettings.Instance.NoReShade)

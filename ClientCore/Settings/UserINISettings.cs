@@ -174,13 +174,12 @@ namespace ClientCore
 
             PrivacyPolicyAccepted = new BoolSetting(iniFile, OPTIONS, "PrivacyPolicyAccepted", false);
             IsFirstRun = new BoolSetting(iniFile, OPTIONS, "IsFirstRun", true);
-            EnhancedQualityGuideRead = new BoolSetting(iniFile, OPTIONS, "EnhancedQualityGuideRead", false);
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
             FakeDifficulty = new IntSetting(iniFile, OPTIONS, "FakeDifficulty", 0);
             SelectedMissionIndex = new IntSetting(iniFile, OPTIONS, "SelectedMissionIndex", 0);
-            GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 1);
+            GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 2);
             PreloadMapPreviews = new BoolSetting(iniFile, VIDEO, "PreloadMapPreviews", false);
             ForceLowestDetailLevel = new BoolSetting(iniFile, VIDEO, "ForceLowestDetailLevel", false);
             MinimizeWindowsOnGameStart = new BoolSetting(iniFile, OPTIONS, "MinimizeWindowsOnGameStart", true);
@@ -337,7 +336,6 @@ namespace ClientCore
 
         public BoolSetting PrivacyPolicyAccepted { get; private set; }
         public BoolSetting IsFirstRun { get; private set; }
-        public BoolSetting EnhancedQualityGuideRead { get; private set; }
         public BoolSetting CustomComponentsDenied { get; private set; }
 
         public IntSetting FakeDifficulty { get; private set; }

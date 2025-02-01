@@ -1912,7 +1912,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             WriteTRModeAdditions(spawnIni, TRMapIni, Players.Count + AIPlayers.Count);
 
             // force game speed
-            int iSpeed = 0;
+            /*int iSpeed = 0;
             foreach (GameLobbyDropDown dropDown in DropDowns)
             {
                 if (dropDown.OptionName == "Game Speed")
@@ -1924,10 +1924,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (iSpeed == 6)
                     spawnIni.SetIntValue("Settings", "GameSpeed", 1);
                 else
-                {
                     spawnIni.SetIntValue("Settings", "GameSpeed", 2);
-                }
-            }
+            }*/
+
+            if (!ClientConfiguration.DEBUG_BUILD)
+                spawnIni.SetIntValue("Settings", "GameSpeed", 2);
 
             spawnIni.WriteIniFile();
 
@@ -1998,6 +1999,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     (checkBox.MapScoringMode == CheckBoxMapScoringMode.DenyWhenUnchecked && !checkBox.Checked))
                 {
                     isValidForStar = false;
+                    break;
+                }
+            }
+
+            foreach (GameLobbyDropDown dropDown in DropDowns)
+            {
+                if (dropDown.OptionName == "Income Hack")
+                {
+                    if (dropDown.SelectedIndex != 0)
+                        isValidForStar = false;
                     break;
                 }
             }
@@ -2110,10 +2121,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
             }
 
-            IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
+            //IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
 
             MapCodeHelper.ApplyMapCode(mapIni, GameMode.GetMapRulesIniFile());
-            MapCodeHelper.ApplyMapCode(mapIni, globalCodeIni);
+            //MapCodeHelper.ApplyMapCode(mapIni, globalCodeIni);
 
             if (Map.TRMode)
             {
@@ -2130,7 +2141,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             // apply fast options
-            if (bForceSpeed && Players.Count() - AIPlayers.Count() > 3)
+            /*if (bForceSpeed && Players.Count() - AIPlayers.Count() > 3)
             {
                 IniFile spawnIni = new IniFile(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
                 if (spawnIni.GetIntValue("Settings", "GameSpeed", 2) == 1)
@@ -2138,7 +2149,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     IniFile fastOptionsIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/FastOptions.ini");
                     IniFile.ConsolidateIniFiles(mapIni, fastOptionsIni);
                 }
-            }
+            }*/
 
             foreach (GameLobbyCheckBox checkBox in CheckBoxes)
                 checkBox.ApplyMapCode(mapIni, GameMode);
@@ -2905,6 +2916,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 ddPlayerColors[pId].SelectedIndex = pInfo.ColorId;
                 ddPlayerColors[pId].AllowDropDown = !playerExtraOptions.IsForceRandomColors && allowPlayerOptionsChange;
 
+                if (Map.TRMode && ddPlayerColors[pId].SelectedIndex == 0)
+                {
+                    pInfo.ColorId = 1;
+                    ddPlayerColors[pId].SelectedIndex = 1;
+                }
+
                 ddPlayerStarts[pId].SelectedIndex = pInfo.StartingLocation;
 
                 ddPlayerTeams[pId].SelectedIndex = pInfo.TeamId;
@@ -3339,6 +3356,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     (checkBox.MapScoringMode == CheckBoxMapScoringMode.DenyWhenUnchecked && !checkBox.Checked))
                 {
                     return RANK_NONE;
+                }
+            }
+
+            foreach (GameLobbyDropDown dropDown in DropDowns)
+            {
+                if (dropDown.OptionName == "Income Hack")
+                {
+                    if (dropDown.SelectedIndex != 0)
+                        return RANK_NONE;
+                    break;
                 }
             }
 

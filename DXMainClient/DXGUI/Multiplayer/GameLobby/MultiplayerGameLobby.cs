@@ -771,6 +771,21 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// </summary>
         protected override void BtnLaunchGame_LeftClick(object sender, EventArgs e)
         {
+            List<string> absentFiles = ClientConfiguration.Instance.RequiredFiles.ToList()
+                .FindAll(f => !string.IsNullOrWhiteSpace(f) && !File.Exists(ProgramConstants.GamePath + f));
+
+            if (absentFiles.Count > 0)
+            {
+                XNAMessageBox.Show(WindowManager, "Missing Files".L10N("UI:Main:MissingFilesTitle"),
+                    "The following required files are missing:".L10N("UI:Main:MissingFilesText1NonAres") +
+                    Environment.NewLine + Environment.NewLine +
+                    String.Join(Environment.NewLine, absentFiles) +
+                    Environment.NewLine + Environment.NewLine +
+                    ("You won't be able to play without those files." + Environment.NewLine +
+                    "Please check your anti-virus or add white list to it.").L10N("UI:Main:MissingFilesText2"));
+                return;
+            }
+
             if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
             {
                 cheaterWindow.Enable();

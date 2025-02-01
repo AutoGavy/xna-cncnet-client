@@ -683,8 +683,8 @@ namespace DTAClient.DXGUI.Generic
 
             if (absentFiles.Count > 0)
                 XNAMessageBox.Show(WindowManager, "Missing Files".L10N("UI:Main:MissingFilesTitle"),
-#if ARES
-                    ("You are missing Yuri's Revenge files that are required" + Environment.NewLine +
+#if ARES_D
+                    ("You are missing game files that are required" + Environment.NewLine +
                     "to play this mod! Yuri's Revenge mods are not standalone," + Environment.NewLine +
                     "so you need a copy of following Yuri's Revenge (v. 1.001)" + Environment.NewLine +
                     "files placed in the mod folder to play the mod:").L10N("UI:Main:MissingFilesText1Ares") +
@@ -694,7 +694,8 @@ namespace DTAClient.DXGUI.Generic
                     Environment.NewLine + Environment.NewLine +
                     String.Join(Environment.NewLine, absentFiles) +
                     Environment.NewLine + Environment.NewLine +
-                    "You won't be able to play without those files.".L10N("UI:Main:MissingFilesText2"));
+                    ("You won't be able to play without those files." + Environment.NewLine +
+                    "Please check your anti-virus or add white list to it.").L10N("UI:Main:MissingFilesText2"));
         }
 
         private void CheckForbiddenFiles()
@@ -733,10 +734,10 @@ namespace DTAClient.DXGUI.Generic
                 UserINISettings.Instance.IsFirstRun.Value = false;
                 UserINISettings.Instance.SaveSettings();
 
-                firstRunMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Initial Installation".L10N("UI:Main:InitialInstallationTitle"),
-                    string.Format(("You have just installed {0}." + Environment.NewLine +
+                firstRunMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "1.10 Version Installed".L10N("UI:Main:InitialInstallationTitle"),
+                    string.Format(("TIBERIUM CRISIS II 1.10 installed." + Environment.NewLine +
                     "It's highly recommended that you configure your settings before playing." +
-                    Environment.NewLine + "Do you want to configure them now?").L10N("UI:Main:InitialInstallationText"), ClientConfiguration.Instance.LocalGame));
+                    Environment.NewLine + "Do you want to configure them now?").L10N("UI:Main:InitialInstallationText")));
                 firstRunMessageBox.YesClickedAction = FirstRunMessageBox_YesClicked;
                 firstRunMessageBox.NoClickedAction = FirstRunMessageBox_NoClicked;
             }
@@ -752,9 +753,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox)
         {
-            optionsWindow.Open(UserINISettings.Instance.EnhancedQualityGuideRead);
-            UserINISettings.Instance.EnhancedQualityGuideRead.Value = true;
-            UserINISettings.Instance.SaveSettings();
+            optionsWindow.Open();
         }
 
         private void SharedUILogic_GameProcessStarted()
@@ -1070,10 +1069,11 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCredits_LeftClick(object sender, EventArgs e)
         {
-            if (UserINISettings.Instance.TC2Completed)
+            /*if (UserINISettings.Instance.TC2Completed)
                 Process.Start("http://www.bilibili.com/video/BV1cJ411X7pi?p=3");
             else
-                innerPanel.Show(innerPanel.CreditsPanel);
+                innerPanel.Show(innerPanel.CreditsPanel);*/
+            Process.Start(MainClientConstants.CREDITS_URL);
         }
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>

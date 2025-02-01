@@ -35,7 +35,7 @@ namespace ClientCore.Statistics.GameParsers
 
             try
             {
-                string newPath = ProgramConstants.GamePath + fileName;
+                string newPath = ProgramConstants.GamePath + "A_" + fileName;
                 File.Copy(gamepath + fileName, newPath, true);
 
                 StreamReader reader = new StreamReader(File.OpenRead(newPath));
