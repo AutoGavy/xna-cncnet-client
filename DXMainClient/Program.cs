@@ -73,6 +73,7 @@ namespace DTAClient
             "Sdl",
             "soft_oal",
             "ImeSharp",
+            "TsfSharp",
         };
 
         private static string COMMON_LIBRARY_PATH;
