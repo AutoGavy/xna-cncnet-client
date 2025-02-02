@@ -133,6 +133,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ImeSharp" Version="1.4.0" Condition="'$(Platform)' == 'SharpDX'" />
+    <Compile Include="IME\DummyIMEHandler.cs" />
+    <Compile Include="IME\IMEHandler.cs" />
+    <Compile Include="IME\WinFormsIMEHandler.cs" Condition="'$(Platform)' == 'SharpDX'" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="ClientGUICreator.cs" />
     <Compile Include="CMedal.cs" />
     <Compile Include="ToolTip.cs" />

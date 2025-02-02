@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 using Rampastring.Tools;
 
-namespace DTAClient.IME;
+namespace ClientGUI.IME;
 
 /// <summary>
 /// Integrate IME to XNA framework.

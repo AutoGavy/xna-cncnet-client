@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace DTAClient.IME
+namespace ClientGUI.IME
 {
     internal class DummyIMEHandler : IMEHandler
     {

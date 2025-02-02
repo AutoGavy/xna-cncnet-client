@@ -368,10 +368,6 @@
     <Reference Include="DTAUpdater">
       <HintPath>..\References\DTAUpdater.dll</HintPath>
     </Reference>
-    <Reference Include="ImeSharp, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ImeSharp.1.4.0\lib\net46\ImeSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\Ionic.Zip.dll</HintPath>
@@ -406,9 +402,6 @@
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TsfSharp">
-      <HintPath>..\packages\TsfSharp.1.1.0\lib\net45\TsfSharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\GS_Side.cs" />
@@ -526,9 +519,6 @@
     <Compile Include="DXGUI\Multiplayer\PlayerExtraOptionsPanel.cs" />
     <Compile Include="DXGUI\Multiplayer\PlayerListBox.cs" />
     <Compile Include="DXGUI\Multiplayer\TeamStartMappingsPanel.cs" />
-    <Compile Include="IME\DummyIMEHandler.cs" />
-    <Compile Include="IME\IMEHandler.cs" />
-    <Compile Include="IME\WinFormsIMEHandler.cs" Condition="'$(Platform)' == 'SharpDX'" />
     <Compile Include="Online\ChannelUser.cs" />
     <Compile Include="Online\CnCNetGameCheck.cs" />
     <Compile Include="Online\CnCNetUserData.cs" />
@@ -647,9 +637,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clienticon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="ImeSharp" Version="1.4.0" Condition="'$(Platform)' == 'SharpDX'" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

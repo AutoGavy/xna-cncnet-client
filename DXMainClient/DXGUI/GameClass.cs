@@ -2,7 +2,7 @@
 using ClientCore.CnCNet5;
 using DTAClient.Domain;
 using DTAClient.DXGUI.Generic;
-using DTAClient.IME;
+using ClientGUI.IME;
 using Localization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;

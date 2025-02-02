@@ -9,7 +9,7 @@ using Rampastring.XNAUI;
 using Rampastring.XNAUI.Input;
 using Rampastring.XNAUI.XNAControls;
 
-namespace DTAClient.IME;
+namespace ClientGUI.IME;
 public abstract class IMEHandler : IIMEHandler
 {
     bool IIMEHandler.TextCompositionEnabled => TextCompositionEnabled;
