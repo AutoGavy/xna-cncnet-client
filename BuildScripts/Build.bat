@@ -23,6 +23,9 @@ ECHO.
 echo Compiling %configuration% %platform%
 ECHO.
 
+call RemoveObj
+dotnet restore ..\ClientGUI\ClientGUI.csproj
+
 "%msbuild%" ..\DXClient.sln /t:Rebuild /p:Platform=%platform% /p:Configuration=%configuration%
 if errorlevel 1 goto error
 
