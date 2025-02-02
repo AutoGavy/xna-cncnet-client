@@ -75,7 +75,6 @@ namespace DTAClient
             "ImeSharp",
             "TsfSharp",
             "SharpGen.Runtime",
-            "SharpGen.Runtime.COM",
         };
 
         private static string COMMON_LIBRARY_PATH;
