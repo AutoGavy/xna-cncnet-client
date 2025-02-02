@@ -72,7 +72,7 @@ namespace DTAClient
             "Rampastring.XNAUI",
             "Sdl",
             "soft_oal",
-            "ImeSharp.dll",
+            "ImeSharp",
         };
 
         private static string COMMON_LIBRARY_PATH;
