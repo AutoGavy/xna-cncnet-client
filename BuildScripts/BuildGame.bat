@@ -25,6 +25,7 @@ goto error
 
 :error
 endlocal
+pause
 exit /B 1
 
 :end
