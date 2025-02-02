@@ -18,7 +18,7 @@ namespace DTAClient.Online
         string[] fileNamesToCheck = new string[]
         {
 #if ARES
-            "Ares.dll",
+            /*"Ares.dll",
             "Ares.dll.inj",
             "Ares.mix",
             "Syringe.exe",
@@ -27,7 +27,26 @@ namespace DTAClient.Online
             "artmd.ini",
             "soundmd.ini",
             "aimd.ini",
+            "shroud.shp",*/
+            "ares.mix",
+            "AxionGear.ext",
+            "cncnet5.ext",
+            "Crisis.ext",
+            "Crisis.ext.inc",
+            "GScript.ext",
+            "Phobos.ext",
+            "mpteams.ini",
+            "ro_mapsettings.ini",
+            "ro_otherside.ini",
+            "ro_phobos.ini",
+            "arttc.ini",
+            "aitc.ini",
+            "uimd.ini",
+            "soundtc.ini",
+            "evamd.ini",
             "shroud.shp",
+            "GotoTC.exe"
+
 #elif YR
             "spawner.xdp",
             "spawner2.xdp",
@@ -163,7 +182,8 @@ namespace DTAClient.Online
 
         private void ParseConfigFile()
         {
-            IniFile config = new IniFile(ProgramConstants.GetBaseResourcePath() + CONFIGNAME);
+            return;
+            /*IniFile config = new IniFile(ProgramConstants.GetBaseResourcePath() + CONFIGNAME);
             calculateGameExeHash = config.GetBooleanValue("Settings", "CalculateGameExeHash", true);
 
             List<string> keys = config.GetSectionKeys("FilenameList");
@@ -178,32 +198,33 @@ namespace DTAClient.Online
             }
 
             fileNamesToCheck = filenames.ToArray();
+        }*/
         }
-    }
 
-    struct FileHashes
-    {
-        public string GameOptionsHash { get; set; }
-        public string ClientDXHash { get; set; }
-        public string ClientXNAHash { get; set; }
-        public string ClientOGLHash { get; set; }
-        public string INIHashes { get; set; }
-        public string MPMapsHash { get; set; }
-        public string GameExeHash { get; set; }
-        public string LauncherExeHash { get; set; }
-        public string FHCConfigHash { get; set; }
-
-        public override string ToString()
+        struct FileHashes
         {
-            return "GameOptions Hash: " + GameOptionsHash + Environment.NewLine +
-                "ClientDXHash: " + ClientDXHash + Environment.NewLine +
-                "ClientXNAHash: " + ClientXNAHash + Environment.NewLine +
-                "ClientOGLHash: " + ClientOGLHash + Environment.NewLine +
-                "INI Hashes: " + INIHashes + Environment.NewLine +
-                "MPMaps Hash: " + MPMapsHash + Environment.NewLine +
-                "MainExe Hash: " + GameExeHash + Environment.NewLine +
-                "LauncherExe Hash: " + LauncherExeHash + Environment.NewLine +
-                "FHCConfig Hash: " + FHCConfigHash;
+            public string GameOptionsHash { get; set; }
+            public string ClientDXHash { get; set; }
+            public string ClientXNAHash { get; set; }
+            public string ClientOGLHash { get; set; }
+            public string INIHashes { get; set; }
+            public string MPMapsHash { get; set; }
+            public string GameExeHash { get; set; }
+            public string LauncherExeHash { get; set; }
+            public string FHCConfigHash { get; set; }
+
+            public override string ToString()
+            {
+                return "GameOptions Hash: " + GameOptionsHash + Environment.NewLine +
+                    "ClientDXHash: " + ClientDXHash + Environment.NewLine +
+                    "ClientXNAHash: " + ClientXNAHash + Environment.NewLine +
+                    "ClientOGLHash: " + ClientOGLHash + Environment.NewLine +
+                    "INI Hashes: " + INIHashes + Environment.NewLine +
+                    "MPMaps Hash: " + MPMapsHash + Environment.NewLine +
+                    "MainExe Hash: " + GameExeHash + Environment.NewLine +
+                    "LauncherExe Hash: " + LauncherExeHash + Environment.NewLine +
+                    "FHCConfig Hash: " + FHCConfigHash;
+            }
         }
     }
 }

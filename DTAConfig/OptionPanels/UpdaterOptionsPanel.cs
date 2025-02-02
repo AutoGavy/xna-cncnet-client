@@ -84,7 +84,7 @@ namespace DTAConfig.OptionPanels
             var msgBox = new XNAMessageBox(WindowManager, "Force Update Confirmation".L10N("UI:DTAConfig:ForceUpdateConfirmTitle"),
                     ("WARNING: Force update will result in files being re-verified" + Environment.NewLine +
                     "and re-downloaded. While this may fix problems with game" + Environment.NewLine +
-                    "files, this also may delete some custom modifications" + Environment.NewLine +
+                    "files, this also may delete some custom adjustments" + Environment.NewLine +
                     "made to this installation. Use at your own risk!" +
                     Environment.NewLine + Environment.NewLine +
                     "If you proceed, the options window will close and the" + Environment.NewLine +
