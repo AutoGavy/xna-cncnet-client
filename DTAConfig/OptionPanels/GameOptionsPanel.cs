@@ -174,6 +174,7 @@ namespace DTAConfig.OptionPanels
             tbPlayerName.ClientRectangle = new Rectangle(trbScrollRate.X,
                 lblPlayerName.Y - 2, 200, 19);
             tbPlayerName.Text = ProgramConstants.PLAYERNAME;
+            tbPlayerName.IMEDisabled = true;
 
             var lblNotice = new XNALabel(WindowManager);
             lblNotice.Name = "lblNotice";
