@@ -50,6 +50,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
             tbPlayerName.ClientRectangle = new Rectangle(Width - 132, 50, 120, 19);
             tbPlayerName.MaximumTextLength = ClientConfiguration.Instance.MaxNameLength;
             string defgame = ClientConfiguration.Instance.LocalGame;
+            tbPlayerName.IMEDisabled = true;
 
             lblPlayerName = new XNALabel(WindowManager);
             lblPlayerName.Name = "lblPlayerName";
