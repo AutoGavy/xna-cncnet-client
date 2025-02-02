@@ -72,10 +72,17 @@ namespace DTAClient
             "Rampastring.XNAUI",
             "Sdl",
             "soft_oal",
-            // "ImeSharp",
-            // "TsfSharp",
-            // "SharpGen.Runtime",
-            // "System.Runtime.CompilerServices.Unsafe",
+
+            // ImeSharp and it's dependencies
+            "ImeSharp",
+            "TsfSharp",
+            "SharpGen.Runtime",
+            "SharpGen.Runtime.COM",
+            "System.Runtime.CompilerServices.Unsafe",
+            "System.Buffers",
+            "System.Memory",
+            "Microsoft.Win32.Registry",
+            "System.Runtime.InteropServices.RuntimeInformation",
         };
 
         private static string COMMON_LIBRARY_PATH;

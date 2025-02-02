@@ -51,12 +51,16 @@ copy SharpDX.DXGI.dll %winBinaries%SharpDX.DXGI.dll
 copy SharpDX.MediaFoundation.dll %winBinaries%SharpDX.MediaFoundation.dll
 copy SharpDX.XAudio2.dll %winBinaries%SharpDX.XAudio2.dll
 copy SharpDX.XInput.dll %winBinaries%SharpDX.XInput.dll
-copy System.Buffers.dll %winBinaries%System.Buffers.dll
+
 copy ImeSharp.dll %winBinaries%ImeSharp.dll
 copy TsfSharp.dll %winBinaries%TsfSharp.dll
 copy SharpGen.Runtime.dll %winBinaries%SharpGen.Runtime.dll
 copy SharpGen.Runtime.COM.dll %cr%SharpGen.Runtime.COM.dll
+copy System.Buffers.dll %winBinaries%System.Buffers.dll
+copy System.Memory.dll %winBinaries%System.Memory.dll
+copy Microsoft.Win32.Registry.dll %winBinaries%Microsoft.Win32.Registry.dll
 copy System.Runtime.CompilerServices.Unsafe.dll %winBinaries%System.Runtime.CompilerServices.Unsafe.dll
+copy System.Runtime.InteropServices.RuntimeInformation.dll %winBinaries%System.Runtime.InteropServices.RuntimeInformation.dll
 
 echo OpenGL
 
