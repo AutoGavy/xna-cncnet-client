@@ -26,7 +26,7 @@ internal class WinFormsIMEHandler : IMEHandler
     {
         Logger.Log($"Initialize WinFormsIMEHandler.");
         Debug.Assert(game?.Window?.Handle != null, "The handle of game window should not be null");
-        InputMethod.Initialize(game.Window.Handle);
+        InputMethod.Initialize(game.Window.Handle, true, true);
         InputMethod.TextInputCallback = OnIMETextInput;
         InputMethod.TextCompositionCallback = (compositionText, cursorPosition) =>
         {
