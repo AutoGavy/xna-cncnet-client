@@ -1240,6 +1240,15 @@
             and does not affect functionality.
             </summary>
         </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.ExclusiveInputCapture">
+            <summary>
+            Determines whether this control should exclusively capture input when it's the selected control,
+            preventing any other control from being the input focus. An example is scroll bars; when the user
+            starts dragging a scroll bar, no other control should get focus as long as the scroll bar is being scrolled,
+            even if the cursor left the scroll bar's area.
+            NOTE: controls using this should give up their selected control status when they've figured out they don't need it anymore.
+            </summary>
+        </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.Focused">
             <summary>
             Determines whether the control should block other controls on the screen
@@ -1283,6 +1292,12 @@
             <summary>
             Whether a child of this control handled input during the ongoing frame.
             Used for input pass-through.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.IsChildActive">
+            <summary>
+            Gets a value that can be used to check whether a child of this control is active on the current frame.
+            See <see cref="P:Rampastring.XNAUI.XNAControls.XNAControl.IsActive"/>.
             </summary>
         </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.RenderTarget">
@@ -1600,7 +1615,6 @@
             Called on each frame while the mouse is on the control's
             client rectangle.
             </summary>
-            <param name="eventArgs">Mouse event arguments.</param>
         </member>
         <member name="M:Rampastring.XNAUI.XNAControls.XNAControl.OnMouseScrolled">
             <summary>
@@ -2189,6 +2203,11 @@
         <member name="T:Rampastring.XNAUI.Renderer">
             <summary>
             Provides static methods for drawing.
+            </summary>
+        </member>
+        <member name="M:Rampastring.XNAUI.Renderer.GetFontList">
+            <summary>
+            Allows direct access to the list of loaded fonts.
             </summary>
         </member>
         <member name="M:Rampastring.XNAUI.Renderer.GetSafeString(System.String,System.Int32)">
