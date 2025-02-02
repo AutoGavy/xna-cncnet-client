@@ -54,6 +54,8 @@ copy SharpDX.XInput.dll %winBinaries%SharpDX.XInput.dll
 copy System.Buffers.dll %winBinaries%System.Buffers.dll
 copy ImeSharp.dll %winBinaries%ImeSharp.dll
 copy TsfSharp.dll %winBinaries%TsfSharp.dll
+copy SharpGen.Runtime.dll %winBinaries%SharpGen.Runtime.dll
+copy SharpGen.Runtime.COM.dll %winBinaries%SharpGen.Runtime.COM.dll
 
 echo OpenGL
 
