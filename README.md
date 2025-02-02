@@ -20,7 +20,7 @@ Requirements
 ------------
 
 The client has 3 builds: Windows (DirectX11), OpenGL and XNA.
-* The Windows and OpenGL builds rely on .NET Framework 4.5 and MonoGame.
+* The Windows and OpenGL builds rely on .NET Framework 4.6 and MonoGame.
 * The XNA build relies on .NET Framework 4.0 and Microsoft's XNA Framework 4.0 Refresh.
   * [Installing XNA for Visual Studio 2019](http://flatredball.com/visual-studio-2019-xna-setup/)
   * [Installing XNA for Visual Studio 2017](http://flatredball.com/visual-studio-2017-xna-setup/)

@@ -122,6 +122,74 @@
             <param name="controlTypeName">The name of the control class type to create.</param>
             <returns>A control of the specified type.</returns>
         </member>
+        <member name="T:Rampastring.XNAUI.Input.IIMEHandler">
+            <summary>
+            Interface for outside components implementing Input Method Editor (IME) support.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.Input.IIMEHandler.TextCompositionEnabled">
+            <summary>
+            Determines whether IME is allowed to compose text.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.Input.Cursor.LeftDown">
+            <summary>
+            Gets a value that indicates whether the left mouse button is held down
+            on the current frame.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.Input.Cursor.LeftPressedDown">
+            <summary>
+            Gets a value that indicates whether the left mouse button was pressed
+            down on this frame (meaning it's down on the current frame, but wasn't down
+            on the previous frame).
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.Input.Cursor.RightDown">
+            <summary>
+            Gets a value that indicates whether the right mouse button is held down
+            on the current frame.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.Input.Cursor.RightPressedDown">
+            <summary>
+            Gets a value that indicates whether the right mouse button was pressed
+            down on this frame (meaning it's down on the current frame, but wasn't down
+            on the previous frame).
+            </summary>
+        </member>
+        <member name="M:Rampastring.XNAUI.Input.Cursor.LoadNativeCursor(System.String)">
+            <summary>
+            Attemps to replace the native operating system pointer cursor with
+            a cursor file from a specific path for the game window. If succesful,
+            the cursor sprite is hidden, otherwise the cursor sprite remains visible.
+            </summary>
+            <param name="path">The path to the cursor (.cur) file.</param>
+        </member>
+        <member name="T:Rampastring.XNAUI.Input.KeyboardEventInput">
+            <summary>
+            Handles text input. XNA does not have a built-in system for text input.
+            Note: MonoGame has a way of detecting text input,
+            via the Game.Window.TextInput event:
+            http://www.gamedev.net/topic/457783-xna-getting-text-from-keyboard/
+            </summary>
+        </member>
+        <member name="E:Rampastring.XNAUI.Input.KeyboardEventInput.CharEntered">
+            <summary>
+            Event raised when a character has been entered.
+            </summary>
+        </member>
+        <member name="M:Rampastring.XNAUI.Input.KeyboardEventInput.Initialize(Microsoft.Xna.Framework.GameWindow)">
+            <summary>
+            Initialize the TextInput with the given GameWindow.
+            </summary>
+            <param name="window">The XNA window to which text input should be linked.</param>
+        </member>
+        <member name="T:Rampastring.XNAUI.Input.RKeyboard">
+            <summary>
+            A class for handling the keyboard.
+            </summary>
+        </member>
         <member name="T:Rampastring.XNAUI.EnhancedSoundEffect">
             <summary>
             A toggleable sound effect that can also have a defined priority
@@ -703,6 +771,11 @@
             The end character index of the visible part of the text string.
             </summary>
         </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.IMEDisabled">
+            <summary>
+            Can be set to disable IME (Input Method Editor) support for this control.
+            </summary>
+        </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNATextBox.PreviousControl">
             <summary>
             The control to switch selection state to when
@@ -1240,6 +1313,15 @@
             and does not affect functionality.
             </summary>
         </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.ExclusiveInputCapture">
+            <summary>
+            Determines whether this control should exclusively capture input when it's the selected control,
+            preventing any other control from being the input focus. An example is scroll bars; when the user
+            starts dragging a scroll bar, no other control should get focus as long as the scroll bar is being scrolled,
+            even if the cursor left the scroll bar's area.
+            NOTE: controls using this should give up their selected control status when they've figured out they don't need it anymore.
+            </summary>
+        </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.Focused">
             <summary>
             Determines whether the control should block other controls on the screen
@@ -1283,6 +1365,12 @@
             <summary>
             Whether a child of this control handled input during the ongoing frame.
             Used for input pass-through.
+            </summary>
+        </member>
+        <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.IsChildActive">
+            <summary>
+            Gets a value that can be used to check whether a child of this control is active on the current frame.
+            See <see cref="P:Rampastring.XNAUI.XNAControls.XNAControl.IsActive"/>.
             </summary>
         </member>
         <member name="P:Rampastring.XNAUI.XNAControls.XNAControl.RenderTarget">
@@ -1600,7 +1688,6 @@
             Called on each frame while the mouse is on the control's
             client rectangle.
             </summary>
-            <param name="eventArgs">Mouse event arguments.</param>
         </member>
         <member name="M:Rampastring.XNAUI.XNAControls.XNAControl.OnMouseScrolled">
             <summary>
@@ -2112,64 +2199,6 @@
             The point of the mouse cursor relative to the control.
             </summary>
         </member>
-        <member name="P:Rampastring.XNAUI.Input.Cursor.LeftDown">
-            <summary>
-            Gets a value that indicates whether the left mouse button is held down
-            on the current frame.
-            </summary>
-        </member>
-        <member name="P:Rampastring.XNAUI.Input.Cursor.LeftPressedDown">
-            <summary>
-            Gets a value that indicates whether the left mouse button was pressed
-            down on this frame (meaning it's down on the current frame, but wasn't down
-            on the previous frame).
-            </summary>
-        </member>
-        <member name="P:Rampastring.XNAUI.Input.Cursor.RightDown">
-            <summary>
-            Gets a value that indicates whether the right mouse button is held down
-            on the current frame.
-            </summary>
-        </member>
-        <member name="P:Rampastring.XNAUI.Input.Cursor.RightPressedDown">
-            <summary>
-            Gets a value that indicates whether the right mouse button was pressed
-            down on this frame (meaning it's down on the current frame, but wasn't down
-            on the previous frame).
-            </summary>
-        </member>
-        <member name="M:Rampastring.XNAUI.Input.Cursor.LoadNativeCursor(System.String)">
-            <summary>
-            Attemps to replace the native operating system pointer cursor with
-            a cursor file from a specific path for the game window. If succesful,
-            the cursor sprite is hidden, otherwise the cursor sprite remains visible.
-            </summary>
-            <param name="path">The path to the cursor (.cur) file.</param>
-        </member>
-        <member name="T:Rampastring.XNAUI.Input.KeyboardEventInput">
-            <summary>
-            Handles text input. XNA does not have a built-in system for text input.
-            Note: MonoGame has a way of detecting text input,
-            via the Game.Window.TextInput event:
-            http://www.gamedev.net/topic/457783-xna-getting-text-from-keyboard/
-            </summary>
-        </member>
-        <member name="E:Rampastring.XNAUI.Input.KeyboardEventInput.CharEntered">
-            <summary>
-            Event raised when a character has been entered.
-            </summary>
-        </member>
-        <member name="M:Rampastring.XNAUI.Input.KeyboardEventInput.Initialize(Microsoft.Xna.Framework.GameWindow)">
-            <summary>
-            Initialize the TextInput with the given GameWindow.
-            </summary>
-            <param name="window">The XNA window to which text input should be linked.</param>
-        </member>
-        <member name="T:Rampastring.XNAUI.Input.RKeyboard">
-            <summary>
-            A class for handling the keyboard.
-            </summary>
-        </member>
         <member name="T:Rampastring.XNAUI.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -2189,6 +2218,11 @@
         <member name="T:Rampastring.XNAUI.Renderer">
             <summary>
             Provides static methods for drawing.
+            </summary>
+        </member>
+        <member name="M:Rampastring.XNAUI.Renderer.GetFontList">
+            <summary>
+            Allows direct access to the list of loaded fonts.
             </summary>
         </member>
         <member name="M:Rampastring.XNAUI.Renderer.GetSafeString(System.String,System.Int32)">
