@@ -56,7 +56,7 @@ copy ImeSharp.dll %winBinaries%ImeSharp.dll
 copy TsfSharp.dll %winBinaries%TsfSharp.dll
 copy SharpGen.Runtime.dll %winBinaries%SharpGen.Runtime.dll
 copy SharpGen.Runtime.COM.dll %cr%SharpGen.Runtime.COM.dll
-copy System.Runtime.CompilerServices.Unsafe.dll %cr%System.Runtime.CompilerServices.Unsafe.dll
+copy System.Runtime.CompilerServices.Unsafe.dll %winBinaries%System.Runtime.CompilerServices.Unsafe.dll
 
 echo OpenGL
 
