@@ -2,6 +2,7 @@
 using ClientCore.CnCNet5;
 using DTAClient.Domain;
 using DTAClient.DXGUI.Generic;
+using DTAClient.IME;
 using Localization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -102,6 +103,7 @@ namespace DTAClient.DXGUI
 
             WindowManager wm = new WindowManager(this, graphics);
             wm.Initialize(content, ProgramConstants.GetBaseResourcePath());
+            wm.IMEHandler = IMEHandler.Create(this);
 
             SetGraphicsMode(wm);
 
