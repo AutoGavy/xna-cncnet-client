@@ -181,6 +181,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     if (pInfo.ColorId == 0)
                         return "This mission is not allowed to select random color.".L10N("UI:Main:CannotUseRandomColor");
                 }
+
+                if (!ClientConfiguration.DEBUG_BUILD)
+                    return "This mode is coming soon. Please follow our official website and don't miss out!".L10N("UI:Main:TRModeNotReady");
             }
 
             var teamMappingsError = GetTeamMappingsError();

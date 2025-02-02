@@ -149,21 +149,21 @@ namespace DTAClient.DXGUI.Multiplayer
         {
             item.Tag = user;
 
-            if (false/*user.IsAdmin*/)
+            /*if (user.IsAdmin)
             {
                 item.Text = user.IRCUser.Name + " " + "(Admin)".L10N("UI:Main:AdminSuffix");
                 item.TextColor = Color.Red;
                 item.Texture = adminGameIcon;
             }
-            else
-            {
+            else*/
+            //{
                 item.Text = user.IRCUser.Name;
 
                 if (user.IRCUser.GameID < 0 || user.IRCUser.GameID >= gameCollection.GameList.Count)
                     item.Texture = unknownGameIcon;
                 else
                     item.Texture = gameCollection.GameList[user.IRCUser.GameID].Texture;
-            }
+            //}
         }
     }
 }

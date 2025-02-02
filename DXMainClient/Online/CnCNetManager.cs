@@ -579,12 +579,12 @@ namespace DTAClient.Online
             if (channel == null)
                 return;
 
-            bool isAdmin = false;
+            //bool isAdmin = false;
             string name = userName;
 
             if (userName.StartsWith("@"))
             {
-                isAdmin = true;
+                //isAdmin = true;
                 name = userName.Remove(0, 1);
             }
 
@@ -739,11 +739,11 @@ namespace DTAClient.Online
             foreach (string userName in userList)
             {
                 string name = userName;
-                bool isAdmin = false;
+                //bool isAdmin = false;
 
                 if (userName.StartsWith("@"))
                 {
-                    isAdmin = true;
+                    //isAdmin = true;
                     name = userName.Substring(1);
                 }
                 else if (userName.StartsWith("+"))
