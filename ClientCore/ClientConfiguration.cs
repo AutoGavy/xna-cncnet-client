@@ -346,12 +346,20 @@ namespace ClientCore
                 if (osVersion.Major == 5)
                     return OSVersion.WINXP;
 
-                if (osVersion.Minor > 1)
-                    return OSVersion.WIN810;
-                else if (osVersion.Minor == 0)
-                    return OSVersion.WINVISTA;
+                if (osVersion.Major == 6)
+                {
+                    if (osVersion.Minor == 0)
+                        return OSVersion.WINVISTA;
 
-                return OSVersion.WIN7;
+                    if (osVersion.Minor > 1)
+                        return OSVersion.WIN810;
+
+                    return OSVersion.WIN7;
+
+                }
+
+                // osVersion.Major > 6
+                return OSVersion.WIN810;
             }
 
             int p = (int)Environment.OSVersion.Platform;
