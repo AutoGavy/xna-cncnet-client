@@ -1303,7 +1303,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void LaunchMapEditor()
         {
-            XNAMessageBox.Show(WindowManager, "����ʽ�汾", "���԰汾�޷�ʹ�ô˹��ܡ�" + Environment.NewLine + "�밲װ1.074�汾");
+            XNAMessageBox.Show(WindowManager, "非正式版本", "测试版本无法使用此功能。" + Environment.NewLine + "请安装1.074版本");
 
             /*OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
             Process mapEditorProcess = new Process();
