@@ -115,47 +115,49 @@ namespace DTAClient.Domain
         {
             try
             {
-                StreamReader reader = new StreamReader(File.OpenRead(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName));
-                reader.BaseStream.Position = 2256;
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(File.OpenRead(ProgramConstants.GamePath + SAVED_GAME_PATH + FileName)))
                 {
-                    if (line.Contains(findSample))
+                    reader.BaseStream.Position = 2256;
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        MissionName = line.Substring(line.IndexOf(findSample) - findSample.Length - 1, 5).ToLower();
-                        SideName = MissionName.Substring(0, 3);
-
-                        reader.Close();
-
-                        switch (SideName)
+                        if (line.Contains(findSample))
                         {
-                            case "tra":
-                            case "prl":
-                            case "gdo":
-                            case "gdi":
-                                SideName = "GDI";
-                                break;
-                            case "nof":
-                            case "nod":
-                                SideName = "Nod";
-                                break;
-                            case "sct":
-                            case "scr":
-                                SideName = "Scrin";
-                                break;
-                            default:
-                                SideName = "GDI";
-                                break;
+                            MissionName = line.Substring(line.IndexOf(findSample) - findSample.Length - 1, 5).ToLower();
+                            SideName = MissionName.Substring(0, 3);
+
+                            reader.Close();
+
+                            switch (SideName)
+                            {
+                                case "tra":
+                                case "prl":
+                                case "gdo":
+                                case "gdi":
+                                    SideName = "GDI";
+                                    break;
+                                case "nof":
+                                case "nod":
+                                    SideName = "Nod";
+                                    break;
+                                case "sct":
+                                case "scr":
+                                    SideName = "Scrin";
+                                    break;
+                                default:
+                                    SideName = "GDI";
+                                    break;
+                            }
+
+                            Logger.Log("SavedGame: Game mission name is " + MissionName);
+                            Logger.Log("SavedGame: Campaign music side name is " + SideName);
+                            return true;
                         }
-
-                        Logger.Log("SavedGame: Game mission name is " + MissionName);
-                        Logger.Log("SavedGame: Campaign music side name is " + SideName);
-                        return true;
                     }
-                }
 
-                reader.Close();
+                    reader.Close();
+                }
                 return false;
             }
             catch (Exception ex)

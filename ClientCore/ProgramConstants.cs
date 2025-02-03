@@ -53,7 +53,7 @@ namespace ClientCore
 
         public static readonly Encoding LAN_ENCODING = Encoding.UTF8;
 
-        private const string BASE_SHARED_DIR = "GameShaders/BaseShared/";
+        public const string BASE_SHARED_DIR = "GameShaders/BaseShared/";
 
         public static string GAME_VERSION = "Developer Mode";
         private static string PlayerName = "No name";

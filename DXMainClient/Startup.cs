@@ -37,6 +37,9 @@ namespace DTAClient
                     {
                         string path = (ProgramConstants.GamePath + "gamemd.exe").Replace('/', '\\');
                         key.SetValue(path, kGpuPreferencesHighPerformanceW);
+
+                        path = (ProgramConstants.GamePath + ProgramConstants.BASE_SHARED_DIR + "tchelper/tchelper.exe").Replace('/', '\\');
+                        key.SetValue(path, kGpuPreferencesHighPerformanceW);
                     } 
                 }
             }
@@ -58,6 +61,9 @@ namespace DTAClient
                         try
                         {
                             string path = (ProgramConstants.GamePath + "gamemd.exe").Replace('/', '\\');
+                            key.DeleteValue(path);
+
+                            path = (ProgramConstants.GamePath + ProgramConstants.BASE_SHARED_DIR + "tchelper/tchelper.exe").Replace('/', '\\');
                             key.DeleteValue(path);
                         }
                         catch (ArgumentException)

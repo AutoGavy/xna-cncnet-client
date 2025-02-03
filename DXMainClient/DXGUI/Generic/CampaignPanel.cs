@@ -643,9 +643,6 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            if (ClientConfiguration.TEST_BUILD)
-                return;
-
             string missionName = MissionList[curMissionIndex].ToUpper();
             if (!campaignOptionsIni.GetBooleanValue(missionName, "IsValid", true))
             {
