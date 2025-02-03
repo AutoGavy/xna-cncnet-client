@@ -242,6 +242,11 @@
             for the specified number of seconds after it has been played.
             </summary>
         </member>
+        <member name="P:Rampastring.XNAUI.EnhancedSoundEffect.Volume">
+            <summary>
+            The volume multiplier for this sound effect.
+            </summary>
+        </member>
         <member name="M:Rampastring.XNAUI.EnhancedSoundEffect.Play">
             <summary>
             Plays this sound if it's enabled.
@@ -419,6 +424,7 @@
         <member name="M:Rampastring.XNAUI.SoundPlayer.PlayWithVolume(System.Single,Rampastring.XNAUI.EnhancedSoundEffect)">
             <summary>
             Plays a sound with the specified volume.
+            This overrides the volume setting of the sound itself.
             </summary>
             <param name="volume">The volume that the sound will be played at.</param>
             <param name="sound">The sound to play.</param>
