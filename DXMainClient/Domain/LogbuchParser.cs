@@ -14,6 +14,8 @@ namespace DTAClient.Domain
         private static readonly string fileName = ClientConfiguration.Instance.StatisticsLogFileName;
 
         private const string DEBUG_FILENAME = "debug/debug.log";
+        private const string LOGBUCH_FILENAME = "logbuch.log";
+        private const string SKIRMISH_LOGBUCH = "skirmish_logbuch.dat";
         private const string PROFILE_NAME = "Client/profile_data";
 
         public static string scoreSong = String.Empty;
@@ -117,10 +119,11 @@ namespace DTAClient.Domain
             }
 
             Logger.Log("Attempting to read campaign logbuch from " + DEBUG_FILENAME);
+            File.Copy(gamepath + DEBUG_FILENAME, gamepath + LOGBUCH_FILENAME, true);
 
             try
             {
-                using StreamReader reader = new StreamReader(File.OpenRead(gamepath + DEBUG_FILENAME));
+                using StreamReader reader = new StreamReader(File.OpenRead(gamepath + LOGBUCH_FILENAME));
                 IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
                 string side = String.Empty;
                 string result = "lose";
@@ -470,6 +473,7 @@ namespace DTAClient.Domain
                 Logger.Log("LogbuchsParser: Error parsing log file! Message: " + ex.Message);
             }
 
+            File.Delete(gamepath + LOGBUCH_FILENAME);
             return;
         }
 
@@ -519,10 +523,11 @@ namespace DTAClient.Domain
             }
 
             Logger.Log("Attempting to read skirmish loaded logbuch from " + fileName);
+            File.Copy(gamepath + fileName, gamepath + SKIRMISH_LOGBUCH, true);
 
             try
             {
-                using StreamReader reader = new StreamReader(File.OpenRead(gamepath + fileName));
+                using StreamReader reader = new StreamReader(File.OpenRead(gamepath + SKIRMISH_LOGBUCH));
                 string result = String.Empty;
                 string line;
 
@@ -550,23 +555,26 @@ namespace DTAClient.Domain
 
                 reader.Close();
 
-                if (String.IsNullOrEmpty(result))
+                if (!String.IsNullOrEmpty(result))
+                {
+                    if (result == "lose" && side.Contains("final"))
+                        scoreSong = side.Substring(0, 3) + result;
+                    else
+                        scoreSong = side + result;
+
+                    ActiveScoreSong();
+                }
+                else
                 {
                     Logger.Log("Skipping playing score music: Player was a spectator.");
-                    return;
                 }
-
-                if (result == "lose" && side.Contains("final"))
-                    scoreSong = side.Substring(0, 3) + result;
-                else
-                    scoreSong = side + result;
-
-                ActiveScoreSong();
             }
             catch (Exception ex)
             {
                 Logger.Log("LogbuchParser: Error parsing score song from loaded skirmish! Message: " + ex.Message);
             }
+
+            File.Delete(gamepath + LOGBUCH_FILENAME);
         }
 
         public static void ClearTrash()
