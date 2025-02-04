@@ -118,13 +118,11 @@ namespace DTAClient.DXGUI.Generic
         {
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             var msgBox = new XNAMessageBox(WindowManager, "Delete Confirmation".L10N("UI:Main:DeleteConfirmationTitle"),
-                string.Format("The following saved game will be deleted permanently:".L10N("UI:Main:DeleteTitle") + Environment.NewLine +
-                    Environment.NewLine +
-                    "Filename".L10N("UI:Main:Filename") + "£º {0}" + Environment.NewLine +
-                    "Saved game name".L10N("UI:Main:SavedGameName") + "£º {1}" + Environment.NewLine +
-                    "Date and time".L10N("UI:Main:DateAndTime") + ": {2}" + Environment.NewLine +
-                    Environment.NewLine +
-                    "Are you sure you want to proceed?".L10N("UI:Main:DeleteConfirmationText"),
+                string.Format(("The following saved game will be deleted permanently:\n\n" +
+                    "Filename: {0}\n" +
+                    "Saved game name: {1}\n" +
+                    "Date and time: {2}\n\n" +
+                    "Are you sure you want to proceed?").L10N("UI:Main:DeleteConfirmationText"),
                     sg.FileName, Renderer.GetSafeString(sg.GUIName, lbSaveGameList.FontIndex), sg.LastModified.ToString()),
                 XNAMessageBoxButtons.YesNo);
             msgBox.Show();

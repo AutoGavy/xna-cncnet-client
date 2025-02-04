@@ -1962,10 +1962,6 @@ namespace DTAConfig.OptionPanels
                 foreach (string logFile in files)
                     File.Delete(logFile);
             }
-
-            string filePath = ProgramConstants.GamePath + "Saved Games/TESTQ.SAV";
-            if (Directory.Exists(filePath))
-                File.Delete(filePath);
         }
 
         /// <summary>
