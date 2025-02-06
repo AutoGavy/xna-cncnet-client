@@ -10,6 +10,7 @@ using Rampastring.XNAUI;
 using Rampastring.Tools;
 using System.Linq;
 using Localization;
+using System.Windows.Forms;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -338,6 +339,9 @@ namespace DTAClient.DXGUI.Generic
                     btnSlideDown.AllowClick = true;
                 }
             }
+
+            foreach (XNAClientButton button in MissionButtons)
+                CheckMission(button);
         }
 
         public void UpdateMissionMedals()
