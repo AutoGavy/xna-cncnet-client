@@ -322,6 +322,9 @@ namespace DTAClient.DXGUI.Generic
 
         public void UpdateMissionButtons()
         {
+            foreach (XNAClientButton button in MissionButtons)
+                CheckMission(button);
+
             IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             if (profileIni.GetBooleanValue("General", "GDO3", false))
@@ -339,9 +342,6 @@ namespace DTAClient.DXGUI.Generic
                     btnSlideDown.AllowClick = true;
                 }
             }
-
-            foreach (XNAClientButton button in MissionButtons)
-                CheckMission(button);
         }
 
         public void UpdateMissionMedals()
