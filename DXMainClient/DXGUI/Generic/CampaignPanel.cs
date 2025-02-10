@@ -1,16 +1,15 @@
 using ClientCore;
+using ClientGUI;
+using DTAClient.Domain;
+using Localization;
 using Microsoft.Xna.Framework;
+using Rampastring.Tools;
+using Rampastring.XNAUI;
+using Rampastring.XNAUI.XNAControls;
 using System;
 using System.Collections.Generic;
-using DTAClient.Domain;
 using System.IO;
-using ClientGUI;
-using Rampastring.XNAUI.XNAControls;
-using Rampastring.XNAUI;
-using Rampastring.Tools;
 using System.Linq;
-using Localization;
-using System.Windows.Forms;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -322,22 +321,42 @@ namespace DTAClient.DXGUI.Generic
 
         public void UpdateMissionButtons()
         {
-            foreach (XNAClientButton button in MissionButtons)
-                CheckMission(button);
+            // slide up
+            if (curMissionIndex > 3)
+            {
+                btnSlideUp.AllowClick = true;
 
+                for (int i = 0; i < 4; i++)
+                {
+                    SetAsButton[i](MissionButtons[curMissionIndex + i - 3]);
+                    CheckMission(MissionButtons[curMissionIndex + i - 3]);
+                    MissionButtons[curMissionIndex - i].Enable();
+                    MissionButtons[curMissionIndex - i].Visible = true;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    SetAsButton[i](MissionButtons[i]);
+                    CheckMission(MissionButtons[i]);
+                }
+            }
+
+            // slide down
             IniFile profileIni = new IniFile(ProgramConstants.GamePath + PROFILE_NAME);
 
             if (profileIni.GetBooleanValue("General", "GDO3", false))
             {
-                if (curMissionIndex == 3)
+                if (curMissionIndex >= 3)
                 {
                     btnSlideDown.AllowClick = true;
                 }
             }
 
-            if (profileIni.GetBooleanValue("General", "GDO5", false))
+            if (profileIni.GetBooleanValue("General", "GDO4", false))
             {
-                if (curMissionIndex == 5)
+                if (curMissionIndex >= 4)
                 {
                     btnSlideDown.AllowClick = true;
                 }

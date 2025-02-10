@@ -612,6 +612,8 @@ namespace DTAClient.DXGUI.Generic
             shaderIniWriter.WriteLine(shaderIniWriter.NewLine);
             shaderIniWriter.Close();
 
+            GetPlayerMusicSide(sg);
+
             // Game Music Settings
             IniFile musicListIni = new IniFile(ProgramConstants.GamePath + "INI/MusicListTC.ini");
             IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
@@ -699,14 +701,10 @@ namespace DTAClient.DXGUI.Generic
                 foreach (string sectionName in sections)
                 {
                     if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
-                    {
                         themeIni.SetStringValue(sectionName, "Normal", "no");
-                    }
 
                     if (!String.IsNullOrEmpty(themeIni.GetStringValue(sectionName, "Side", null)))
-                    {
                         themeIni.SetStringValue(sectionName, "Side", "none");
-                    }
                 }
                 themeIni.WriteIniFile();
             }
@@ -717,13 +715,9 @@ namespace DTAClient.DXGUI.Generic
             GameProcessLogic.GameProcessExited += GameProcessExited_Callback;
 
             if (CampaignIni == null)
-            {
                 GameProcessLogic.StartGameProcess();
-            }
             else
-            {
                 GameProcessLogic.StartGameProcess(CampaignIni.GetBooleanValue("BaseInfo", "ControlSpeed", true), true);
-            }
         }
 
         private void GameProcessExited_Callback()

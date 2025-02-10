@@ -227,12 +227,6 @@ namespace DTAClient.Domain
                             curMission = "PRL2";
                             profileIni.SetBooleanValue("General", "GDO1", true);
                         }
-                        else if (line.Contains("GDO2"))
-                        {
-                            Logger.Log("GDO2 Completed, skip 1");
-
-                            profileIni.SetBooleanValue("General", "GDO4", true);
-                        }
 
                         //for (int i = 1; i <= 12; i++)
                         for (int i = 1; i <= 5; i++) // max enabled to gdo5
