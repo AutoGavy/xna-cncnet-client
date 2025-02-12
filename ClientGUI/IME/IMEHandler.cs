@@ -60,7 +60,8 @@ public abstract class IMEHandler : IIMEHandler
     public static IMEHandler Create(Game game)
     {
 #if !XNA && !WINDOWSGL
-        return new WinFormsIMEHandler(game);
+        //return new WinFormsIMEHandler(game);
+        return new DummyIMEHandler();
 #else
         return new DummyIMEHandler();
 #endif

@@ -118,8 +118,8 @@ namespace DTAClient.DXGUI.Generic
             }
             else
             {
-                XNAMessageBox.Show(WindowManager, "Act II Not Completed".L10N("UI:Main:ActIINotCompleted"),
-                    string.Format("You need to completed Act II\nto start Act I campaign.".L10N("UI:Main:ActIINotCompletedDesc")));
+                XNAMessageBox.Show(WindowManager, "Act II Part One Not Completed".L10N("UI:Main:ActIINotCompleted"),
+                    string.Format("You need to completed Act II Part One\nto start Act I campaign.".L10N("UI:Main:ActIINotCompletedDesc")));
             }
         }
 
