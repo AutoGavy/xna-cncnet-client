@@ -143,7 +143,7 @@ namespace ClientCore
             Tooltips = new BoolSetting(iniFile, OPTIONS, "ToolTips", true);
             ClassicRallyPoint = new BoolSetting(iniFile, OPTIONS, "ClassicRallyPoint", false);
             ClassicDoubleClick = new BoolSetting(iniFile, OPTIONS, "ClassicDoubleClick", false);
-            ClassicMouseSetup = new BoolSetting(iniFile, OPTIONS, "ClassicMouseSetup", true);
+            ClassicMouseSetup = new BoolSetting(iniFile, OPTIONS, "ClassicMouseSetup", false);
             bDisableWin = new BoolSetting(iniFile, OPTIONS, "bDisableWin", false);
             ShowHiddenObjects = new BoolSetting(iniFile, OPTIONS, "ShowHidden", true);
             MoveToUndeploy = new BoolSetting(iniFile, OPTIONS, "MoveToUndeploy", true);

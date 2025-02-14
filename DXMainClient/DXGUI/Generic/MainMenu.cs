@@ -731,9 +731,6 @@ namespace DTAClient.DXGUI.Generic
         {
             if (UserINISettings.Instance.IsFirstRun)
             {
-                UserINISettings.Instance.IsFirstRun.Value = false;
-                UserINISettings.Instance.SaveSettings();
-
                 firstRunMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "1.10 Version Installed".L10N("UI:Main:InitialInstallationTitle"),
                     string.Format(("TIBERIUM CRISIS II 1.10 installed." + Environment.NewLine +
                     "It's highly recommended that you configure your settings before playing." +
@@ -745,15 +742,27 @@ namespace DTAClient.DXGUI.Generic
             optionsWindow.PostInit();
         }
 
+        private void DisplayFirstRunMessages()
+        {
+            XNAMessageBox.Show(WindowManager, "Right-Click Order".L10N("UI:DTAConfig:MouseSetupTitle"),
+                ("Right-click order for the units has been set." + Environment.NewLine + "You can change it to classic left-click order in [Gameplay] options.")
+                .L10N("UI:DTAConfig:MouseSetupDesc").Replace("@", Environment.NewLine));
+
+            UserINISettings.Instance.IsFirstRun.Value = false;
+            UserINISettings.Instance.SaveSettings();
+        }
+
         private void FirstRunMessageBox_NoClicked(XNAMessageBox messageBox)
         {
             if (customComponentDialogQueued)
                 CUpdater_OnCustomComponentsOutdated();
+            DisplayFirstRunMessages();
         }
 
         private void FirstRunMessageBox_YesClicked(XNAMessageBox messageBox)
         {
             optionsWindow.Open();
+            DisplayFirstRunMessages();
         }
 
         private void SharedUILogic_GameProcessStarted()
