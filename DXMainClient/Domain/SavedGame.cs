@@ -13,7 +13,8 @@ namespace DTAClient.Domain
     public class SavedGame
     {
         const string SAVED_GAME_PATH = "Saved Games/";
-        const string findSample = ".MAP";
+        const string FindSample_MAP = ".MAP";
+        const string FindSample_MAPAlt = ".MA#";
 
         public SavedGame(string fileName)
         {
@@ -121,9 +122,9 @@ namespace DTAClient.Domain
 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.Contains(findSample))
+                    if (line.Contains(FindSample_MAP) || line.Contains(FindSample_MAPAlt))
                     {
-                        MissionName = line.Substring(line.IndexOf(findSample) - findSample.Length - 1, 5).ToLower();
+                        MissionName = line.Substring(line.IndexOf(FindSample_MAP) - FindSample_MAP.Length - 1, 5).ToLower();
                         SideName = MissionName.Substring(0, 3);
 
                         reader.Close();
