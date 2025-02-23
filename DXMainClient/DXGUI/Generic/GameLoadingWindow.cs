@@ -48,7 +48,7 @@ namespace DTAClient.DXGUI.Generic
         public override void Initialize()
         {
             Name = "GameLoadingWindow";
-            BackgroundTexture = AssetLoader.LoadTexture("loadmissionbg.png");
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(3, 4, 5, 240), 1, 1);
 
             ClientRectangle = new Rectangle(0, 0, 1100, 618);
             CenterOnParent();
@@ -58,7 +58,7 @@ namespace DTAClient.DXGUI.Generic
             lbSaveGameList.ClientRectangle = new Rectangle(13, 13, 1075, 555);
             lbSaveGameList.AddColumn("SAVED GAME NAME".L10N("UI:Main:SavedGameNameColumnHeader"), 400);
             lbSaveGameList.AddColumn("DATE / TIME".L10N("UI:Main:SavedGameDateTimeColumnHeader"), 174);
-            //lbSaveGameList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            //lbSaveGameList.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 255), 1, 1);
             lbSaveGameList.BackgroundTexture = AssetLoader.LoadTexture("generalbglight.png");
             lbSaveGameList.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             lbSaveGameList.SelectedIndexChanged += ListBox_SelectedIndexChanged;
@@ -110,8 +110,17 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
-            //Enabled = false;
-            WindowExited?.Invoke(this, EventArgs.Empty);
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+
+            if (parent.CampaignPanel.Visible || parent.CampaignSelector.Visible)
+            {
+                Enabled = false;
+                Visible = false;
+            }
+            else
+            {
+                WindowExited?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void BtnDelete_LeftClick(object sender, EventArgs e)
@@ -293,7 +302,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                            //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -329,7 +338,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -364,7 +373,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -444,7 +453,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                            //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -479,7 +488,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                            //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -514,7 +523,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                            //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -549,7 +558,7 @@ namespace DTAClient.DXGUI.Generic
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                            //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             // Tint
                             if (bLightClouds)
@@ -696,8 +705,7 @@ namespace DTAClient.DXGUI.Generic
             if (CampaignIni != null && CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
             {
                 IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
-
-                List<string> sections = themeIni.GetSections();
+                /*List<string> sections = themeIni.GetSections();
                 foreach (string sectionName in sections)
                 {
                     if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
@@ -705,7 +713,7 @@ namespace DTAClient.DXGUI.Generic
 
                     if (!String.IsNullOrEmpty(themeIni.GetStringValue(sectionName, "Side", null)))
                         themeIni.SetStringValue(sectionName, "Side", "none");
-                }
+                }*/
                 themeIni.WriteIniFile();
             }
 
@@ -732,12 +740,21 @@ namespace DTAClient.DXGUI.Generic
 
             if (!String.IsNullOrEmpty(loadedSide))
             {
-                if (IsCampaign && !String.IsNullOrEmpty(loadedMisson))
+                bool bIsCamp = IsCampaign && !String.IsNullOrEmpty(loadedMisson);
+
+                if (bIsCamp)
                     LogbuchParser.ParseForCampaign(loadedSide, loadedMisson);
                 else
                     LogbuchParser.ParseForLoadedSkirmish(loadedSide);
 
                 LogbuchParser.ClearTrash();
+
+                if (bIsCamp)
+                {
+                    MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+                    parent.CampaignPanel.UpdateMissionMedals();
+                    parent.CampaignPanel.UpdateMissionButtons();
+                }
             }
 
             discordHandler?.UpdatePresence();

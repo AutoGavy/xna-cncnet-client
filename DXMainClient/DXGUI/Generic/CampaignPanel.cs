@@ -97,6 +97,7 @@ namespace DTAClient.DXGUI.Generic
         private XNAMessageBox TooHardMessageBox;
 
         private XNAClientButton btnLaunch;
+        private XNAClientButton btnLoad;
         private XNAClientButton btnCancel;
         private XNAClientButton btnSlideUp;
         private XNAClientButton btnSlideDown;
@@ -212,6 +213,16 @@ namespace DTAClient.DXGUI.Generic
             btnLaunch.SetAlphaCheckVal(0);
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
 
+            btnLoad = new XNAClientButton(WindowManager);
+            btnLoad.Name = "btnLoad";
+            btnLoad.ClientRectangle = new Rectangle(66, 724, 83, 28);
+            // english:
+            // btnLoad.ClientRectangle = new Rectangle(67, 725, 121, 26);
+            btnLoad.IdleTexture = AssetLoader.LoadTexture("CampaignRes/loadbtn.png");
+            btnLoad.HoverTexture = AssetLoader.LoadTexture("CampaignRes/loadbtn_c.png");
+            btnLoad.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
+            btnLoad.LeftClick += BtnLoad_LeftClick;
+
             btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(1184, 725, 66, 32);
@@ -264,6 +275,7 @@ namespace DTAClient.DXGUI.Generic
             btnOldCampaign.LeftClick += BtnOldCampaign_LeftClick;
 
             AddChild(btnLaunch);
+            AddChild(btnLoad);
             AddChild(btnCancel);
             AddChild(btnSlideUp);
             AddChild(btnSlideDown);
@@ -658,6 +670,12 @@ namespace DTAClient.DXGUI.Generic
             Logger.Log("Error: Could not find hovered mission button.");
         }
 
+        private void BtnLoad_LeftClick(object sender, EventArgs e)
+        {
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            parent.ShowSubControl(parent.GameLoadingWindow);
+        }
+
         private void BtnCancel_LeftClick(object sender, EventArgs e)
         {
             // 退内层菜单
@@ -677,8 +695,8 @@ namespace DTAClient.DXGUI.Generic
             {
                 TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                     "Start With This Difficulty".L10N("UI:Main:StartWithThisDiff"),
-                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\nSave / Load currently is not available, please read game text and dialogue at any difficulty,\nand be careful, otherwise you may lose in a unexpected plot.\n*Abyss difficulty is a hardcore plot background mode!! This difficulty is not recommended for the first time to play!".L10N("UI:Main:StartWithThisDiffDesc").Replace("@", Environment.NewLine)));
-                TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
+                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play."
+                    .L10N("UI:Main:StartWithThisDiffDesc").Replace("@", Environment.NewLine)));
                 UserINISettings.Instance.TooHardHint.Value = false;
             }
             else
@@ -692,6 +710,7 @@ namespace DTAClient.DXGUI.Generic
         {
             //ClickSoundLight.Play();
             MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+
             parent.CampaignSelector.ReloadBattleIni(false);
             parent.ShowSubControl(parent.CampaignSelector);
         }
@@ -852,8 +871,8 @@ namespace DTAClient.DXGUI.Generic
             IniFile CampaignIni = new IniFile(ProgramConstants.GamePath + "GameShaders/CampaignINI/" +
                 mission.Scenario.Substring(0, 5).ToLower() + ".ini");
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
-            if (!UserINISettings.Instance.NoReShade)
-            {
+            //if (!UserINISettings.Instance.NoReShade)
+            //{
                 string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
@@ -944,7 +963,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -980,7 +999,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                    //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1015,7 +1034,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                    //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1064,11 +1083,11 @@ namespace DTAClient.DXGUI.Generic
 
                 if (!String.IsNullOrEmpty(strExtraLines))
                     shaderIniWriter.WriteLine(strExtraLines);
-            }
-            else
+            //}
+            /*else
             {
                 shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DEFAULT); // Default
-            }
+            }*/
 
             shaderIniWriter.WriteLine(shaderIniWriter.NewLine);
             shaderIniWriter.Close();
@@ -1156,7 +1175,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
 
-                List<string> sections = themeIni.GetSections();
+                /*List<string> sections = themeIni.GetSections();
                 foreach (string sectionName in sections)
                 {
                     if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
@@ -1168,7 +1187,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         themeIni.SetStringValue(sectionName, "Side", "none");
                     }
-                }
+                }*/
                 themeIni.WriteIniFile();
             }
 
@@ -1226,10 +1245,8 @@ namespace DTAClient.DXGUI.Generic
             LogbuchParser.ClearTrash();
             UpdateMissionMedals();
             UpdateMissionButtons();
-            /*if (UserINISettings.Instance.TC2Completed)
-            {
-                btnOldCampaign.AllowClick = true;
-            }*/
+            //if (UserINISettings.Instance.TC2Completed)
+            //    btnOldCampaign.AllowClick = true;
             discordHandler?.UpdatePresence();
         }
 

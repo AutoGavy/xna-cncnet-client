@@ -2183,8 +2183,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             // ReShade Settings
             ProgramConstants.SetupPreset(bForceSpeed);
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
-            if (!UserINISettings.Instance.NoReShade)
-            {
+            //if (!UserINISettings.Instance.NoReShade)
+            //{
                 string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
@@ -2268,7 +2268,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         mapIni.SetStringValue("Basic", "NextScenario", "S_Shader");
 
@@ -2315,7 +2315,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         mapIni.SetStringValue("Basic", "NextScenario", "A_Shader");
 
@@ -2389,7 +2389,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         mapIni.SetStringValue("Basic", "NextScenario", "M_Shader");
 
@@ -2435,7 +2435,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                             {
                                 strTechniques += ",AmbientLight";
                             }
-                            if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                            //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                             mapIni.SetStringValue("Basic", "NextScenario", "N_Shader");
 
@@ -2496,12 +2496,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 {
                     shaderIniWriter.WriteLine(strExtraLines);
                 }
-            }
-            else
+            //}
+            /*else
             {
                 shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DEFAULT); // Default
                 mapIni.SetStringValue("Basic", "Name", "");
-            }
+            }*/
             shaderIniWriter.WriteLine(shaderIniWriter.NewLine);
             shaderIniWriter.Close();
 

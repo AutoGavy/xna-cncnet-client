@@ -253,8 +253,11 @@ namespace DTAClient.Domain
                             string[] unlockData = strUnlockData.Split(',');
                             foreach (string data in unlockData)
                             {
-                                profileIni.SetBooleanValue(data, "Enable", true);
-                                profileIni.SetBooleanValue(data, "New", true);
+                                if (profileIni.GetBooleanValue(data, "Enable", false))
+                                {
+                                    profileIni.SetBooleanValue(data, "Enable", true);
+                                    profileIni.SetBooleanValue(data, "New", true);
+                                }
                             }
                         }
                     }

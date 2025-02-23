@@ -37,6 +37,7 @@ namespace DTAClient.DXGUI.Generic
         private List<Mission> Missions = new List<Mission>();
         private XNAListBox lbCampaignList;
         private XNAClientButton btnLaunch;
+        private XNAClientButton btnLoad;
         private XNAClientButton btnCancel;
         private XNATextBlock tbMissionDescription;
         private XNATrackbar trbDifficultySelector;
@@ -145,6 +146,12 @@ namespace DTAClient.DXGUI.Generic
             btnLaunch.AllowClick = false;
             btnLaunch.LeftClick += BtnLaunch_LeftClick;
 
+            btnLoad = new XNAClientButton(WindowManager);
+            btnLoad.Name = "btnLoad";
+            btnLoad.ClientRectangle = new Rectangle(12, Height - 35, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
+            btnLoad.Text = "Load".L10N("UI:Main:LoadGame");
+            btnLoad.LeftClick += BtnLoad_LeftClick;
+
             btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
             btnCancel.ClientRectangle = new Rectangle(Width - 145,
@@ -158,6 +165,7 @@ namespace DTAClient.DXGUI.Generic
             AddChild(tbMissionDescription);
             AddChild(lblDifficultyLevel);
             AddChild(btnLaunch);
+            AddChild(btnLoad);
             AddChild(btnCancel);
             AddChild(trbDifficultySelector);
             AddChild(lblEasy);
@@ -225,6 +233,12 @@ namespace DTAClient.DXGUI.Generic
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
             PrepareToLaunch();
+        }
+
+        private void BtnLoad_LeftClick(object sender, EventArgs e)
+        {
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            parent.ShowSubControl(parent.GameLoadingWindow);
         }
 
         private void PrepareToLaunch()
@@ -437,7 +451,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -473,7 +487,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                    //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -508,7 +522,7 @@ namespace DTAClient.DXGUI.Generic
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                    //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -696,8 +710,7 @@ namespace DTAClient.DXGUI.Generic
                 if (CampaignIni.GetBooleanValue("BaseInfo", "MusicFullControl", false))
                 {
                     IniFile themeIni = new IniFile(ProgramConstants.GamePath + SPSOUND_INI);
-
-                    List<string> sections = themeIni.GetSections();
+                    /*List<string> sections = themeIni.GetSections();
                     foreach (string sectionName in sections)
                     {
                         if (themeIni.GetStringValue(sectionName, "Normal", null) == "yes")
@@ -709,7 +722,7 @@ namespace DTAClient.DXGUI.Generic
                         {
                             themeIni.SetStringValue(sectionName, "Side", "none");
                         }
-                    }
+                    }*/
                     themeIni.WriteIniFile();
                 }
                 /*else if (CampaignIni.GetBooleanValue("BaseInfo", "SmartMusic", true))

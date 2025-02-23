@@ -42,6 +42,7 @@ namespace DTAConfig.OptionPanels
 
         private XNAClientDropDown ddHighDetail;
         private XNAClientDropDown ddDLSS;
+        private XNAClientDropDown ddDLSS_D;
         private XNAClientDropDown ddGFXPreset;
         private XNAClientDropDown ddCloudsEffect;
         private XNAClientDropDown ddAntiAliasing;
@@ -357,6 +358,18 @@ namespace DTAConfig.OptionPanels
             ddDLSS.AddItem("Native".L10N("UI:DTAConfig:Native"));
             ddDLSS.AllowDropDown = false;
 
+            ddDLSS_D = new XNAClientDropDown(WindowManager);
+            ddDLSS_D.Name = "ddDLSS_D";
+            ddDLSS_D.ClientRectangle = new Rectangle(
+                ddIngameResolution.ClientRectangle.X,
+                lblHighDetail.ClientRectangle.Y - 2,
+                ddIngameResolution.ClientRectangle.Width,
+                ddIngameResolution.ClientRectangle.Height);
+            ddDLSS_D.AddItem("Disabled".L10N("UI:DTAConfig:TSDisable"));
+            ddDLSS_D.SelectedIndex = 0;
+            ddDLSS_D.AllowDropDown = false;
+            ddDLSS_D.Visible = false;
+
             var lblGFXPreset = new XNALabel(WindowManager);
             lblGFXPreset.Name = "lblGFXPreset";
             lblGFXPreset.ClientRectangle = new Rectangle(lblIngameResolution.ClientRectangle.X,
@@ -529,6 +542,7 @@ namespace DTAConfig.OptionPanels
             AddChild(ddHighDetail);
             AddChild(lblDLSS);
             AddChild(ddDLSS);
+            AddChild(ddDLSS_D);
             AddChild(lblGFXPreset);
             AddChild(ddGFXPreset);
             AddChild(lblCloudsEffect);
@@ -899,6 +913,9 @@ namespace DTAConfig.OptionPanels
                 ddAntiAliasing.AllowDropDown = true;
                 ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
             }
+
+            ddDLSS_D.Visible = !ddDLSS.AllowDropDown;
+            ddDLSS.Visible = !ddDLSS_D.Visible;
         }
 
         private void ddGFXPreset_SelectedIndexChanged(object sender, EventArgs e)
@@ -1130,6 +1147,9 @@ namespace DTAConfig.OptionPanels
 
                 ddAntiAliasing.AllowDropDown = !bHighRes;
             }
+
+            ddDLSS_D.Visible = !ddDLSS.AllowDropDown;
+            ddDLSS.Visible = !ddDLSS_D.Visible;
         }
 
         /// <summary>
@@ -1297,6 +1317,9 @@ namespace DTAConfig.OptionPanels
 
             chkVideoMode.Checked = UserINISettings.Instance.VideoMode;
 
+            ddDLSS_D.Visible = !ddDLSS.AllowDropDown;
+            ddDLSS.Visible = !ddDLSS_D.Visible;
+
 #if YR
             chkBackBufferInVRAM.Checked = false;
 #else
@@ -1433,6 +1456,9 @@ namespace DTAConfig.OptionPanels
             IniSettings.AirflowEffect.Value = true;
 
             IniSettings.VideoMode.Value = chkVideoMode.Checked;
+
+            ddDLSS_D.Visible = !ddDLSS.AllowDropDown;
+            ddDLSS.Visible = !ddDLSS_D.Visible;
 
 #if YR
             IniSettings.BackBufferInVRAM.Value = false;
@@ -1684,8 +1710,8 @@ namespace DTAConfig.OptionPanels
             ProgramConstants.SetupPreset();
             IniFile CampaignIni = new IniFile(ProgramConstants.GamePath + "GameShaders/CampaignINI/testq.ini");
             StreamWriter shaderIniWriter = new StreamWriter(ProgramConstants.GamePath + "GameShaders/TCMainShader.ini");
-            if (!UserINISettings.Instance.NoReShade)
-            {
+            //if (!UserINISettings.Instance.NoReShade)
+            //{
                 string strTechniques = "Colourfulness";
                 string strExtraLines = String.Empty;
 
@@ -1780,7 +1806,7 @@ namespace DTAConfig.OptionPanels
                         {
                             strTechniques += ",AmbientLight";
                         }
-                        if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                        //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                         // Tint
                         if (bLightClouds)
@@ -1820,7 +1846,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                    //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1859,7 +1885,7 @@ namespace DTAConfig.OptionPanels
                     {
                         strTechniques += ",AmbientLight";
                     }
-                    if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
+                    //if (UserINISettings.Instance.HighDetail >= 1) strTechniques += ",HDR";
 
                     // Tint
                     if (bLightClouds)
@@ -1914,18 +1940,18 @@ namespace DTAConfig.OptionPanels
                 {
                     shaderIniWriter.WriteLine(strExtraLines);
                 }
-            }
-            else
+            //}
+            /*else
             {
                 shaderIniWriter.WriteLine(ClientConfiguration.TC_SHADER_DEFAULT); // Default
-            }
+            }*/
 
             shaderIniWriter.WriteLine(shaderIniWriter.NewLine);
             shaderIniWriter.Close();
 
             // Game Music Settings
-            /*IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
-            List<string> sections = musicConfigIni.GetSections();
+            IniFile musicConfigIni = new IniFile(ProgramConstants.GamePath + "INI/MusicConfigTC.ini");
+            /*List<string> sections = musicConfigIni.GetSections();
             foreach (string sectionName in sections)
             {
                 if (musicConfigIni.GetStringValue(sectionName, "Normal", null) == "yes")
@@ -1937,8 +1963,8 @@ namespace DTAConfig.OptionPanels
                 {
                     musicConfigIni.SetStringValue(sectionName, "Side", "none");
                 }
-            }
-            musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);*/
+            }*/
+            musicConfigIni.WriteIniFile(ProgramConstants.GamePath + SPSOUND_INI);
 
             File.Delete(ProgramConstants.GamePath + CREDITS_TXT);
 
