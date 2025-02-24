@@ -28,10 +28,10 @@ namespace DTAClient.DXGUI.Generic
             "CBF46AF0B95C95EBE3F4CC496C0286AB043B27BB", // Difficulty Hell.ini
             "49E81D8F7CA06AB99380179A78E7743D8E9E63E5", // Difficulty Normal.ini
 
-            "8F04CA0591D7EFA927CAB025BB78DE247526EBEF", // Train 00
-            "75AC924E69177C2C3A340B2234BDE1AC1A60D4AF", // Train 01
-            "3718245B8DA961AE152A27381F8E930F4EDA22E2", // Train 02
-            "C3D18E72CD2F2DFDD3817F563E3A25E0CF025D19", // Train 03
+            "5D4C1678629A05F96F768E10A20F4D315D5535CB", // Train 00
+            "019680975B3B11056830BDEC872EF37578A6CAB2", // Train 01
+            "BEA4817C5FDC4106756D4BCA68CFFB12AD9AF8B8", // Train 02
+            "A467CF6E89E570F05F79AD3E030E613F579ED8D3", // Train 03
 
             "6773B65378B0D2A803E8C08478B1E99DF0B15B5C", // GDI 01
             "F330A2ED32F6AE7D8096279CFCA24D022FE63943", // GDI 02
@@ -221,7 +221,7 @@ namespace DTAClient.DXGUI.Generic
             "INI/Game Options/Destroyable Bridges.ini",
             "INI/Game Options/IHStage1.ini",
             "INI/Game Options/IHStage2.ini",
-            "INI/Game Options/IHStageStandard.ini",
+            "INI/Game Options/IHStandard.ini",
             "INI/Game Options/Ion Storm.ini",
             "INI/Game Options/No Epic.ini",
             "INI/Game Options/No Rain.ini",
@@ -236,7 +236,7 @@ namespace DTAClient.DXGUI.Generic
             "INI/Game Options/OreStage3.ini",
             "INI/Game Options/OreStandard.ini",
             "INI/Game Options/Reveal Map.ini",
-            "INI/Game Options/ThickShroud.ini",
+            "INI/Game Options/Thick Shroud.ini",
             "INI/Game Options/Unrebuildable Tech.ini",
 
             "INI/Map Code/Challenge Easy.ini",

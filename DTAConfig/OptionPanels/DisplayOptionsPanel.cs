@@ -945,7 +945,7 @@ namespace DTAConfig.OptionPanels
                     break;
 
                 case 1: // Medium
-                    ddDLSS.SelectedIndex = 0;
+                    ddDLSS.SelectedIndex = 1;
                     ddHighDetail.SelectedIndex = 1;
                     ddCloudsEffect.SelectedIndex = 1;
                     ddVFXDetail.SelectedIndex = 1;
@@ -957,7 +957,7 @@ namespace DTAConfig.OptionPanels
                     break;
 
                 case 2: // High
-                    ddDLSS.SelectedIndex = 1;
+                    ddDLSS.SelectedIndex = 2;
                     ddHighDetail.SelectedIndex = 2;
                     ddCloudsEffect.SelectedIndex = 1;
                     ddVFXDetail.SelectedIndex = 2;
@@ -969,7 +969,7 @@ namespace DTAConfig.OptionPanels
                     break;
 
                 case 3: // Ultra
-                    ddDLSS.SelectedIndex = 2;
+                    ddDLSS.SelectedIndex = 3;
                     ddHighDetail.SelectedIndex = 3;
                     ddCloudsEffect.SelectedIndex = 1;
                     ddVFXDetail.SelectedIndex = 2;
