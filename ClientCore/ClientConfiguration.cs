@@ -7,7 +7,7 @@ namespace ClientCore
     public class ClientConfiguration
     {
         public static readonly bool DEBUG_BUILD = false;
-        public static readonly bool TEST_BUILD = true;
+        public static readonly bool TEST_BUILD = false;
 
         private const string GENERAL = "General";
         private const string AUDIO = "Audio";

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -731,7 +732,17 @@ namespace DTAClient.DXGUI.Generic
         private void GameProcessExited_Callback()
         {
             WindowManager.AddCallback(new Action(GameProcessExited), null);
-            WindowExited?.Invoke(this, EventArgs.Empty);
+
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            if (parent.CampaignPanel.Visible || parent.CampaignSelector.Visible)
+            {
+                Enabled = false;
+                Visible = false;
+            }
+            else
+            {
+                WindowExited?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         protected virtual void GameProcessExited()

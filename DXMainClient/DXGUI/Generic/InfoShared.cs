@@ -23,41 +23,41 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArrayCamp =
         {
-            "A851224274A86CB39217DA2D38E67E7DE4C8C611", // Difficulty Easy.ini
-            "96F69F6CBAE1146B5105F70E46F12E6DF506A9EB", // Difficulty Hard.ini
-            "7313144376C4385B8F1ED09E4BC850752AFB4735", // Difficulty Hell.ini
-            "00637DA534D5ABF27C56D72E9D0DA818AFE2C941", // Difficulty Normal.ini
+            "2FB0BF27A34BE9A108C4C3618BFE03F798C2B44B", // Difficulty Easy.ini
+            "EC69C905090090157FD85EED71BEF8D9F7D93883", // Difficulty Hard.ini
+            "CBF46AF0B95C95EBE3F4CC496C0286AB043B27BB", // Difficulty Hell.ini
+            "49E81D8F7CA06AB99380179A78E7743D8E9E63E5", // Difficulty Normal.ini
 
             "8F04CA0591D7EFA927CAB025BB78DE247526EBEF", // Train 00
             "75AC924E69177C2C3A340B2234BDE1AC1A60D4AF", // Train 01
             "3718245B8DA961AE152A27381F8E930F4EDA22E2", // Train 02
             "C3D18E72CD2F2DFDD3817F563E3A25E0CF025D19", // Train 03
 
-            "14E2C2CCD0B59CE50F493611133D6A5A2A2DD502", // GDI 01
-            "C7E0A19C3BDDCDAB43255668FE62A4FCE73256B0", // GDI 02
-            "EDC997F50D73DEC1DA1F56D112F0675CBF948661", // GDI 03
-            "0BE03DBDA4C29BA276E146E60EACEB3646ADE5A2", // GDI 04
-            "506464800EEC49F2936D477E0624626258A6EC7B", // GDI 05
-            "7C16B5B88C726DD9F640DC7DB35B6451C92ADB5B", // GDI 06
-            "B92A11D49285852FC0D622CA5F79C509FDE8B69D", // GDI 07
-            "E13C311EA0B0B5CB1502F72A3F377E98654EC2B6", // GDI 08
+            "6773B65378B0D2A803E8C08478B1E99DF0B15B5C", // GDI 01
+            "F330A2ED32F6AE7D8096279CFCA24D022FE63943", // GDI 02
+            "9511B17B3C8156C5A9F54A47B4B52404FB4AA23C", // GDI 03
+            "CEB229380E7A79F3B3535E8186035913FFA9C010", // GDI 04
+            "BB525B58EF87304E8043184CB2F973562879D975", // GDI 05
+            "8FBAA1FAF9805688886BBCE4D30DF7FD8AF2A746", // GDI 06
+            "179A3AC49B349C3FFFCE72C46BFB1D1DF7210C48", // GDI 07
+            "FD102DEA37D08BF4351CE5F7A4957922E11DF4F1", // GDI 08
 
-            "7B071F82A931054961370F177738CEE45883AF4C", // End 01
-            "337617CC5B7AFB6AD92B548B273B655A91FF54C0", // End 02
+            //"5F1A3B9F7C4F1E94C10269D39E34A33BFD36174E", // End 01
+            //"F8C153308738BFFC5B0D3AB7571DF181EA21C773", // End 02
 
-            "71751972AC0C393FD9CF31A86CD96111CB010D18", // Nod 01
-            "A68ADE548D44FA812BD49D47E27A9BD10EE3C228", // Nod 02
-            "7B7B17B7370C02473306E1531370027120B99A3C", // Nod 03
-            "1AA77A203A327A36A0EBBEDDAE03E2A8458F01BE", // Nod 04
-            "8F8051E06C48A381D4C4AA8CBCA5254AE2450335", // Nod 05
-            "E60363ACFAEC22B9093754EC773E40B386281DCE", // Nod 06
-            "3DCCBAB4FF70498A2550862FD0713F3164340280", // Nod 07
-            "CEA84166EBB0E29738E37A524E9D8249A97C73C1", // Nod 08
+            "5F1A3B9F7C4F1E94C10269D39E34A33BFD36174E", // Nod 01
+            "F8C153308738BFFC5B0D3AB7571DF181EA21C773", // Nod 02
+            "A250E0533A5311213E01ED74C593490E218EC5D1", // Nod 03
+            "8564BD5D30638E969A9EF8CCCE0D1BE489B53DC3", // Nod 04
+            "FCA9502776BEED5C76790FBACAD3740740E00544", // Nod 05
+            "49C686B7649B50D13E37E1C940317B3BCDBF2185", // Nod 06
+            "275ED29B5860D6B1106F4118E9DCAEA8B217C43E", // Nod 07
+            "5D50EA539D2F9A796426B423D1A9601F630BA19D", // Nod 08
 
-            "1A08B84E5F903E51C32B0AF3996790F0478C4840", // Scrin 01
-            "D33A4456B17871D4014FFFADCB4598C6951C8047", // Scrin 02
-            "2DA6B42A4E6B5AC6E1F054EAB8D42F029F43008B", // Scrin 03
-            "92D8CDC82DFBF3C078E2431B3380643F9E165D17"  // Scrin 04
+            "B54AD6E2AB8BD14E8C6D2DFAEEAFD653FDF474F6", // Scrin 01
+            "8274B16C657412C41948797F4DB5E5879CFE441F", // Scrin 02
+            "51C50C57D5F35AFDABD009B7140A17BCD7792D39", // Scrin 03
+            "619A6AE05623923878C1683F05492CBF3486C009"  // Scrin 04
         };
 
         public static readonly string[] filesToCheckCamp =
@@ -81,8 +81,8 @@ namespace DTAClient.DXGUI.Generic
             "MapsTC/Missions/gdi07.map",
             "MapsTC/Missions/gdi08.map",
 
-            "MapsTC/Missions/end01.map",
-            "MapsTC/Missions/end02.map",
+            //"MapsTC/Missions/end01.map",
+            //"MapsTC/Missions/end02.map",
 
             "MapsTC/Missions/nod01.map",
             "MapsTC/Missions/nod02.map",
@@ -167,70 +167,76 @@ namespace DTAClient.DXGUI.Generic
 
         public static readonly string[] filesHashArray =
         {
-            "86b4f1a4498a811973ba71a84ee0d6cba6372c1e", // GameOptions
+            "5EF86EB02F6359668841D9A9FE35F9E588F3EDE9", // GameOptions
 
-            "6C0F1F00BDC1EE2CDAC67119E21CA816CF30271E", // Auto Handle
             "715869652AFC3D5E7C0102CB573CE586FD1174ED", // Auto Repair
-            "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709", // Ion Storm
+            "587DB8F7C95EB8E8E98B4E86DDCFFCADDC9B3A17", // Capture Protect
             "3FDFE5A78683E1440F174F55E1EB826D39563571", // Destroyable Bridges
-            "1926B0FA2971CCE3981A7BE7BEDDED8E96CD2C1D", // No Epic
-            "A6A0245C282FD80454CD95AF1B4CC3A9E15D39D9", // Low Detail
-            "972DC58682F890201409476BE6C950D64806141D", // No Muzzle
+            "D5493E148240DF4BF5E19B8F5CE6239AD289436F", // IH Stage 1
+            "4DE695C7E2156A78D999F44838D038E4CA07F94B", // IH Stage 2
+            "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709", // IH Stage Standard
+            "67717D5358C517D09C6E36E549C07EE91FB10D96", // Ion Storm
+            "302D9B5C7002557CFBB2DB201FA31080C6B543EF", // No Epic
             "B2551F45259872B01093A317E304FF2A82BAC30D", // No Rain
-            "440C94AC323DCE05232AB79352095D4F6AF07B10", // No Rush
+            "DD2844CC99461018917ECF24495F75148C41DAE9", // No Rush
             "DD7B28C0E59A907C25E94CFD2DED42B3E7233A9B", // No Silos
+            "43C618F3FDE397270BF7744436D15825B8804A47", // No T4
             "B2B71102BB35EC095CC9C1D038B7A1958B17C0D8", // No TEU Lift
             "3B305AE3A6E803A82DF6506B84D10787A9D97BB5", // No Tiberium Lifeforms
             "3033513D21B7BBC4D6809D2AB263AF27D6C33E9D", // No Turret
-            "18C0E1F5CFF19D0F3BE2DA2232B3FF26AED5A1B6", // OreDouble
-            "64FCA65E80822C690E24748FEA497EF82639D619", // OreQuintuple
-            "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709", // OreStandard
-            "D5493E148240DF4BF5E19B8F5CE6239AD289436F", // OreTriple
+            "C08A489553D42F00DDBBF00A8727E031E8A8DAD7", // Ore Stage 1
+            "B02F4760D4E0236ECCE12404549635DE104DC9ED", // Ore Stage 2
+            "C91E751FAEDED01A8457DE9690ED10596F4D3E15", // Ore Stage 3
+            "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709", // Ore Standard
             "0CFBCB6D5428DA579183F121E103AAB2B4F00B4D", // Reveal Map
-            "7DE809012A6CF96503B78FD9C83EA4E0E9E62470", // Second Tech
+            "5BE1408AC0AC83C02496D8EB4111FE44715729FA", // Thick Shroud
             "C600B33BCCE62DD46D74CC40267D602D867550A6", // Unrebuildable Tech
 
-            "DE03851F67AB87F7965784D343B4C6F57B9041BF", // Challenge Easy.ini
-            "0C8F4A2100E234E44AAF6A08A072BEAA0C71B84A", // Challenge Hard.ini
-            "B7A54AEEC72BF6CCC4E89F46841A3FF9621D69D3", // Challenge Medium.ini
-            "F091810065CF34C8D7F503D4D844F59F46DAC808", // Co-Op Easy.ini
-            "95025F487A6FF22F596DD92B8FEB6F5BE574863E", // Co-Op Hard.ini
-            "AFD6C3EB0EA8A572EA5EB42F6B49229A778E6149", // Co-Op Medium.ini
+            "4168FDE4D78BFBB28E9E3E9813A0F5DAAD92C803", // Challenge Easy.ini
+            "84E3268CB68D4012F554785181362C8DF8DD583E", // Challenge Hard.ini
+            "5861612BDD162B181E20F3413AD0B0D2C3CDA81E", // Challenge Medium.ini
+            "9C4B09D6A575080E8B2EAE8A79DF380C87FB88CA", // Co-Op Easy.ini
+            "9E381980FA67419426187F9DC14A5E676C383612", // Co-Op Hard.ini
+            "EB0BA8C1B90EF316568F9902B08EFC6CA134F28A", // Co-Op Medium.ini
             "E42E4B2478B7CFF648DCCD5BEAC8C8B1C7122E25", // Crazy Crates.ini
-            "ec8df6503caba20c53fc4f42da431b4807774fae", // Difficulty Tier.ini
+            "C6B244582C611BA12BF79FF1D6E19FF3E21516D1", // Difficulty Tier.ini
             "D42ECB8AE645547E361AF96DB4B7320F61EE29C3", // Duel.ini
             "38F3655B98432FF1601316C42F44A0E049DF730A", // FastOptions.ini
             "575B300FBE5A5900B9D072AF73B0CE5FC0680E1C", // Fortress.ini
-            "06EE9314FBD8614B17419C3DD901519700582667", // MultiplayerOptions.ini
-            "20F25C4466A140D7B40277DEB9FB5E1CE04B249F", // Newbie Practice.ini
-            "23DDBB82E150F9168AC1078EC25338CCAC4E8229", // NoAirflow.ini
+            "D31CD1FBE20A061BDF69FDCB17BD2339CD7084B9", // MultiplayerOptions.ini
             "575B300FBE5A5900B9D072AF73B0CE5FC0680E1C", // Standard.ini
-            "D0320F3AAE2382065B8A4E5023489D3489D65A9D"  // Survival Battle.ini
+            "39A43C1A7E65C794D2364999CBC059FC7F83646E", // Time Rebellion Abyss.ini
+            "DF799C5A91E38FBA5BB8E305BB18A6EDA905661E", // Time Rebellion Burtal.ini
+            "DD04C65DF53C3F545F5460172F901C402A26FC05", // Time Rebellion Hard.ini
+            "C58C1B75936F0756F279F61D4824A4112CCC60C6", // Time Rebellion Normal.ini
+            "4117F461D88162C9F6BDC3566B559BEFCE337E52"  // Unlimited Epic.ini
         };
 
         public static readonly string[] filesToCheck =
         {
             "Resources/GameOptions.ini",
 
-            "INI/Game Options/Auto Handle.ini",
             "INI/Game Options/Auto Repair.ini",
-            "INI/Game Options/Ion Storm.ini",
+            "INI/Game Options/Capture Protect.ini",
             "INI/Game Options/Destroyable Bridges.ini",
+            "INI/Game Options/IHStage1.ini",
+            "INI/Game Options/IHStage2.ini",
+            "INI/Game Options/IHStageStandard.ini",
+            "INI/Game Options/Ion Storm.ini",
             "INI/Game Options/No Epic.ini",
-            "INI/Game Options/Low Detail.ini",
-            "INI/Game Options/No Muzzle.ini",
             "INI/Game Options/No Rain.ini",
             "INI/Game Options/No Rush.ini",
             "INI/Game Options/No Silos.ini",
+            "INI/Game Options/No T4.ini",
             "INI/Game Options/No TEU Lift.ini",
             "INI/Game Options/No Tiberium Lifeforms.ini",
             "INI/Game Options/No Turret.ini",
-            "INI/Game Options/OreDouble.ini",
-            "INI/Game Options/OreQuintuple.ini",
+            "INI/Game Options/OreStage1.ini",
+            "INI/Game Options/OreStage2.ini",
+            "INI/Game Options/OreStage3.ini",
             "INI/Game Options/OreStandard.ini",
-            "INI/Game Options/OreTriple.ini",
             "INI/Game Options/Reveal Map.ini",
-            "INI/Game Options/Second Tech.ini",
+            "INI/Game Options/ThickShroud.ini",
             "INI/Game Options/Unrebuildable Tech.ini",
 
             "INI/Map Code/Challenge Easy.ini",
@@ -245,10 +251,12 @@ namespace DTAClient.DXGUI.Generic
             "INI/Map Code/FastOptions.ini",
             "INI/Map Code/Fortress.ini",
             "INI/Map Code/MultiplayerOptions.ini",
-            "INI/Map Code/Newbie Practice.ini",
-            "INI/Map Code/NoAirflow.ini",
             "INI/Map Code/Standard.ini",
-            "INI/Map Code/Survival Battle.ini",
+            "INI/Map Code/Time Rebellion Abyss.ini",
+            "INI/Map Code/Time Rebellion Brutal.ini",
+            "INI/Map Code/Time Rebellion Hard.ini",
+            "INI/Map Code/Time Rebellion Normal.ini",
+            "INI/Map Code/Unlimited Epic.ini"
         };
     }
 }

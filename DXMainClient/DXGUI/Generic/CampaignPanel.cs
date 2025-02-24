@@ -688,8 +688,8 @@ namespace DTAClient.DXGUI.Generic
             if (!campaignOptionsIni.GetBooleanValue(missionName, "IsValid", true))
             {
                 XNAMessageBox.Show(WindowManager,
-                    "Cannot Start Mission".L10N("UI:Main:CantStartMission"),
-                    string.Format("Mission is not completed yet,\nplease select next mission.".L10N("UI:Main:InvalidMission")));
+                    "Coming Soon".L10N("UI:Main:CantStartMission"),
+                    string.Format("This mission is not completed yet.\nPlease select next mission.".L10N("UI:Main:InvalidMission")));
             }
             else if (UserINISettings.Instance.TooHardHint)
             {
