@@ -24,6 +24,7 @@ namespace DTAClient.Domain
         public string FileName { get; private set; }
         public string GUIName { get; private set; }
         public DateTime LastModified { get; private set; }
+        public string MissionPrefix { get; private set; }
         public string SideName { get; private set; }
         public string MissionName { get; private set; }
 
@@ -125,11 +126,11 @@ namespace DTAClient.Domain
                     if (line.Contains(FindSample_MAP) || line.Contains(FindSample_MAPAlt))
                     {
                         MissionName = line.Substring(line.IndexOf(FindSample_MAP) - FindSample_MAP.Length - 1, 5).ToLower();
-                        SideName = MissionName.Substring(0, 3);
+                        MissionPrefix = MissionName.Substring(0, 3);
 
                         reader.Close();
 
-                        switch (SideName)
+                        switch (MissionPrefix)
                         {
                             case "tra":
                             case "prl":

@@ -209,7 +209,7 @@ namespace DTAClient.DXGUI.Generic
             "DF799C5A91E38FBA5BB8E305BB18A6EDA905661E", // Time Rebellion Burtal.ini
             "DD04C65DF53C3F545F5460172F901C402A26FC05", // Time Rebellion Hard.ini
             "C58C1B75936F0756F279F61D4824A4112CCC60C6", // Time Rebellion Normal.ini
-            "4117F461D88162C9F6BDC3566B559BEFCE337E52"  // Unlimited Epic.ini
+            "B4B18A264C0A5B97977A565AF3B363C1ADF58E9F"  // Unlimited Epic.ini
         };
 
         public static readonly string[] filesToCheck =

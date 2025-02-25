@@ -166,11 +166,16 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnLaunch_LeftClick(object sender, EventArgs e)
         {
-            //XNAMessageBox.Show(WindowManager, "Save / Load Unavailable".L10N("UI:Main:SLUnavailable"), "This feature is working in progress.".L10N("UI:Main:LoadGameUncompleted"));
-            //return;
 
             SavedGame sg = savedGames[lbSaveGameList.SelectedIndex];
             Logger.Log("Loading saved game " + sg.FileName);
+
+            GetPlayerMusicSide(sg);
+            IsCampaign = sg.ParseMissionName();
+
+            bool bIsActII = false;
+            if (sg.MissionPrefix == "prl" || sg.MissionPrefix == "gdo")
+                bIsActII = true;
 
             File.Delete(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
             StreamWriter sw = new StreamWriter(ProgramConstants.GamePath + ProgramConstants.SPAWNER_SETTINGS);
@@ -186,6 +191,8 @@ namespace DTAClient.DXGUI.Generic
                 sw.WriteLine("GameSpeed=" + UserINISettings.Instance.GameSpeed);
             else
                 sw.WriteLine("GameSpeed=2");
+            sw.WriteLine("IsCampaign=" + (IsCampaign ? "Yes" : "No"));
+            sw.WriteLine("IsAct2Campaign=" + (bIsActII ? "Yes" : "No"));
             sw.WriteLine();
             sw.Close();
 
@@ -200,7 +207,6 @@ namespace DTAClient.DXGUI.Generic
             discordHandler?.UpdatePresence(sg.GUIName, true);
 
             // ReShade Settings
-            IsCampaign = sg.ParseMissionName();
             IniFile CampaignIni = IsCampaign ?
                 new IniFile(ProgramConstants.GamePath + "GameShaders/CampaignINI/" +
                     sg.MissionName + ".ini") :
@@ -621,8 +627,6 @@ namespace DTAClient.DXGUI.Generic
 
             shaderIniWriter.WriteLine(shaderIniWriter.NewLine);
             shaderIniWriter.Close();
-
-            GetPlayerMusicSide(sg);
 
             // Game Music Settings
             IniFile musicListIni = new IniFile(ProgramConstants.GamePath + "INI/MusicListTC.ini");

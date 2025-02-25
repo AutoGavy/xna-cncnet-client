@@ -24,6 +24,7 @@ using System.Threading;
 using Updater;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using System.Windows.Forms;
 
 namespace DTAClient.DXGUI.Generic
 {
@@ -1312,6 +1313,9 @@ namespace DTAClient.DXGUI.Generic
 
         private void LaunchMapEditor()
         {
+            XNAMessageBox.Show(WindowManager, "Map Editor Unavailable".L10N("UI:Main:MapEditorUnavailable"),
+                string.Format("This feature is coming soon. Stay tuned for future updates!".L10N("UI:Main:MapEditorUnavailableDesc")));
+
             /*OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
             Process mapEditorProcess = new Process();
 
