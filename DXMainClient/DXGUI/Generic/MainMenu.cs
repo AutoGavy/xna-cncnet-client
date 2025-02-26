@@ -24,7 +24,6 @@ using System.Threading;
 using Updater;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using System.Windows.Forms;
 
 namespace DTAClient.DXGUI.Generic
 {

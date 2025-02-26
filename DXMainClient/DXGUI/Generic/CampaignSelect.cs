@@ -91,21 +91,13 @@ namespace DTAClient.DXGUI.Generic
 
         private void ChapterSelectMsgbox_YesClicked(XNAMessageBox obj)
         {
-            if (UserINISettings.Instance.TutorialCompleted)
+            Disable();
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            parent.CampaignPanel.WindowExited += (sub_sender, sub_arg) =>
             {
-                Disable();
-                MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
-                parent.CampaignPanel.WindowExited += (sub_sender, sub_arg) =>
-                {
-                    parent.Show(this);
-                };
-                parent.Show(parent.CampaignPanel);
-            }
-            else
-            {
-                XNAMessageBox.Show(WindowManager, "Tutorial Not Completed".L10N("UI:Main:TutorialNotCompleted"),
-                    string.Format("You need to completed at least one mission of tutorial\nto start main campaign.".L10N("UI:Main:TutorialNotCompletedDesc")));
-            }
+                parent.Show(this);
+            };
+            parent.Show(parent.CampaignPanel);
         }
 
         private void ChapterSelectMsgbox_NoClicked(XNAMessageBox obj)
@@ -125,11 +117,19 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnGDI_LeftClick(object sender, EventArgs e)
         {
-            ChapterSelectMsgbox = XNAMessageBox.ShowActDialog(WindowManager,
-                "Select Chapter".L10N("UI:Main:SelectChapter"),
-                string.Format("Please select the chapter you want to play.".L10N("UI:Main:PlzSelectChapter")));
-            ChapterSelectMsgbox.YesClickedAction = ChapterSelectMsgbox_YesClicked;
-            ChapterSelectMsgbox.NoClickedAction = ChapterSelectMsgbox_NoClicked;
+            if (UserINISettings.Instance.TutorialCompleted)
+            {
+                ChapterSelectMsgbox = XNAMessageBox.ShowActDialog(WindowManager,
+                    "Select Chapter".L10N("UI:Main:SelectChapter"),
+                    string.Format("Please select the chapter you want to play.".L10N("UI:Main:PlzSelectChapter")));
+                ChapterSelectMsgbox.YesClickedAction = ChapterSelectMsgbox_YesClicked;
+                ChapterSelectMsgbox.NoClickedAction = ChapterSelectMsgbox_NoClicked;
+            }
+            else
+            {
+                XNAMessageBox.Show(WindowManager, "Tutorial Not Completed".L10N("UI:Main:TutorialNotCompleted"),
+                    string.Format("You need to completed at least one mission of tutorial\nto start main campaign.".L10N("UI:Main:TutorialNotCompletedDesc")));
+            }
         }
 
         private void BtnBack_LeftClick(object sender, EventArgs e)
