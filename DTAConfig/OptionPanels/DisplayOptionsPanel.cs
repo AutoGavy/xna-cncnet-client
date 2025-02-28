@@ -473,12 +473,9 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddAntiAliasing.SelectedIndexChanged += ddAntiAliasing_SelectedIndexChanged;
-                //ddAntiAliasing.AddItem("Invalid Setting".L10N("UI:DTAConfig:Invalid"));
                 ddAntiAliasing.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
-                //ddAntiAliasing.AddItem("Subpixel Morphological (SMAA)".L10N("UI:DTAConfig:SMAA"));
-                //ddAntiAliasing.AddItem("FXAA (recommended for large screen)".L10N("UI:DTAConfig:FXAA"));
                 ddAntiAliasing.AddItem("Enable".L10N("UI:DTAConfig:Enable"));
-            ddAntiAliasing.AllowDropDown = true;
+            //ddAntiAliasing.AllowDropDown = true;
 
             lblDetailTip = new XNALabel(WindowManager);
             lblDetailTip.Name = "lblDetailTip";
@@ -516,7 +513,7 @@ namespace DTAConfig.OptionPanels
             btnTestGame.MouseLeave += BtnTestGame_MouseLeave;
 
             ddDLSS.Tag = true;
-            ddAntiAliasing.Tag = true;
+            //ddAntiAliasing.Tag = true;
             ddHighDetail.Tag = true;
             ddCloudsEffect.Tag = true;
             ddVFXDetail.Tag = true;
@@ -889,7 +886,7 @@ namespace DTAConfig.OptionPanels
 
                 if (!UserINISettings.Instance.DebugReShade)
                 {
-                    ddAntiAliasing.AllowDropDown = false;
+                    //ddAntiAliasing.AllowDropDown = false;
                     ddAntiAliasing.SelectedIndex = 0;
                 }
             }
@@ -910,8 +907,9 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = false;
                 //ddDLSS.SelectedIndex = 3;
 
-                ddAntiAliasing.AllowDropDown = true;
-                ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
+                //ddAntiAliasing.AllowDropDown = true;
+                //ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
+                ddAntiAliasing.SelectedIndex = renderer.NoReShade ? 0 : 1;
             }
 
             ddDLSS_D.Visible = !ddDLSS.AllowDropDown;
@@ -927,8 +925,8 @@ namespace DTAConfig.OptionPanels
             ddTracerDetail.Tag = false;
             ddDisplacement.Tag = false;
 
-            if (!ddDLSS.AllowDropDown)
-                ddAntiAliasing.Tag = false;
+            //if (!ddDLSS.AllowDropDown)
+            //    ddAntiAliasing.Tag = false;
 
             switch (ddGFXPreset.SelectedIndex)
             {
@@ -940,8 +938,8 @@ namespace DTAConfig.OptionPanels
                     ddTracerDetail.SelectedIndex = 1;
                     ddDisplacement.SelectedIndex = 0;
 
-                    if (!ddDLSS.AllowDropDown)
-                        ddAntiAliasing.SelectedIndex = 1;
+                    //if (!ddDLSS.AllowDropDown)
+                    //    ddAntiAliasing.SelectedIndex = 1;
                     break;
 
                 case 1: // Medium
@@ -952,8 +950,8 @@ namespace DTAConfig.OptionPanels
                     ddTracerDetail.SelectedIndex = 1;
                     ddDisplacement.SelectedIndex = 0;
 
-                    if (!ddDLSS.AllowDropDown)
-                        ddAntiAliasing.SelectedIndex = 1;
+                    //if (!ddDLSS.AllowDropDown)
+                    //    ddAntiAliasing.SelectedIndex = 1;
                     break;
 
                 case 2: // High
@@ -964,8 +962,8 @@ namespace DTAConfig.OptionPanels
                     ddTracerDetail.SelectedIndex = 2;
                     ddDisplacement.SelectedIndex = 0;
 
-                    if (!ddDLSS.AllowDropDown)
-                        ddAntiAliasing.SelectedIndex = 1;
+                    //if (!ddDLSS.AllowDropDown)
+                    //    ddAntiAliasing.SelectedIndex = 1;
                     break;
 
                 case 3: // Ultra
@@ -976,8 +974,8 @@ namespace DTAConfig.OptionPanels
                     ddTracerDetail.SelectedIndex = 2;
                     ddDisplacement.SelectedIndex = 1;
 
-                    if (!ddDLSS.AllowDropDown)
-                        ddAntiAliasing.SelectedIndex = 1;
+                    //if (!ddDLSS.AllowDropDown)
+                    //    ddAntiAliasing.SelectedIndex = 1;
                     break;
             }
 
@@ -988,8 +986,8 @@ namespace DTAConfig.OptionPanels
             ddTracerDetail.Tag = true;
             ddDisplacement.Tag = true;
 
-            if (!ddDLSS.AllowDropDown)
-                ddAntiAliasing.Tag = true;
+            //if (!ddDLSS.AllowDropDown)
+            //    ddAntiAliasing.Tag = true;
         }
 
         private void ddHighDetail_SelectedIndexChanged(object sender, EventArgs e)
@@ -1036,9 +1034,9 @@ namespace DTAConfig.OptionPanels
 
         private void ddAntiAliasing_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((bool)ddAntiAliasing.Tag)
-                ddGFXPreset.SelectedIndex = 4;
-            ddAntiAliasing.Tag = true;
+            //if ((bool)ddAntiAliasing.Tag)
+            //    ddGFXPreset.SelectedIndex = 4;
+            //ddAntiAliasing.Tag = true;
         }
 
         private void ChkWindowedMode_CheckedChanged(object sender, EventArgs e)
@@ -1079,11 +1077,11 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = true;
                 ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
-                if (!UserINISettings.Instance.DebugReShade)
+                /*if (!UserINISettings.Instance.DebugReShade)
                 {
                     ddAntiAliasing.AllowDropDown = false;
                     ddAntiAliasing.SelectedIndex = 0;
-                }
+                }*/
             }
             else
             {
@@ -1106,8 +1104,9 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = false;
                 //ddDLSS.SelectedIndex = 3;
 
-                ddAntiAliasing.AllowDropDown = true;
-                ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
+                //ddAntiAliasing.AllowDropDown = true;
+                //ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
+                ddAntiAliasing.SelectedIndex = renderer.NoReShade ? 0 : 1;
             }
 
             if (renderer.NoReShade)
@@ -1145,7 +1144,8 @@ namespace DTAConfig.OptionPanels
                 ddVFXDetail.AllowDropDown = true;
                 ddDisplacement.AllowDropDown = true;
 
-                ddAntiAliasing.AllowDropDown = !bHighRes;
+                //ddAntiAliasing.AllowDropDown = !bHighRes;
+                ddAntiAliasing.AllowDropDown = true;
             }
 
             ddDLSS_D.Visible = !ddDLSS.AllowDropDown;
@@ -1244,8 +1244,8 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = true;
                 ddDLSS.SelectedIndex = UserINISettings.Instance.DLSS.Value;
 
-                ddAntiAliasing.AllowDropDown = false;
-                ddAntiAliasing.SelectedIndex = 0;
+                //ddAntiAliasing.AllowDropDown = false;
+                //ddAntiAliasing.SelectedIndex = 0;
             }
             else
             {
@@ -1268,8 +1268,8 @@ namespace DTAConfig.OptionPanels
                 ddDLSS.AllowDropDown = false;
                 //ddDLSS.SelectedIndex = 3;
 
-                ddAntiAliasing.AllowDropDown = true;
-                ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
+                //ddAntiAliasing.AllowDropDown = true;
+                //ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing.Value;
             }
 
             string currentClientRes = IniSettings.ClientResolutionX.Value + "x" + IniSettings.ClientResolutionY.Value;
@@ -1285,7 +1285,7 @@ namespace DTAConfig.OptionPanels
             ddClientTheme.SelectedIndex = selectedThemeIndex > -1 ? selectedThemeIndex : 0;
 
             ddDLSS.Tag = false;
-            ddAntiAliasing.Tag = false;
+            //ddAntiAliasing.Tag = false;
             ddHighDetail.Tag = false;
             ddCloudsEffect.Tag = false;
             ddVFXDetail.Tag = false;
@@ -1302,7 +1302,7 @@ namespace DTAConfig.OptionPanels
             ddAntiAliasing.SelectedIndex = UserINISettings.Instance.AntiAliasing;
 
             ddDLSS.Tag = true;
-            ddAntiAliasing.Tag = true;
+            //ddAntiAliasing.Tag = true;
             ddHighDetail.Tag = true;
             ddCloudsEffect.Tag = true;
             ddVFXDetail.Tag = true;

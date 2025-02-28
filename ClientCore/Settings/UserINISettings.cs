@@ -72,8 +72,8 @@ namespace ClientCore
             }
             IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", IngameScreenX);
             IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", IngameScreenY);
-            FakeIngameScreenWidth = new IntSetting(iniFile, VIDEO, "FakeScreenWidth", IngameScreenX);
-            FakeIngameScreenHeight = new IntSetting(iniFile, VIDEO, "FakeScreenHeight", IngameScreenY);
+            FakeIngameScreenWidth = new IntSetting(iniFile, VIDEO, "FakeScreenWidth", Screen.PrimaryScreen.Bounds.Width);
+            FakeIngameScreenHeight = new IntSetting(iniFile, VIDEO, "FakeScreenHeight", Screen.PrimaryScreen.Bounds.Height);
 
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
@@ -114,7 +114,7 @@ namespace ClientCore
             HighDetail = new IntSetting(iniFile, VIDEO, "HighDetail", GoodGPU);
             DLSS = new IntSetting(iniFile, VIDEO, "DLSS", 3);
             GFXPreset = new IntSetting(iniFile, VIDEO, "DisplayFPS", GoodGPU);
-            AntiAliasing = new IntSetting(iniFile, VIDEO, "AntiAliasing", GoodGPU == 3 ? 1 : 0);
+            AntiAliasing = new IntSetting(iniFile, VIDEO, "AntiAliasing", (Screen.PrimaryScreen.Bounds.Width > 1920 || Screen.PrimaryScreen.Bounds.Height > 1440) ? 0 : 1);
             TracerDetail = new IntSetting(iniFile, VIDEO, "TracerDetail", 2);
             VFXDetail = new IntSetting(iniFile, VIDEO, "VFXDetail", 2);
             Displacement = new IntSetting(iniFile, VIDEO, "DisplaceEffect", GoodGPU == 3 ? 1 : 0);
