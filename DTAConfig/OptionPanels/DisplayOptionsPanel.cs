@@ -38,6 +38,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkBackBufferInVRAM;
         private XNAClientPreferredItemDropDown ddClientResolution;
         private XNAClientCheckBox chkBorderlessClient;
+        private XNAClientDropDown ddMaxFPS;
         private XNAClientDropDown ddClientTheme;
 
         private XNAClientDropDown ddHighDetail;
@@ -58,6 +59,8 @@ namespace DTAConfig.OptionPanels
         private XNAClientButton btnTestGame;
         private XNALabel lblDetailTip;
         private XNAMessageBox SureToTextBox;
+        private XNAMessageBox LowFPSMsgBox;
+        private XNAMessageBox HighFPSMsgBox;
 
         private List<DirectDrawWrapper> renderers;
 
@@ -251,6 +254,25 @@ namespace DTAConfig.OptionPanels
             chkBorderlessClient.Text = "Fullscreen Client".L10N("UI:DTAConfig:FullscreenClient");
             chkBorderlessClient.CheckedChanged += ChkBorderlessMenu_CheckedChanged;
             chkBorderlessClient.Checked = true;
+
+            var lblMaxFPS = new XNALabel(WindowManager);
+            lblMaxFPS.Name = "lblMaxFPS";
+            lblMaxFPS.ClientRectangle = new Rectangle(
+                lblClientResolution.X,
+                lblRenderer.Y, 0, 0);
+            lblMaxFPS.Text = "Max FPS:".L10N("UI:DTAConfig:MaxFPS");
+
+            ddMaxFPS = new XNAClientDropDown(WindowManager);
+            ddMaxFPS.Name = "ddMaxFPS";
+            ddMaxFPS.ClientRectangle = new Rectangle(
+                ddClientResolution.X,
+                ddRenderer.Y,
+                ddClientResolution.Width,
+                ddRenderer.Height);
+            ddMaxFPS.SelectedIndexChanged += ddFPS_SelectedIndexChanged;
+            ddMaxFPS.AddItem("30");
+            ddMaxFPS.AddItem("40 (Default)".L10N("UI:DTAConfig:FPS40"));
+            ddMaxFPS.AddItem("60");
 
             var lblClientTheme = new XNALabel(WindowManager);
             lblClientTheme.Name = "lblClientTheme";
@@ -512,6 +534,7 @@ namespace DTAConfig.OptionPanels
             btnTestGame.MouseEnter += BtnTestGame_MouseEnter;
             btnTestGame.MouseLeave += BtnTestGame_MouseLeave;
 
+            ddMaxFPS.Tag = true;
             ddDLSS.Tag = true;
             //ddAntiAliasing.Tag = true;
             ddHighDetail.Tag = true;
@@ -524,6 +547,8 @@ namespace DTAConfig.OptionPanels
             AddChild(chkBorderlessWindowedMode);
             AddChild(chkBackBufferInVRAM);
             AddChild(chkBorderlessClient);
+            AddChild(lblMaxFPS);
+            AddChild(ddMaxFPS);
             AddChild(lblClientTheme);
             AddChild(ddClientTheme);
             AddChild(lblClientResolution);
@@ -855,6 +880,33 @@ namespace DTAConfig.OptionPanels
                     ddClientResolution.SelectedIndex = optimalWindowedResIndex;
                 }
             }
+        }
+
+        private void FPSMsgBox_NoClicked(XNAMessageBox messageBox) => ddMaxFPS.SelectedIndex = 1;
+
+        private void ddFPS_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(bool)ddMaxFPS.Tag)
+                return;
+
+            if (ddMaxFPS.SelectedIndex == 0)
+            {
+                LowFPSMsgBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                  "Set to 30 FPS".L10N("UI:Main:LowFPSSelect"),
+                  string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play.\nEasy difficulty is very easy, but cannot unlock medals."
+                  .L10N("UI:Main:LowFPSSelectDesc").Replace("@", Environment.NewLine)));
+                LowFPSMsgBox.NoClickedAction = FPSMsgBox_NoClicked;
+            }
+            else if (ddMaxFPS.SelectedIndex == 2)
+            {
+                HighFPSMsgBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                    "Set to 60 FPS".L10N("UI:Main:HighFPSSelect"),
+                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play.\nEasy difficulty is very easy, but cannot unlock medals."
+                    .L10N("UI:Main:HighFPSSelectDesc").Replace("@", Environment.NewLine)));
+                HighFPSMsgBox.NoClickedAction = FPSMsgBox_NoClicked;
+            }
+
+            ddMaxFPS.Tag = true;
         }
 
         private void ddIngameResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -1227,6 +1279,13 @@ namespace DTAConfig.OptionPanels
             string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
             int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
+            // don't change.
+            if (ingameRes[0] > 1920 || ingameRes[1] > 1440)
+            {
+                IniSettings.IngameScreenWidth.Value = 1920;
+                IniSettings.IngameScreenHeight.Value = (int)(Convert.ToDouble(ingameRes[1]) / Convert.ToDouble(ingameRes[0]) * Convert.ToDouble(1920));
+            }
+
             // Apply >1080p resolution
             int FakeWidth = ingameRes[0];
             int FakeHeight = ingameRes[1];
@@ -1279,6 +1338,10 @@ namespace DTAConfig.OptionPanels
             ddClientResolution.SelectedIndex = clientResIndex > -1 ? clientResIndex : 0;
 
             chkBorderlessClient.Checked = UserINISettings.Instance.BorderlessWindowedClient;
+
+            ddMaxFPS.Tag = false;
+            ddMaxFPS.SelectedIndex = UserINISettings.Instance.MaxFPS;
+            ddMaxFPS.Tag = true;
 
             int selectedThemeIndex = ddClientTheme.Items.FindIndex(
                 ddi => ddi.Text == UserINISettings.Instance.ClientTheme);
@@ -1430,6 +1493,8 @@ namespace DTAConfig.OptionPanels
 
             IniSettings.BorderlessWindowedClient.Value = chkBorderlessClient.Checked;
 
+            IniSettings.MaxFPS.Value = ddMaxFPS.SelectedIndex;
+
             if (IniSettings.ClientTheme != ddClientTheme.SelectedItem.Text)
                 restartRequired = true;
 
@@ -1505,7 +1570,13 @@ namespace DTAConfig.OptionPanels
                 // Set up ddraw.ini
                 if (!UserINISettings.Instance.DebugReShade)
                 {
-                    rendererSettingsIni.SetIntValue("gamemd", "maxfps", 41);
+                    int nMaxFPS = 41;
+                    if (UserINISettings.Instance.MaxFPS == 0)
+                        nMaxFPS = 31;
+                    else if (UserINISettings.Instance.MaxFPS == 2)
+                        nMaxFPS = 61;
+
+                    rendererSettingsIni.SetIntValue("gamemd", "maxfps", nMaxFPS);
                     rendererSettingsIni.SetIntValue("gamemd", "minfps", -1);
                     rendererSettingsIni.SetIntValue("gamemd", "maxgameticks", 0);
                     rendererSettingsIni.SetBooleanValue("gamemd", "devmode", false);

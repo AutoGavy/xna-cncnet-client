@@ -117,19 +117,19 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnGDI_LeftClick(object sender, EventArgs e)
         {
-            if (UserINISettings.Instance.TutorialCompleted)
-            {
+            //if (UserINISettings.Instance.TutorialCompleted)
+            //{
                 ChapterSelectMsgbox = XNAMessageBox.ShowActDialog(WindowManager,
                     "Select Chapter".L10N("UI:Main:SelectChapter"),
                     string.Format("Please select the chapter you want to play.".L10N("UI:Main:PlzSelectChapter")));
                 ChapterSelectMsgbox.YesClickedAction = ChapterSelectMsgbox_YesClicked;
                 ChapterSelectMsgbox.NoClickedAction = ChapterSelectMsgbox_NoClicked;
-            }
+            /*}
             else
             {
                 XNAMessageBox.Show(WindowManager, "Tutorial Not Completed".L10N("UI:Main:TutorialNotCompleted"),
                     string.Format("You need to completed at least one mission of tutorial\nto start main campaign.".L10N("UI:Main:TutorialNotCompletedDesc")));
-            }
+            }*/
         }
 
         private void BtnBack_LeftClick(object sender, EventArgs e)

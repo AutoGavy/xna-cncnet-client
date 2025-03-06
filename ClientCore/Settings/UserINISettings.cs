@@ -74,6 +74,7 @@ namespace ClientCore
             IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", IngameScreenY);
             FakeIngameScreenWidth = new IntSetting(iniFile, VIDEO, "FakeScreenWidth", Screen.PrimaryScreen.Bounds.Width);
             FakeIngameScreenHeight = new IntSetting(iniFile, VIDEO, "FakeScreenHeight", Screen.PrimaryScreen.Bounds.Height);
+            MaxFPS = new IntSetting(iniFile, VIDEO, "MaxFPS", 1);
 
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", string.Empty);
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
@@ -92,7 +93,7 @@ namespace ClientCore
             DebugReShade = new BoolSetting(iniFile, OPTIONS, "DebugReShade", false);
             ClientFPS = new IntSetting(iniFile, VIDEO, "ClientFPS", 60);
 
-            System.Management.ManagementObjectSearcher objvide = new System.Management.ManagementObjectSearcher("select * from Win32_VideoController");
+            /*System.Management.ManagementObjectSearcher objvide = new System.Management.ManagementObjectSearcher("select * from Win32_VideoController");
             foreach (System.Management.ManagementObject obj in objvide.Get())
             {
                 if (obj["VideoProcessor"] == null)
@@ -108,7 +109,8 @@ namespace ClientCore
                         || strName.Contains("HD7950") || strName.Contains("HD7870"))
                         GoodGPU = 3;
                 }
-            }
+            }*/
+            GoodGPU = 3;
 
             NoReShade = new BoolSetting(iniFile, VIDEO, "NoReShade", false);
             HighDetail = new IntSetting(iniFile, VIDEO, "HighDetail", GoodGPU);
@@ -177,7 +179,7 @@ namespace ClientCore
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
-            FakeDifficulty = new IntSetting(iniFile, OPTIONS, "FakeDifficulty", 0);
+            FakeDifficulty = new IntSetting(iniFile, OPTIONS, "FakeDifficulty", 1);
             SelectedMissionIndex = new IntSetting(iniFile, OPTIONS, "SelectedMissionIndex", 0);
             GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 2);
             PreloadMapPreviews = new BoolSetting(iniFile, VIDEO, "PreloadMapPreviews", false);
@@ -191,7 +193,7 @@ namespace ClientCore
             CanReShade = new BoolSetting(iniFile, OPTIONS, "CanReShade", false);
 
             TutorialCompleted = new BoolSetting(iniFile, OPTIONS, "TutorialCompleted", false);
-            TooHardHint = new BoolSetting(iniFile, OPTIONS, "TooHardHint", true);
+            TooHardHint = new BoolSetting(iniFile, OPTIONS, "_TooHardHint", true);
 
             TC2Completed = new BoolSetting(iniFile, NETWORK, "OTStuID5", false);
             EggSide1 = new BoolSetting(iniFile, NETWORK, "OTStuID1", false);
@@ -221,6 +223,7 @@ namespace ClientCore
         public IntSetting IngameScreenHeight { get; private set; }
         public IntSetting FakeIngameScreenWidth { get; private set; }
         public IntSetting FakeIngameScreenHeight { get; private set; }
+        public IntSetting MaxFPS { get; private set; }
         public StringSetting ClientTheme { get; private set; }
         public IntSetting DetailLevel { get; private set; }
         public StringSetting Renderer { get; private set; }

@@ -842,6 +842,9 @@ namespace DTAClient.DXGUI.Generic
             else
                 lblUpdateStatus.Text = "Click to check for updates.".L10N("UI:Main:ClickToCheckUpdate");
 
+            if (File.Exists(ProgramConstants.GamePath + "d3dx9_29.ext"))
+                File.Delete(ProgramConstants.GamePath + "d3dx9_29.ext");
+
             CheckRequiredFiles();
             CheckForbiddenFiles();
             CheckIfFirstRun();

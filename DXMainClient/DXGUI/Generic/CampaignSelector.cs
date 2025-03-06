@@ -346,6 +346,8 @@ namespace DTAClient.DXGUI.Generic
             swriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : trbDifficultySelector.Value.ToString()));
             swriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty());
 
+            swriter.WriteLine("EZMode=" + (trbDifficultySelector.Value == 0 ? "Yes" : "No"));
+
             IniFile difficultyIni = new IniFile(ProgramConstants.GamePath + InfoShared.DifficultyIniPaths[trbDifficultySelector.Value]);
             string difficultyName = InfoShared.DifficultyNames[trbDifficultySelector.Value];
 

@@ -227,20 +227,22 @@ namespace DTAClient.Domain
                             curMission = "PRL2";
                             profileIni.SetBooleanValue("General", "GDO1", true);
                         }
-
-                        //for (int i = 1; i <= 12; i++)
-                        for (int i = 1; i <= 5; i++) // max enabled to gdo5
+                        else
                         {
-                            string missionIndex = i.ToString();
-                            if (line.Contains("GDO" + missionIndex))
+                            //for (int i = 1; i <= 12; i++)
+                            for (int i = 1; i <= 5; i++) // max enabled to gdo5
                             {
-                                Logger.Log("GDO" + missionIndex + " Completed");
+                                string missionIndex = i.ToString();
+                                if (line.Contains("GDO" + missionIndex))
+                                {
+                                    Logger.Log("GDO" + missionIndex + " Completed");
 
-                                side = "gdo" + missionIndex;
-                                curMission = "GDO" + missionIndex;
+                                    side = "gdo" + missionIndex;
+                                    curMission = "GDO" + missionIndex;
 
-                                if (i != 5)
-                                    profileIni.SetBooleanValue("General", "GDO" + (i + 1).ToString(), true);
+                                    if (i != 5)
+                                        profileIni.SetBooleanValue("General", "GDO" + (i + 1).ToString(), true);
+                                }
                             }
                         }
 
@@ -342,6 +344,7 @@ namespace DTAClient.Domain
                         else // player won
                         {
                             scoreSong = "gdiwin";
+                            Logger.Log("Setting tutorial complete");
                             UserINISettings.Instance.ReloadSettings();
                             UserINISettings.Instance.TutorialCompleted.Value = true;
                             UserINISettings.Instance.SaveSettings();

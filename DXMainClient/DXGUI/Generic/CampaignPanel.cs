@@ -696,7 +696,7 @@ namespace DTAClient.DXGUI.Generic
                 UserINISettings.Instance.TooHardHint.Value = false;
                 TooHardMessageBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                     "Start With This Difficulty".L10N("UI:Main:StartWithThisDiff"),
-                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play."
+                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play.\nEasy difficulty is very easy, but cannot unlock medals."
                     .L10N("UI:Main:StartWithThisDiffDesc").Replace("@", Environment.NewLine)));
                 TooHardMessageBox.YesClickedAction = TooHardMessageBox_YesClicked;
             }
@@ -834,6 +834,7 @@ namespace DTAClient.DXGUI.Generic
             swriter.WriteLine("SidebarHack=" + ClientConfiguration.Instance.SidebarHack);
             swriter.WriteLine("Side=" + mission.Side);
             swriter.WriteLine("BuildOffAlly=" + mission.BuildOffAlly);
+            swriter.WriteLine("EZMode=" + (curDifficultyIndex == 0 ? "Yes" : "No"));
 
             IniFile difficultyIni;
             //IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
