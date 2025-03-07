@@ -845,6 +845,17 @@ namespace DTAClient.DXGUI.Generic
             if (File.Exists(ProgramConstants.GamePath + "d3dx9_29.ext"))
                 File.Delete(ProgramConstants.GamePath + "d3dx9_29.ext");
 
+            string keyboardINIPath = ProgramConstants.GamePath + ClientConfiguration.Instance.KeyboardINI;
+            if (File.Exists(keyboardINIPath))
+            {
+                var keyboardIni = new IniFile(keyboardINIPath);
+
+                if (!keyboardIni.KeyExists("Hotkey", "BriefingTab"))
+                    keyboardIni.SetStringValue("Hotkey", "BriefingTab", "9");
+
+                keyboardIni.WriteIniFile(ProgramConstants.GamePath + ClientConfiguration.Instance.KeyboardINI);
+            }
+
             CheckRequiredFiles();
             CheckForbiddenFiles();
             CheckIfFirstRun();
