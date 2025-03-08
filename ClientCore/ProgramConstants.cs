@@ -47,13 +47,19 @@ namespace ClientCore
         public const string UPSCALE_CONFIG_DIR = "tchelper/config/";
         public const string UPSCALE_CONFIG_NAME = "config.json";
         public const string RESHADE_DLL = "d3d9.ext";
-        public const string RESHADE_DLL_DISABLED = "d3d9_disabled.ext";
 
         public const int GAME_ID_MAX_LENGTH = 4;
 
         public static readonly Encoding LAN_ENCODING = Encoding.UTF8;
 
         public const string BASE_SHARED_DIR = "GameShaders/BaseShared/";
+
+        private static bool? isMono;
+
+        /// <summary>
+        /// Gets a value whether or not the application is running under Mono. Uses lazy loading and caching.
+        /// </summary>
+        public static bool ISMONO => isMono ??= Type.GetType("Mono.Runtime") != null;
 
         public static string GAME_VERSION = "Developer Mode";
         private static string PlayerName = "No name";

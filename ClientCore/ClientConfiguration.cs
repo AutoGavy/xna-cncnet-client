@@ -336,35 +336,31 @@ namespace ClientCore
 
         public OSVersion GetOperatingSystemVersion()
         {
-            Version osVersion = Environment.OSVersion.Version;
-
+            // OperatingSystem.IsWindowsVersionAtLeast() is the preferred API but is not supported on earlier .NET versions
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                if (osVersion.Major < 5)
+                Version osVersion = Environment.OSVersion.Version;
+
+                if (osVersion.Major <= 4)
                     return OSVersion.UNKNOWN;
 
                 if (osVersion.Major == 5)
                     return OSVersion.WINXP;
 
-                if (osVersion.Major == 6)
-                {
-                    if (osVersion.Minor == 0)
-                        return OSVersion.WINVISTA;
+                if (osVersion.Major == 6 && osVersion.Minor == 0)
+                    return OSVersion.WINVISTA;
 
-                    if (osVersion.Minor > 1)
-                        return OSVersion.WIN810;
-
+                if (osVersion.Major == 6 && osVersion.Minor <= 1)
                     return OSVersion.WIN7;
 
-                }
-
-                // osVersion.Major > 6
                 return OSVersion.WIN810;
             }
 
-            int p = (int)Environment.OSVersion.Platform;
+            if (ProgramConstants.ISMONO)
+                return OSVersion.UNIX;
 
             // http://mono.wikia.com/wiki/Detecting_the_execution_platform
+            int p = (int)Environment.OSVersion.Platform;
             if (p == 4 || p == 6 || p == 128)
                 return OSVersion.UNIX;
 
