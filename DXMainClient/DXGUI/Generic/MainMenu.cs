@@ -845,26 +845,32 @@ namespace DTAClient.DXGUI.Generic
             if (File.Exists(ProgramConstants.GamePath + "d3dx9_29.ext"))
                 File.Delete(ProgramConstants.GamePath + "d3dx9_29.ext");
 
-            var user_os = ClientConfiguration.Instance.GetOperatingSystemVersion();
-            if (user_os == OSVersion.WIN810 || user_os == OSVersion.UNKNOWN)
-            {
-                var filePath = ProgramConstants.GamePath + "dbgcore.dll";
-                if (!File.Exists(filePath))
-                    File.Copy(ProgramConstants.GetBaseResourcePath() + "dbgcore.dll", filePath, true);
+            var corePath = ProgramConstants.GetBaseResourcePath() + "dbgcore.dll";
+            var helpPath = ProgramConstants.GetBaseResourcePath() + "dbghelp.dll";
 
-                filePath = ProgramConstants.GamePath + "dbghelp.dll";
-                if (!File.Exists(filePath))
-                    File.Copy(ProgramConstants.GetBaseResourcePath() + "dbghelp.dll", filePath, true);
-            }
-            else
+            if (File.Exists(corePath) && File.Exists(helpPath))
             {
-                var filePath = ProgramConstants.GamePath + "dbgcore.dll";
-                if (File.Exists(filePath))
-                    File.Delete(filePath);
+                var user_os = ClientConfiguration.Instance.GetOperatingSystemVersion();
+                if (user_os == OSVersion.WIN810 || user_os == OSVersion.UNKNOWN)
+                {
+                    var filePath = ProgramConstants.GamePath + "dbgcore.dll";
+                    if (!File.Exists(filePath))
+                        File.Copy(corePath, filePath, true);
 
-                filePath = ProgramConstants.GamePath + "dbghelp.dll";
-                if (File.Exists(filePath))
-                    File.Delete(filePath);
+                    filePath = ProgramConstants.GamePath + "dbghelp.dll";
+                    if (!File.Exists(filePath))
+                        File.Copy(helpPath, filePath, true);
+                }
+                else
+                {
+                    var filePath = ProgramConstants.GamePath + "dbgcore.dll";
+                    if (File.Exists(filePath))
+                        File.Delete(filePath);
+
+                    filePath = ProgramConstants.GamePath + "dbghelp.dll";
+                    if (File.Exists(filePath))
+                        File.Delete(filePath);
+                }
             }
 
             string keyboardINIPath = ProgramConstants.GamePath + ClientConfiguration.Instance.KeyboardINI;

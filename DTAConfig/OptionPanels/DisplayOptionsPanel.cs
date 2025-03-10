@@ -39,6 +39,7 @@ namespace DTAConfig.OptionPanels
         private XNAClientPreferredItemDropDown ddClientResolution;
         private XNAClientCheckBox chkBorderlessClient;
         private XNAClientDropDown ddMaxFPS;
+        private XNAClientDropDown ddScaleFactor;
         private XNAClientDropDown ddClientTheme;
 
         private XNAClientDropDown ddHighDetail;
@@ -54,13 +55,14 @@ namespace DTAConfig.OptionPanels
         private XNAClientCheckBox chkAlphaLight;
         private XNAClientCheckBox chkAirflowEffect;
         private XNAClientCheckBox chkVideoMode;
-		
+
         private XNAClientButton btnReadTutorial;
         private XNAClientButton btnTestGame;
         private XNALabel lblDetailTip;
         private XNAMessageBox SureToTextBox;
         private XNAMessageBox LowFPSMsgBox;
         private XNAMessageBox HighFPSMsgBox;
+        private XNAMessageBox HighScaleMsgBox;
 
         private List<DirectDrawWrapper> renderers;
 
@@ -105,8 +107,8 @@ namespace DTAConfig.OptionPanels
 
             var resolutions = GetResolutions(clientConfig.MinimumIngameWidth,
                 clientConfig.MinimumIngameHeight, int.MaxValue, int.MaxValue);
-                //clientConfig.MaximumIngameWidth,
-                //clientConfig.MaximumIngameHeight);
+            //clientConfig.MaximumIngameWidth,
+            //clientConfig.MaximumIngameHeight);
 
             resolutions.Sort();
 
@@ -274,6 +276,24 @@ namespace DTAConfig.OptionPanels
             ddMaxFPS.AddItem("40 (Default)".L10N("UI:DTAConfig:FPS40"));
             ddMaxFPS.AddItem("60");
 
+            var lblScaleFactor = new XNALabel(WindowManager);
+            lblScaleFactor.Name = "lblScaleFactor";
+            lblScaleFactor.ClientRectangle = new Rectangle(
+                lblClientResolution.X,
+                lblRenderer.Y, 0, 0);
+            lblScaleFactor.Text = "Scaling:".L10N("UI:DTAConfig:ScaleFactor");
+
+            ddScaleFactor = new XNAClientDropDown(WindowManager);
+            ddScaleFactor.Name = "ddScaleFactor";
+            ddScaleFactor.ClientRectangle = new Rectangle(
+                ddClientResolution.X,
+                ddRenderer.Y,
+                ddClientResolution.Width,
+                ddRenderer.Height);
+            ddScaleFactor.SelectedIndexChanged += ddScaleFactor_SelectedIndexChanged;
+            ddScaleFactor.AddItem("100% (Default)".L10N("UI:DTAConfig:Scale100"));
+            ddScaleFactor.AddItem("120%");
+
             var lblClientTheme = new XNALabel(WindowManager);
             lblClientTheme.Name = "lblClientTheme";
             lblClientTheme.ClientRectangle = new Rectangle(
@@ -355,10 +375,10 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddHighDetail.SelectedIndexChanged += ddHighDetail_SelectedIndexChanged;
-                ddHighDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
-                ddHighDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
-                ddHighDetail.AddItem("High".L10N("UI:DTAConfig:High"));
-                ddHighDetail.AddItem("Ultra".L10N("UI:DTAConfig:Ultra"));
+            ddHighDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
+            ddHighDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
+            ddHighDetail.AddItem("High".L10N("UI:DTAConfig:High"));
+            ddHighDetail.AddItem("Ultra".L10N("UI:DTAConfig:Ultra"));
             ddHighDetail.AllowDropDown = true;
 
             var lblDLSS = new XNALabel(WindowManager);
@@ -425,8 +445,8 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddCloudsEffect.SelectedIndexChanged += ddCloudsEffect_SelectedIndexChanged;
-                ddCloudsEffect.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
-                ddCloudsEffect.AddItem("Enable".L10N("UI:DTAConfig:Enable"));
+            ddCloudsEffect.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
+            ddCloudsEffect.AddItem("Enable".L10N("UI:DTAConfig:Enable"));
             ddCloudsEffect.AllowDropDown = true;
 
             var lblTracerDetail = new XNALabel(WindowManager);
@@ -442,9 +462,9 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddTracerDetail.SelectedIndexChanged += ddTracerDetail_SelectedIndexChanged;
-                ddTracerDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
-                ddTracerDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
-                ddTracerDetail.AddItem("High".L10N("UI:DTAConfig:High"));
+            ddTracerDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
+            ddTracerDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
+            ddTracerDetail.AddItem("High".L10N("UI:DTAConfig:High"));
             ddTracerDetail.AllowDropDown = true;
 
             var lblVFXDetail = new XNALabel(WindowManager);
@@ -460,9 +480,9 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddVFXDetail.SelectedIndexChanged += ddVFXDetail_SelectedIndexChanged;
-                ddVFXDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
-                ddVFXDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
-                ddVFXDetail.AddItem("High".L10N("UI:DTAConfig:High"));
+            ddVFXDetail.AddItem("Low".L10N("UI:DTAConfig:Low"));
+            ddVFXDetail.AddItem("Medium".L10N("UI:DTAConfig:Medium"));
+            ddVFXDetail.AddItem("High".L10N("UI:DTAConfig:High"));
             ddVFXDetail.AllowDropDown = true;
 
             var lblDisplacement = new XNALabel(WindowManager);
@@ -478,8 +498,8 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddDisplacement.SelectedIndexChanged += ddDisplacement_SelectedIndexChanged;
-                ddDisplacement.AddItem("Low".L10N("UI:DTAConfig:Low"));
-                ddDisplacement.AddItem("High".L10N("UI:DTAConfig:High"));
+            ddDisplacement.AddItem("Low".L10N("UI:DTAConfig:Low"));
+            ddDisplacement.AddItem("High".L10N("UI:DTAConfig:High"));
             ddDisplacement.AllowDropDown = true;
 
             var lblAntiAliasing = new XNALabel(WindowManager);
@@ -495,8 +515,8 @@ namespace DTAConfig.OptionPanels
                 ddIngameResolution.ClientRectangle.Width,
                 ddIngameResolution.ClientRectangle.Height);
             ddAntiAliasing.SelectedIndexChanged += ddAntiAliasing_SelectedIndexChanged;
-                ddAntiAliasing.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
-                ddAntiAliasing.AddItem("Enable".L10N("UI:DTAConfig:Enable"));
+            ddAntiAliasing.AddItem("Disable".L10N("UI:DTAConfig:Disable"));
+            ddAntiAliasing.AddItem("Enable".L10N("UI:DTAConfig:Enable"));
             //ddAntiAliasing.AllowDropDown = true;
 
             lblDetailTip = new XNALabel(WindowManager);
@@ -519,7 +539,7 @@ namespace DTAConfig.OptionPanels
             chkVideoMode.Name = "chkVideoMode";
             chkVideoMode.ClientRectangle = new Rectangle(0, 0, 0, 0);
             chkVideoMode.Text = "Youtube/Twitch Record Mode".L10N("UI:DTAConfig:RecordMode");
-			
+
             btnReadTutorial = new XNAClientButton(WindowManager);
             btnReadTutorial.Name = "btnReadTutorial";
             btnReadTutorial.ClientRectangle = new Rectangle(0, 0, 160, 23);
@@ -535,6 +555,7 @@ namespace DTAConfig.OptionPanels
             btnTestGame.MouseLeave += BtnTestGame_MouseLeave;
 
             ddMaxFPS.Tag = true;
+            ddScaleFactor.Tag = true;
             ddDLSS.Tag = true;
             //ddAntiAliasing.Tag = true;
             ddHighDetail.Tag = true;
@@ -549,6 +570,8 @@ namespace DTAConfig.OptionPanels
             AddChild(chkBorderlessClient);
             AddChild(lblMaxFPS);
             AddChild(ddMaxFPS);
+            AddChild(lblScaleFactor);
+            AddChild(ddScaleFactor);
             AddChild(lblClientTheme);
             AddChild(ddClientTheme);
             AddChild(lblClientResolution);
@@ -598,8 +621,8 @@ namespace DTAConfig.OptionPanels
 
         private void BtnTestGame_LeftClick(object sender, EventArgs e)
         {
-           SureToTextBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Test Game Quality".L10N("UI:DTAConfig:TestGame"),
-               string.Format("Are you sure to test right now?").L10N("UI:DTAConfig:TestGame_Desc"));
+            SureToTextBox = XNAMessageBox.ShowYesNoDialog(WindowManager, "Test Game Quality".L10N("UI:DTAConfig:TestGame"),
+                string.Format("Are you sure to test right now?").L10N("UI:DTAConfig:TestGame_Desc"));
 
             SureToTextBox.YesClickedAction = SureToTextBox_YesClicked;
         }
@@ -893,7 +916,7 @@ namespace DTAConfig.OptionPanels
             {
                 LowFPSMsgBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                   "Set to 30 FPS".L10N("UI:Main:LowFPSSelect"),
-                  string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play.\nEasy difficulty is very easy, but cannot unlock medals."
+                  string.Format("Limiting the maximum frame rate to 30 may cause\nsome music and effects to not transition seamlessly,\nbut it can improve performance.\nAre you sure to set the maximum frame rate to this value?"
                   .L10N("UI:Main:LowFPSSelectDesc").Replace("@", Environment.NewLine)));
                 LowFPSMsgBox.NoClickedAction = FPSMsgBox_NoClicked;
             }
@@ -901,12 +924,71 @@ namespace DTAConfig.OptionPanels
             {
                 HighFPSMsgBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
                     "Set to 60 FPS".L10N("UI:Main:HighFPSSelect"),
-                    string.Format("Are you sure to start with this difficulty?\nIf you've played Command & Conquer before, you can start on normal difficulty.\n*Abyss difficulty is a hardcore plot background mode. This difficulty is not recommended for the first time to play.\nEasy difficulty is very easy, but cannot unlock medals."
+                    string.Format("Setting the maximum frame rate to 60 FPS will\nsignificantly increase power consumption by 50%.\nAre you sure to set the maximum frame rate to this value?"
                     .L10N("UI:Main:HighFPSSelectDesc").Replace("@", Environment.NewLine)));
                 HighFPSMsgBox.NoClickedAction = FPSMsgBox_NoClicked;
             }
 
             ddMaxFPS.Tag = true;
+        }
+
+        private void ScaleMsgBox_NoClicked(XNAMessageBox messageBox) => ddScaleFactor.SelectedIndex = 0;
+
+        private void ddScaleFactor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
+            int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
+
+            // Apply >1080p resolution
+            int FakeWidth = ingameRes[0];
+            int FakeHeight = ingameRes[1];
+
+            bool bHighRes = FakeWidth > 1920 || FakeHeight > 1440;
+
+            if (!bHighRes)
+            {
+                var renderer = (DirectDrawWrapper)ddRenderer.SelectedItem.Tag;
+                IniFile rendererSettingsIni = new IniFile(ProgramConstants.GamePath + renderer.ConfigFileName);
+                chkWindowedMode.Checked = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                    renderer.WindowedModeKey, false);
+
+                if (ddScaleFactor.SelectedIndex == 0)
+                {
+                    bool setting = rendererSettingsIni.GetBooleanValue(renderer.WindowedModeSection,
+                        renderer.BorderlessWindowedModeKey, false);
+                    chkBorderlessWindowedMode.Checked = renderer.IsBorderlessWindowedModeKeyReversed ? !setting : setting;
+
+                    //chkWindowedMode.Checked = UserINISettings.Instance.WindowedMode;
+                    //chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
+
+                    chkWindowedMode.AllowChecking = true;
+                    if (!chkWindowedMode.Checked)
+                        chkBorderlessWindowedMode.Checked = false;
+                    chkBorderlessWindowedMode.AllowChecking = chkWindowedMode.Checked;
+                }
+                else
+                {
+                    chkWindowedMode.AllowChecking = false;
+                    chkWindowedMode.Checked = false;
+
+                    chkBorderlessWindowedMode.AllowChecking = false;
+                    chkBorderlessWindowedMode.Checked = false;
+                }
+            }
+
+            if (!(bool)ddScaleFactor.Tag)
+                return;
+
+            if (ddScaleFactor.SelectedIndex == 1)
+            {
+                HighScaleMsgBox = XNAMessageBox.ShowYesNoDialog(WindowManager,
+                    "Scaling Screen".L10N("UI:Main:ScalingScreen"),
+                    string.Format("Enabling scaling may cause 2D game visuals to appear blurry,\nbut it can improve overall clarity.\nAre you sure to enable scaling?"
+                    .L10N("UI:Main:ScalingScreenDesc").Replace("@", Environment.NewLine)));
+                HighScaleMsgBox.NoClickedAction = ScaleMsgBox_NoClicked;
+            }
+
+            ddScaleFactor.Tag = true;
         }
 
         private void ddIngameResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -941,6 +1023,14 @@ namespace DTAConfig.OptionPanels
                     //ddAntiAliasing.AllowDropDown = false;
                     ddAntiAliasing.SelectedIndex = 0;
                 }
+            }
+            else if (ddScaleFactor.SelectedIndex != 0)
+            {
+                chkWindowedMode.AllowChecking = false;
+                chkWindowedMode.Checked = false;
+
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = false;
             }
             else
             {
@@ -1276,6 +1366,10 @@ namespace DTAConfig.OptionPanels
                 chkBorderlessWindowedMode.Checked = UserINISettings.Instance.BorderlessWindowedMode;
             }
 
+            ddScaleFactor.Tag = false;
+            ddScaleFactor.SelectedIndex = UserINISettings.Instance.ScaleFactor;
+            ddScaleFactor.Tag = true;
+
             string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
             int[] ingameRes = new int[2] { int.Parse(resolution[0]), int.Parse(resolution[1]) };
 
@@ -1305,6 +1399,14 @@ namespace DTAConfig.OptionPanels
 
                 //ddAntiAliasing.AllowDropDown = false;
                 //ddAntiAliasing.SelectedIndex = 0;
+            }
+            else if (ddScaleFactor.SelectedIndex != 0)
+            {
+                chkWindowedMode.AllowChecking = false;
+                chkWindowedMode.Checked = false;
+
+                chkBorderlessWindowedMode.AllowChecking = false;
+                chkBorderlessWindowedMode.Checked = false;
             }
             else
             {
@@ -1441,14 +1543,24 @@ namespace DTAConfig.OptionPanels
 
             if (!UserINISettings.Instance.DebugReShade && (ingameRes[0] > 1920 || ingameRes[1] > 1440))
             {
-                IniSettings.IngameScreenWidth.Value = 1920;
-                IniSettings.IngameScreenHeight.Value = (int)(Convert.ToDouble(ingameRes[1]) / Convert.ToDouble(ingameRes[0]) * Convert.ToDouble(1920));
+                int baseWidth = ddScaleFactor.SelectedIndex == 0 ? 1920 : 1600;
+
+                IniSettings.IngameScreenWidth.Value = baseWidth;
+                IniSettings.IngameScreenHeight.Value = (int)(Convert.ToDouble(ingameRes[1]) / Convert.ToDouble(ingameRes[0]) * Convert.ToDouble(baseWidth));
+
                 bHighRes = true;
             }
             else
             {
                 IniSettings.IngameScreenWidth.Value = ingameRes[0];
                 IniSettings.IngameScreenHeight.Value = ingameRes[1];
+
+                if (ddScaleFactor.SelectedIndex == 1)
+                {
+                    IniSettings.IngameScreenWidth.Value = Math.Max((int)(IniSettings.IngameScreenWidth.Value / 1.2), ClientConfiguration.Instance.MinimumIngameWidth);
+                    IniSettings.IngameScreenHeight.Value = Math.Max((int)(IniSettings.IngameScreenHeight.Value / 1.2),
+                        (int)(Convert.ToDouble(ingameRes[1]) / Convert.ToDouble(ingameRes[0]) * Convert.ToDouble(ClientConfiguration.Instance.MinimumIngameWidth)));
+                }
             }
             IniSettings.FakeIngameScreenWidth.Value = ingameRes[0];
             IniSettings.FakeIngameScreenHeight.Value = ingameRes[1];
@@ -1494,6 +1606,8 @@ namespace DTAConfig.OptionPanels
             IniSettings.BorderlessWindowedClient.Value = chkBorderlessClient.Checked;
 
             IniSettings.MaxFPS.Value = ddMaxFPS.SelectedIndex;
+
+            IniSettings.ScaleFactor.Value = ddScaleFactor.SelectedIndex;
 
             if (IniSettings.ClientTheme != ddClientTheme.SelectedItem.Text)
                 restartRequired = true;
