@@ -699,7 +699,7 @@ namespace DTAClient.DXGUI.Generic
                     mapIni.SetStringValue("AmbSoundWPWH", "AnimList", "NULLQAQ");
 
                 string moviePath = ProgramConstants.GamePath + "tcextrab04.big";
-                if (!File.Exists(moviePath) || Utilities.CalculateSHA1ForFile(moviePath).ToUpper() != "F432ACC0E48675CF2545EB8DC777E5EE7138247C")
+                if (!File.Exists(moviePath))
                     mapIni.SetStringValue("Basic", "Win", "dummymovie_win");
 
                 //IniFile globalCodeIni = new IniFile(ProgramConstants.GamePath + "INI/Map Code/GlobalCode.ini");
