@@ -55,7 +55,7 @@ namespace ClientCore.CnCNet5
                     Texture = AssetLoader.TextureFromImage(Resources.tsicon)
                 },
 
-                new CnCNetGame()
+                /*new CnCNetGame()
                 {
                     ChatChannel = "#cncnet-mo",
                     ClientExecutableName = "MentalOmegaClient.exe",
@@ -64,7 +64,7 @@ namespace ClientCore.CnCNet5
                     RegistryInstallPath = "HKCU\\Software\\MentalOmega",
                     UIName = "Mental Omega",
                     Texture = AssetLoader.TextureFromImage(Resources.moicon)
-                },
+                },*/
 
                 new CnCNetGame()
                 {
@@ -77,7 +77,7 @@ namespace ClientCore.CnCNet5
                     Texture = AssetLoader.TextureFromImage(Resources.yricon)
                 },
 
-                new CnCNetGame()
+                /*new CnCNetGame()
                 {
                     ChatChannel = "#redres-lobby",
                     ClientExecutableName = "RRLauncher.exe",
@@ -86,7 +86,7 @@ namespace ClientCore.CnCNet5
                     RegistryInstallPath = "HKLM\\Software\\RedResurrection",
                     UIName = "YR Red-Resurrection",
                     Texture = AssetLoader.TextureFromImage(Resources.rricon)
-                },
+                },*/
 
                 new CnCNetGame()
                 {
@@ -143,7 +143,7 @@ namespace ClientCore.CnCNet5
                     Texture = AssetLoader.TextureFromImage(Resources.reicon)
                 },
 
-                new CnCNetGame()
+                /*new CnCNetGame()
                 {
                     ChatChannel = "#cncnet-fr",
                     ClientExecutableName = "FRLauncher.exe",
@@ -152,7 +152,7 @@ namespace ClientCore.CnCNet5
                     RegistryInstallPath = "HKCU\\Software\\FinaleReturn",
                     UIName = "Finale Return",
                     Texture = AssetLoader.TextureFromImage(Resources.fricon)
-                },
+                },*/
 
                 new CnCNetGame()
                 {

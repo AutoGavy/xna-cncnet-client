@@ -793,6 +793,28 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 return;
             }
 
+            if (Map.TRMode)
+            {
+                string error = null;
+
+                foreach (PlayerInfo pInfo in Players)
+                {
+                    if (pInfo.ColorId == 0)
+                        error = "This mission is not allowed to select random color.".L10N("UI:Main:CannotUseRandomColor");
+                }
+
+                if (!ClientConfiguration.DEBUG_BUILD)
+                {
+                    error = "This mode is coming soon. Please follow our official website and don't miss out!".L10N("UI:Main:TRModeNotReady");
+                }
+
+                if (error != null)
+                {
+                    XNAMessageBox.Show(WindowManager, "Cannot launch game".L10N("UI:Main:LaunchGameErrorTitle"), error);
+                    return;
+                }
+            }
+
             if (!IsHost)
             {
                 RequestReadyStatus();
