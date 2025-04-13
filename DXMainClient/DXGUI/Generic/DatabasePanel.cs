@@ -128,9 +128,9 @@ namespace DTAClient.DXGUI.Generic
 
             tbDataText = new XNATextBlock(WindowManager);
             tbDataText.Name = "tbDataText";
-            tbDataText.ClientRectangle = new Rectangle(679, 45, 498, 395);
-            // english:
-            // tbDataText.ClientRectangle = new Rectangle(681, 59, 496, 375);
+            tbDataText.ClientRectangle = ClientConfiguration.ENG_VER
+                ? new Rectangle(681, 59, 496, 375)
+                : new Rectangle(679, 45, 498, 395);
             tbDataText.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             tbDataText.DrawBorders = false;
             tbDataText.Alpha = 1.0f;

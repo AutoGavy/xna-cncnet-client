@@ -8,6 +8,7 @@ namespace ClientCore
     {
         public static readonly bool DEBUG_BUILD = true;
         public static readonly bool TEST_BUILD = false;
+        public static readonly bool ENG_VER = false;
 
         private const string GENERAL = "General";
         private const string AUDIO = "Audio";

@@ -744,23 +744,26 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private bool AreFilesModified()
         {
+            if (ClientConfiguration.ENG_VER)
+                return false;
+
             int iCount = 0;
             foreach (string filePath in InfoShared.filesToCheck)
             {
                 if (!File.Exists(ProgramConstants.GamePath + filePath))
                 {
                     cheaterWindow.SetCantFindText(filePath);
-                    return false;
+                    return true;
                 }
 
                 if (iCount >= InfoShared.filesHashArray.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArray[iCount].ToUpper())
                 {
                     cheaterWindow.SetDefaultText(filePath);
-                    return false;
+                    return true;
                 }
                 ++iCount;
             }
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -786,7 +789,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 return;
             }
 
-            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && AreFilesModified())
             {
                 cheaterWindow.Enable();
                 AddNotice("You have modified files and cannot start the game.".L10N("UI:Main:DifferentFileDetected"));

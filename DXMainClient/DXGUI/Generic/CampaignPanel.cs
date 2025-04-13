@@ -215,9 +215,9 @@ namespace DTAClient.DXGUI.Generic
 
             btnLoad = new XNAClientButton(WindowManager);
             btnLoad.Name = "btnLoad";
-            btnLoad.ClientRectangle = new Rectangle(66, 724, 83, 28);
-            // english:
-            // btnLoad.ClientRectangle = new Rectangle(67, 725, 121, 26);
+            btnLoad.ClientRectangle = ClientConfiguration.ENG_VER
+                ? new Rectangle(67, 725, 121, 26)
+                : new Rectangle(66, 724, 83, 28);
             btnLoad.IdleTexture = AssetLoader.LoadTexture("CampaignRes/loadbtn.png");
             btnLoad.HoverTexture = AssetLoader.LoadTexture("CampaignRes/loadbtn_c.png");
             btnLoad.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
@@ -225,9 +225,9 @@ namespace DTAClient.DXGUI.Generic
 
             btnCancel = new XNAClientButton(WindowManager);
             btnCancel.Name = "btnCancel";
-            btnCancel.ClientRectangle = new Rectangle(1184, 725, 66, 32);
-            // english:
-            // btnCancel.ClientRectangle = new Rectangle(1161, 725, 92, 31);
+            btnCancel.ClientRectangle = ClientConfiguration.ENG_VER
+                ? new Rectangle(1161, 725, 92, 31)
+                : new Rectangle(1184, 725, 66, 32);
             btnCancel.IdleTexture = AssetLoader.LoadTexture("Database/backbtn.png");
             btnCancel.HoverTexture = AssetLoader.LoadTexture("Database/backbtn_c.png");
             btnCancel.HoverSoundEffect = new EnhancedSoundEffect("button.wav");
@@ -738,7 +738,7 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
                 cheaterWindow.Enable();
@@ -780,17 +780,17 @@ namespace DTAClient.DXGUI.Generic
                 if (!File.Exists(ProgramConstants.GamePath + filePath))
                 {
                     cheaterWindow.SetCantFindText(filePath);
-                    return false;
+                    return true;
                 }
 
                 if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount].ToUpper())
                 {
                     cheaterWindow.SetDefaultText(filePath);
-                    return false;
+                    return true;
                 }
                 ++iCount;
             }
-            return true;
+            return false;
         }
 
         private string GetPlayerMusicSide(string strSide)

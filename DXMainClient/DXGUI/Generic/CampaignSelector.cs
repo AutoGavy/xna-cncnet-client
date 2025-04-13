@@ -258,7 +258,7 @@ namespace DTAClient.DXGUI.Generic
                 return;
             }
 
-            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && !AreFilesModified())
+            if (!ClientConfiguration.TEST_BUILD && !ClientConfiguration.Instance.ModMode && AreFilesModified())
             {
                 // Confront the user by showing the cheater screen
                 cheaterWindow.Enable();
@@ -283,17 +283,17 @@ namespace DTAClient.DXGUI.Generic
                 if (!File.Exists(ProgramConstants.GamePath + filePath))
                 {
                     cheaterWindow.SetCantFindText(filePath);
-                    return false;
+                    return true;
                 }
 
                 if (iCount >= InfoShared.filesHashArrayCamp.Length || Utilities.CalculateSHA1ForFile(filePath).ToUpper() != InfoShared.filesHashArrayCamp[iCount].ToUpper())
                 {
                     cheaterWindow.SetDefaultText(filePath);
-                    return false;
+                    return true;
                 }
                 ++iCount;
             }
-            return true;
+            return false;
         }
 
         private string GetPlayerMusicSide(string strSide)
